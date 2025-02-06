@@ -39,7 +39,7 @@ jobs:
 
       - uses:
           with:
-            npde-version: "lts/hydrogen"
+            node-version: "lts/hydrogen"
 
       - run: npm ci
 
