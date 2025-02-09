@@ -14,7 +14,7 @@
     "services:down": "docker compose down",
     "lint:prettier:check": "prettier --check .",
     "lint:prettier:fix": "prettier --write .",
-    "lint:eslint:check": "next lint --di r .",
+    "lint:eslint:check": "next lint --dir ./src ./test",
     "prepare": "husky"
   },
   "dependencies": {
