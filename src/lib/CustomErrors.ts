@@ -3,7 +3,7 @@ class CustomError extends Error {
   public readonly statusCode: number;
   public readonly isPublicError: boolean;
 
-  constructor(message: string, cause: unknown, action: string, statusCode: number, isPublicError: boolean) {
+  constructor(message: string, action: string, statusCode: number, isPublicError: boolean, cause?: unknown) {
     super(message, { cause: cause });
     this.action = action;
     this.statusCode = statusCode;
@@ -12,8 +12,15 @@ class CustomError extends Error {
 }
 
 export class UserValidationsError extends CustomError {
-  constructor(message: string, cause: unknown, action: string, statusCode: number, isPublicError: boolean) {
-    super(message, cause, action, statusCode, isPublicError);
+  constructor(message: string, action: string, statusCode: number, isPublicError: boolean, cause?: unknown) {
+    super(message, action, statusCode, isPublicError, cause);
     this.name = "UserValidationsError2";
+  }
+}
+
+export class RegisterServiceError extends CustomError {
+  constructor(message: string, action: string, statusCode: number, isPublicError: boolean, cause?: unknown) {
+    super(message, action, statusCode, isPublicError, cause);
+    this.name = "RegisterServiceError";
   }
 }
