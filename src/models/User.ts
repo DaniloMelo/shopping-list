@@ -33,9 +33,9 @@ export default class User {
       throw new UserValidationsError(
         "Nome inválido.",
         "O nome deve conter 3 ou mais caracteres e não pode ser em branco.",
-        "O nome deve conter 3 ou mais caracteres.",
         400,
         true,
+        "O nome deve conter 3 ou mais caracteres.",
       );
     }
 
@@ -49,10 +49,10 @@ export default class User {
     if (!emailRegex.test(this.email)) {
       throw new UserValidationsError(
         "Email inválido.",
-        "Formato de email inválido.",
         "Insira um email válido.",
         400,
         true,
+        "Formato de email inválido.",
       );
     }
 
@@ -65,10 +65,10 @@ export default class User {
     if (!passwordRegex.test(this.password)) {
       throw new UserValidationsError(
         "Formato de senha inválida.",
-        "A senha não segue o seguinte formato: 8 Caracteres, 1 Letra maiúscula, 1 Número e 1 Caractere especial.",
         "A senha deve conter: 8 Caracteres, 1 Letra maiúscula, 1 Número e 1 Caractere especial.",
         400,
         true,
+        "A senha não segue o seguinte formato: 8 Caracteres, 1 Letra maiúscula, 1 Número e 1 Caractere especial.",
       );
     }
 
@@ -76,9 +76,9 @@ export default class User {
       throw new UserValidationsError(
         "As senhas não são iguais.",
         "As senhas não são iguais.",
-        "Verifique as senhas informadas.",
         400,
         true,
+        "Verifique as senhas informadas.",
       );
     }
 
