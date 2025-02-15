@@ -23,7 +23,7 @@ export default class RegisterService {
 
       const isUserExists = await this.userRepository.findUserByEmail(email);
       if (isUserExists) {
-        throw new RegisterServiceError("Credenciais inválidas", "Tente Novamente", 400, true);
+        throw new RegisterServiceError("Credenciais inválidas.", "Tente Novamente.", 400, true);
       }
 
       const hashedPassword = await this.hasher.encrypt(password);

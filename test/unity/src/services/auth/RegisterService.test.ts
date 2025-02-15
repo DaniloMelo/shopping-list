@@ -24,32 +24,33 @@ describe("scr/service/RegisterService.ts", () => {
 
   describe("Successful Cases", () => {
     test("Should create a new user successfully", async () => {
-      mockUserRepository.findUserByEmail.mockResolvedValue(null);
-      mockHasher.encrypt.mockResolvedValue("hashed-password");
-      mockUserRepository.createUser.mockRejectedValue(undefined);
-
-      const response = await registerService.register({
+      const user = {
         name: "John Doe",
         email: "john@email.com",
         password: "P4ssword!23",
         passwordConfirmation: "P4ssword!23",
-      });
+      };
 
-      expect(response).toBeUndefined();
+      mockUserRepository.findUserByEmail.mockResolvedValue(null);
+      mockHasher.encrypt.mockResolvedValue("hashed-password");
+      mockUserRepository.createUser.mockRejectedValue(undefined);
+
+      await expect(registerService.register(user)).resolves.toBeUndefined();
     });
   });
 
-  // describe("Failure Cases", () => {
-  //   test("Should throw an error if user exists", async () => {
-  //     const user = {
-  //       name: "John Doe",
-  //       email: "john@email.com",
-  //       password: "P4ssword!23"
-  //     };
+  describe("Failure Cases", () => {
+    test("Should throw an error if user exists", async () => {
+      const existingUser = {
+        name: "John Doe",
+        email: "john@email.com",
+        password: "P4ssword!23",
+        passwordConfirmation: "P4ssword!23",
+      };
 
-  //     (mockUserRepository.findUserByEmail as jest.Mock).mockResolvedValue(user)
+      mockUserRepository.findUserByEmail.mockResolvedValue(existingUser);
 
-  //     await ...
-  //   })
-  // });
+      await expect(registerService.register(existingUser)).rejects.toThrow("Credenciais inválidas");
+    });
+  });
 });
