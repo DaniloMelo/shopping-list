@@ -18,7 +18,6 @@ describe("src/models/User.ts", () => {
       const user = new User(" ", "john@email.com", "P4ssword!23", "P4ssword!23");
 
       expect(() => user.getUser()).toThrow("Nome inválido.");
-      // expect(() => user.getUser()).toThrow("O nome deve conter 3 ou mais caracteres.");
     });
 
     test("Should return an error when email is not valid", () => {
