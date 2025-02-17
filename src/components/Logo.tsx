@@ -18,6 +18,7 @@ export default function Logo({ size }: LogoProps) {
         alt="Logo Lista de Compras"
         width={size === "sm" ? 100 : size === "md" ? 150 : 200}
         height={size === "sm" ? 100 : size === "md" ? 150 : 200}
+        priority
       />
 
       <p className={`${size === "sm" ? "text-md" : size === "md" ? "text-xl" : "text-3xl"} mt-2 font-montserrat`}>

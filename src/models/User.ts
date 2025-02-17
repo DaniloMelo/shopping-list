@@ -75,10 +75,10 @@ export default class User {
     if (this.password !== this.passwordConfirmation) {
       throw new UserValidationsError(
         "As senhas não são iguais.",
-        "As senhas não são iguais.",
+        "Verifique as senhas informadas.",
         400,
         true,
-        "Verifique as senhas informadas.",
+        "As senhas não são iguais.",
       );
     }
 

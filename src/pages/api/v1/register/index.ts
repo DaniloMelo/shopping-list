@@ -23,7 +23,7 @@ export default async function register(req: NextApiRequest, res: NextApiResponse
     if (error instanceof UserValidationsError || error instanceof RegisterServiceError) {
       return res
         .status(error.statusCode)
-        .json({ error: error.message, action: error.action, isPublicError: error.isPublicError });
+        .json({ message: error.message, action: error.action, isPublicError: error.isPublicError });
     }
 
     return res.status(500).json({ error: "Internal Server Error." });

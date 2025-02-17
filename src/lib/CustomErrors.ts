@@ -24,3 +24,12 @@ export class RegisterServiceError extends CustomError {
     this.name = "RegisterServiceError";
   }
 }
+
+export class PublicError extends Error {
+  public action: string;
+
+  constructor(message: string, action: string) {
+    super(message);
+    this.action = action;
+  }
+}
