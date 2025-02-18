@@ -16,13 +16,13 @@ export interface IUserRepository {
 export default class UserRepository implements IUserRepository {
   async createUser(newUserObj: IDbUser): Promise<void> {
     await prisma.user.create({
-      data: newUserObj,
+      data: { ...newUserObj, email: newUserObj.email.toLowerCase() },
     });
   }
 
   async findUserByEmail(email: string): Promise<IDbUser | null> {
     return await prisma.user.findUnique({
-      where: { email },
+      where: { email: email.toLowerCase() },
     });
   }
 
