@@ -31,7 +31,7 @@ describe("src/repository/UserRepository.ts", () => {
       await userRepository.createUser(userObj);
 
       expect(prisma.user.create).toHaveBeenCalledWith({
-        data: userObj,
+        data: { ...userObj, email: userObj.email.toLowerCase() },
       });
     });
 
@@ -93,7 +93,7 @@ describe("src/repository/UserRepository.ts", () => {
       await userRepository.findUserByEmail(nonExistentEmail);
 
       expect(prisma.user.findUnique).toHaveBeenCalledWith({
-        where: { email: nonExistentEmail },
+        where: { email: nonExistentEmail.toLowerCase() },
       });
     });
 
