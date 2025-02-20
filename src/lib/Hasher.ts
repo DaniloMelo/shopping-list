@@ -6,11 +6,11 @@ export interface IHasher {
 }
 
 export default class Hasher implements IHasher {
-  encrypt(data: string): Promise<string> {
-    return bcrypt.hash(data, 12);
+  async encrypt(data: string): Promise<string> {
+    return await bcrypt.hash(data, 12);
   }
 
-  decrypt(data: string, hashedData: string): Promise<boolean> {
-    return bcrypt.compare(data, hashedData);
+  async decrypt(data: string, hashedData: string): Promise<boolean> {
+    return await bcrypt.compare(data, hashedData);
   }
 }
