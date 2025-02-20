@@ -33,7 +33,7 @@ describe("scr/service/RegisterService.ts", () => {
 
       mockUserRepository.findUserByEmail.mockResolvedValue(null);
       mockHasher.encrypt.mockResolvedValue("hashed-password");
-      mockUserRepository.createUser.mockRejectedValue(undefined);
+      mockUserRepository.createUser.mockResolvedValue(undefined);
 
       await expect(registerService.register(user)).resolves.toBeUndefined();
     });
