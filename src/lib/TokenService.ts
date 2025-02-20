@@ -2,7 +2,7 @@ import { SignJWT, jwtVerify, JWTPayload } from "jose";
 import { TokenServiceError } from "./CustomErrors";
 
 export interface ITokenService {
-  generate(payload: object): Promise<string>;
+  generate(payload: { userId: string }): Promise<string>;
   verify(token: string): Promise<JWTPayload>;
 }
 

@@ -42,6 +42,15 @@ describe("scr/service/RegisterService.ts", () => {
   describe("Failure Cases", () => {
     test("Should throw an error if user exists", async () => {
       const existingUser = {
+        id: "123",
+        name: "John Doe",
+        email: "john@email.com",
+        password: "P4ssword!23",
+        createdAt: new Date(Date.now()),
+      };
+
+      const newUser = {
+        id: "123",
         name: "John Doe",
         email: "john@email.com",
         password: "P4ssword!23",
@@ -50,7 +59,7 @@ describe("scr/service/RegisterService.ts", () => {
 
       mockUserRepository.findUserByEmail.mockResolvedValue(existingUser);
 
-      await expect(registerService.register(existingUser)).rejects.toThrow("Credenciais inválidas");
+      await expect(registerService.register(newUser)).rejects.toThrow("Credenciais inválidas");
     });
   });
 });

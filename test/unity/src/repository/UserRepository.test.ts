@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import UserRepository, { IUserRepository, IDbUser } from "@/repository/UserRepository";
+import UserRepository, { IUserRepository, IDbUser, INewUser } from "@/repository/UserRepository";
 
 jest.mock("../../../../src/lib/prisma", () => ({
   prisma: {
@@ -20,7 +20,7 @@ describe("src/repository/UserRepository.ts", () => {
 
   describe("Successful Cases", () => {
     test("Should create an unser", async () => {
-      const userObj: IDbUser = {
+      const userObj: INewUser = {
         name: "John Doe",
         email: "john@email.com",
         password: "hashed-password",
@@ -38,9 +38,11 @@ describe("src/repository/UserRepository.ts", () => {
     test("Should return an user by email", async () => {
       const userEmail = "john@email.com";
       const userData: IDbUser = {
+        id: "123",
         name: "John Doe",
         email: "john@email.com",
         password: "hashed-password",
+        createdAt: new Date(Date.now()),
       };
 
       (prisma.user.findUnique as jest.Mock).mockResolvedValue(userData);
@@ -55,9 +57,11 @@ describe("src/repository/UserRepository.ts", () => {
     test("Should return an user by ID", async () => {
       const userId = "123";
       const userData: IDbUser = {
+        id: "123",
         name: "John Doe",
         email: "john@email.com",
         password: "hashed-password",
+        createdAt: new Date(Date.now()),
       };
 
       (prisma.user.findUnique as jest.Mock).mockResolvedValue(userData);

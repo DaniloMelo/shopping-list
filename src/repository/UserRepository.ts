@@ -1,20 +1,28 @@
 import { prisma } from "@/lib/prisma";
 
 export interface IDbUser {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+  createdAt: Date;
+}
+
+export interface INewUser {
   name: string;
   email: string;
   password: string;
 }
 
 export interface IUserRepository {
-  createUser(newUserObj: IDbUser): Promise<void>;
+  createUser(newUserObj: INewUser): Promise<void>;
   findUserByEmail(email: string): Promise<IDbUser | null>;
   findUserById(userId: string): Promise<IDbUser | null>;
   updatePassword(userId: string, newPassword: string): Promise<void>;
 }
 
 export default class UserRepository implements IUserRepository {
-  async createUser(newUserObj: IDbUser): Promise<void> {
+  async createUser(newUserObj: INewUser): Promise<void> {
     await prisma.user.create({
       data: { ...newUserObj, email: newUserObj.email.toLowerCase() },
     });
