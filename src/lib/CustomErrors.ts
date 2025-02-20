@@ -25,11 +25,19 @@ export class RegisterServiceError extends CustomError {
   }
 }
 
+export class TokenServiceError extends CustomError {
+  constructor(message: string, action: string, statusCode: number, isPublicError: boolean, cause?: unknown) {
+    super(message, action, statusCode, isPublicError, cause);
+    this.name = "TokenServiceError";
+  }
+}
+
 export class PublicError extends Error {
   public action: string;
 
   constructor(message: string, action: string) {
     super(message);
+    this.name = "PublicError";
     this.action = action;
   }
 }
