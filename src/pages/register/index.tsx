@@ -61,10 +61,10 @@ export default function RegisterPage() {
       }
 
       setFormSuccess("Usuário Criado! Aguarde...");
+      setNewUser({ name: "", email: "", password: "", passwordConfirmation: "" });
       setIsDisabled(true);
       setIsLoading(false);
-      setNewUser({ name: "", email: "", password: "", passwordConfirmation: "" });
-      setTimeout(() => router.push("/"), 2000); // To-do: Change to /login
+      setTimeout(() => router.push("/login"), 2000);
     } catch (error) {
       if (error instanceof PublicError) {
         setFormErrorMessage(error.message);
