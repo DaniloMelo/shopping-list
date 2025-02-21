@@ -1,7 +1,7 @@
 import User from "@/models/User";
 import { IHasher } from "@/lib/Hasher";
 import { IUserRepository } from "@/repository/UserRepository";
-import { RegisterServiceError, UserValidationsError } from "@/lib/CustomErrors";
+import { InternalServerError, RegisterServiceError, UserValidationsError } from "@/lib/CustomErrors";
 
 interface INewUserData {
   name: string;
@@ -38,6 +38,15 @@ export default class RegisterService {
       if (error instanceof UserValidationsError || error instanceof RegisterServiceError) {
         throw error;
       }
+
+      console.error("Error during user register: ", error);
+
+      throw new InternalServerError(
+        "Ocorreu um Erro inesperado ao tentar realizar o cadastro",
+        "Tente novamente mais tarde",
+        500,
+        true,
+      );
     }
   }
 }
