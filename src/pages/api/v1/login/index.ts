@@ -20,7 +20,7 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
   try {
     const { email, password } = req.body;
 
-    const sessionToken = loginService.login(email, password);
+    const sessionToken = await loginService.login(email, password);
 
     res.setHeader(
       "Set-Cookie",
