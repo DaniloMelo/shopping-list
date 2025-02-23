@@ -20,7 +20,12 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
   try {
     const { email, password } = req.body;
 
-    await loginService.login(email, password);
+    const sessionToken = await loginService.login(email, password);
+
+    res.setHeader(
+      "Set-Cookie",
+      `sessionToken=${sessionToken}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=86400`,
+    );
 
     return res.status(200).json({ message: "Login Successfull." });
   } catch (error) {
