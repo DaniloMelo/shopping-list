@@ -32,6 +32,13 @@ export class LoginServiceError extends CustomError {
   }
 }
 
+export class ResetPasswordServiceError extends CustomError {
+  constructor(message: string, action: string, statusCode: number, isPublicError: boolean, cause?: unknown) {
+    super(message, action, statusCode, isPublicError, cause);
+    this.name = "ResetPasswordServiceError";
+  }
+}
+
 export class TokenServiceError extends CustomError {
   constructor(message: string, action: string, statusCode: number, isPublicError: boolean, cause?: unknown) {
     super(message, action, statusCode, isPublicError, cause);
@@ -43,6 +50,16 @@ export class InternalServerError extends CustomError {
   constructor(message: string, action: string, statusCode: number, isPublicError: boolean, cause?: unknown) {
     super(message, action, statusCode, isPublicError, cause);
     this.name = "InternalServerError";
+  }
+}
+
+export class MethodNotAllowedError extends Error {
+  statusCode: number;
+
+  constructor(message = "Method Not Allowed.", statusCode = 405) {
+    super(message);
+    this.statusCode = statusCode;
+    this.name = "MethodNotAllowedError";
   }
 }
 
