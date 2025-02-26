@@ -18,7 +18,7 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@prisma/client": "^6.3.0",
+    "@prisma/client": "6.3.0",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.7",
     "jose": "^5.10.0",
