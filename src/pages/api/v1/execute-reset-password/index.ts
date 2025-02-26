@@ -1,4 +1,4 @@
-import { InternalServerError, ResetPasswordServiceError } from "@/lib/CustomErrors";
+import { InternalServerError, ResetPasswordServiceError, UserValidationsError } from "@/lib/CustomErrors";
 import Hasher from "@/lib/Hasher";
 import Mailer from "@/lib/Mailer";
 import TokenService from "@/lib/TokenService";
@@ -20,19 +20,23 @@ const resetPasswordService = new ResetPasswordService(
   mailer,
 );
 
-export default async function RequestResetPassword(req: NextApiRequest, res: NextApiResponse) {
+export default async function ExecuteResetPassword(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
     return res.status(405).json({ message: "Method Not Allowed." });
   }
 
   try {
-    const { email } = req.body;
+    const { email, token, password, passwordConfirmation } = req.body;
 
-    await resetPasswordService.requestResetPassword(email);
+    await resetPasswordService.executeResetPassword(email, token, password, passwordConfirmation);
 
-    return res.status(200).json({ message: "Email sent" });
+    return res.status(200).json({ message: "New password has been created." });
   } catch (error) {
-    if (error instanceof ResetPasswordServiceError || error instanceof InternalServerError) {
+    if (
+      error instanceof ResetPasswordServiceError ||
+      error instanceof InternalServerError ||
+      error instanceof UserValidationsError
+    ) {
       return res
         .status(error.statusCode)
         .json({ message: error.message, action: error.action, isPublicError: error.isPublicError });
