@@ -19,7 +19,7 @@ export default class RegisterService {
   async register({ name, email, password, passwordConfirmation }: INewUserData): Promise<void> {
     try {
       const user = new User(name, email, password, passwordConfirmation);
-      const newUser = user.getUser();
+      const newUser = user.getUser()!;
 
       const isUserExists = await this.userRepository.findUserByEmail(email);
       if (isUserExists) {
