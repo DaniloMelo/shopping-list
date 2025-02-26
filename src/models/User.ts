@@ -1,11 +1,5 @@
 import { UserValidationsError } from "@/lib/CustomErrors";
 
-export interface IUserDTO {
-  name: string;
-  email: string;
-  password: string;
-}
-
 export default class User {
   constructor(
     private readonly name: string,
@@ -14,18 +8,20 @@ export default class User {
     private readonly passwordConfirmation: string,
   ) {}
 
-  getUser(): IUserDTO {
-    let user;
-
+  getUser() {
     if (this.nameValidation() && this.emailValidation() && this.passwordValidation()) {
-      user = {
+      return {
         name: this.name,
         email: this.email,
         password: this.password,
       };
     }
+  }
 
-    return user!;
+  getPassword() {
+    if (this.passwordValidation()) {
+      return this.password;
+    }
   }
 
   private nameValidation() {
