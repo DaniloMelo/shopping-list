@@ -74,7 +74,7 @@ describe("src/services/auth/ResetPasswordService.ts", () => {
     });
 
     describe("Failure Cases", () => {
-      test("Shold throw an error if user don't exist", async () => {
+      test("Should throw an error if user don't exist", async () => {
         mockUserRepository.findUserByEmail.mockResolvedValue(null);
 
         await expect(resetPasswordService.requestResetPassword("john@email.com")).rejects.toThrow(
@@ -82,7 +82,7 @@ describe("src/services/auth/ResetPasswordService.ts", () => {
         );
       });
 
-      test("Shold throw an error if some reset password token already exists", async () => {
+      test("Should throw an error if some reset password token already exists", async () => {
         const dbUser = {
           id: "123",
           name: "John Doe",
@@ -136,9 +136,6 @@ describe("src/services/auth/ResetPasswordService.ts", () => {
         mockResetPasswordRepository.deleteAllResetPasswordTokens.mockResolvedValue();
 
         await resetPasswordService.executeResetPassword("john@email.com", "fake-token", "P4ssword!234", "P4ssword!234");
-
-        // expect(mockUserRepository.findUserByEmail).toHaveBeenCalledWith("john@email.com");
-        // expect(mockResetPasswordRepository.findResetPasswordToken).toHaveBeenCalledWith("123");
         expect(mockHasher.decrypt).toHaveBeenCalledWith("fake-token", "hashed-fake-token");
         expect(mockHasher.encrypt).toHaveBeenCalledWith("P4ssword!234");
         expect(mockUserRepository.updatePassword).toHaveBeenCalledWith("123", "new-hashed-password");
@@ -146,6 +143,57 @@ describe("src/services/auth/ResetPasswordService.ts", () => {
       });
     });
 
-    // describe("Failure Cases", () => {})
+    describe("Failure Cases", () => {
+      test("Should throw an error if user don't exist", async () => {
+        mockUserRepository.findUserByEmail.mockResolvedValue(null);
+
+        await expect(
+          resetPasswordService.executeResetPassword("john@email.com", "fake-token", "P4ssword!234", "P4ssword!234"),
+        ).rejects.toThrow(ResetPasswordServiceError);
+      });
+
+      test("Should throw an error if token don't exist", async () => {
+        const dbUser = {
+          id: "123",
+          name: "John Doe",
+          email: "john@email.com",
+          password: "hashed-password",
+          createdAt: new Date(),
+        };
+
+        mockUserRepository.findUserByEmail.mockResolvedValue(dbUser);
+        mockResetPasswordRepository.findResetPasswordToken.mockResolvedValue(null);
+
+        await expect(
+          resetPasswordService.executeResetPassword("john@email.com", "fake-token", "P4ssword!234", "P4ssword!234"),
+        ).rejects.toThrow(ResetPasswordServiceError);
+      });
+
+      test("Should throw an error when the token has expired", async () => {
+        const dbUser = {
+          id: "123",
+          name: "John Doe",
+          email: "john@email.com",
+          password: "hashed-password",
+          createdAt: new Date(),
+        };
+
+        const dbResetPasswordToken = {
+          id: "456",
+          token: "hashed-fake-token",
+          userId: "123",
+          expiresAt: new Date(Date.now() - 10 * 60 * 1000),
+          createdAt: new Date(),
+        };
+
+        mockUserRepository.findUserByEmail.mockResolvedValue(dbUser);
+        mockResetPasswordRepository.findResetPasswordToken.mockResolvedValue(dbResetPasswordToken);
+        mockHasher.decrypt.mockResolvedValue(true);
+
+        await expect(
+          resetPasswordService.executeResetPassword("john@email.com", "fake-token", "P4ssword!234", "P4ssword!234"),
+        ).rejects.toThrow(ResetPasswordServiceError);
+      });
+    });
   });
 });
