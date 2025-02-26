@@ -5,54 +5,58 @@ import { PublicError } from "@/lib/CustomErrors";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
-import { IoIosMail } from "react-icons/io";
+import { MdLock } from "react-icons/md";
 
-export default function RequestResetPasswordPage() {
-  const [email, setEmail] = useState("");
+export default function ExecuteResetPasswordPage() {
+  const [password, setPassword] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isDisabled, setIsDisabled] = useState(true);
   const [formErrorMessage, setFormErrorMessage] = useState("");
   const [formErrorAction, setFormErrorAction] = useState("");
-  const [formSuccess, setFormSucces] = useState("");
+  const [formSuccess, setFormSuccess] = useState("");
   const router = useRouter();
 
   useEffect(() => {
-    if (!email.includes("@") || !email.includes(".com") || email.trim().length === 0) {
+    if (password.length < 8 || passwordConfirmation.length < 8) {
       setIsDisabled(true);
     } else {
       setIsDisabled(false);
     }
-  }, [email]);
+  }, [password, passwordConfirmation]);
 
   async function handleFormSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setIsLoading(true);
     setFormErrorMessage("");
     setFormErrorAction("");
-    setFormSucces("");
+    setFormSuccess("");
 
     try {
-      const response = await fetch("api/v1/request-reset-password", {
+      const { token, email } = router.query;
+
+      const response = await fetch("api/v1/execute-reset-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, token, password, passwordConfirmation }),
       });
 
       if (!response.ok) {
-        const ErrorData = await response.json();
-        if (ErrorData.isPublicError) throw new PublicError(ErrorData.message, ErrorData.action);
+        const errorData = await response.json();
+        if (errorData.isPublicError) throw new PublicError(errorData.message, errorData.action);
       }
 
-      setFormSucces("Email Enviado.");
-      setEmail("");
-      setIsLoading(false);
+      setFormSuccess("Senha Alterada. Aguarde...");
+      setPassword("");
+      setPasswordConfirmation("");
       setIsDisabled(true);
+      setIsLoading(false);
       setTimeout(() => router.push("/login"), 3000);
     } catch (error) {
       if (error instanceof PublicError) {
+        setIsLoading(false);
         setFormErrorMessage(error.message);
         setFormErrorAction(error.action);
-        setIsLoading(false);
         setTimeout(() => {
           setFormErrorMessage("");
           setFormErrorAction("");
@@ -68,17 +72,22 @@ export default function RequestResetPasswordPage() {
 
         <h1 className="text-xl self-start mt-10 mb-5">Redefinicição de senha</h1>
 
-        <p className="text-sm text-zinc-400 mb-10">
-          Caso tenha um usuário cadastrado e válido, receberá um email com instruções de como redefinir a sua senha.
-        </p>
-
         <form className="w-full flex flex-col gap-5" onSubmit={handleFormSubmit}>
           <AuthInput
-            Icon={IoIosMail}
-            placeholder="Email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            Icon={MdLock}
+            placeholder="Senha"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+
+          <AuthInput
+            Icon={MdLock}
+            placeholder="Confirme a senha"
+            type="password"
+            value={passwordConfirmation}
+            onChange={(e) => setPasswordConfirmation(e.target.value)}
             required
           />
 

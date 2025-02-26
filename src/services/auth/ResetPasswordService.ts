@@ -40,7 +40,7 @@ export default class ResetPasswordService {
         expiresAt: expirationTime,
       });
 
-      const resetPasswordUrl = `${getBaseUrl()}/reset-password?token=${resetPasswordToken}&email=${encodeURIComponent(isUserExists.email)}`;
+      const resetPasswordUrl = `${getBaseUrl()}/execute-reset-password?token=${resetPasswordToken}&email=${encodeURIComponent(isUserExists.email)}`;
 
       const emailText = `
       Olá, ${isUserExists.name}.\n
@@ -74,12 +74,17 @@ export default class ResetPasswordService {
     try {
       const isUserExists = await this.userRepository.findUserByEmail(email);
       if (!isUserExists) {
-        throw new ResetPasswordServiceError("User not found.", "Check the email provided.", 404, false);
+        throw new ResetPasswordServiceError("Usuário não encontrado", "Verifique suas credenciais.", 404, true);
       }
 
       const isResetPasswordTokenExists = await this.resetPasswordRepository.findResetPasswordToken(isUserExists.id);
       if (!isResetPasswordTokenExists) {
-        throw new ResetPasswordServiceError("Reset password token not found.", "Chech the id provided.", 401, false);
+        throw new ResetPasswordServiceError(
+          "Não foi possível redefinir sua senha.",
+          "Faça uma nova solicitação.",
+          401,
+          true,
+        );
       }
 
       await this.hasher.decrypt(token, isResetPasswordTokenExists.token);
