@@ -64,7 +64,12 @@ describe("src/services/auth/ResetPasswordService.ts", () => {
         mockResetPasswordRepository.createResetPasswordToken.mockResolvedValue(undefined);
         mockMailer.send.mockResolvedValue(undefined);
 
-        await expect(resetPasswordService.requestResetPassword("john@email.com")).resolves.toBeUndefined();
+        await resetPasswordService.requestResetPassword("john@email.com");
+
+        expect(mockTokenService.generate).toHaveBeenCalled();
+        expect(mockHasher.encrypt).toHaveBeenCalledWith("fake-test-token");
+        expect(mockResetPasswordRepository.createResetPasswordToken).toHaveBeenCalled();
+        expect(mockMailer.send).toHaveBeenCalled();
       });
     });
 
@@ -104,15 +109,43 @@ describe("src/services/auth/ResetPasswordService.ts", () => {
     });
   });
 
-  // describe("executeResetPassword method", () => {
+  describe("executeResetPassword method", () => {
+    describe("Successfull Cases", () => {
+      test("Should call executeResetPassword method and reset password properly", async () => {
+        const dbUser = {
+          id: "123",
+          name: "John Doe",
+          email: "john@email.com",
+          password: "hashed-password",
+          createdAt: new Date(),
+        };
 
-  // })
+        const dbResetPasswordToken = {
+          id: "456",
+          token: "hashed-fake-token",
+          userId: "123",
+          expiresAt: new Date(Date.now() + 10 * 60 * 1000),
+          createdAt: new Date(),
+        };
+
+        mockUserRepository.findUserByEmail.mockResolvedValue(dbUser);
+        mockResetPasswordRepository.findResetPasswordToken.mockResolvedValue(dbResetPasswordToken);
+        mockHasher.decrypt.mockResolvedValue(true);
+        mockHasher.encrypt.mockResolvedValue("new-hashed-password");
+        mockUserRepository.updatePassword.mockResolvedValue();
+        mockResetPasswordRepository.deleteAllResetPasswordTokens.mockResolvedValue();
+
+        await resetPasswordService.executeResetPassword("john@email.com", "fake-token", "P4ssword!234", "P4ssword!234");
+
+        // expect(mockUserRepository.findUserByEmail).toHaveBeenCalledWith("john@email.com");
+        // expect(mockResetPasswordRepository.findResetPasswordToken).toHaveBeenCalledWith("123");
+        expect(mockHasher.decrypt).toHaveBeenCalledWith("fake-token", "hashed-fake-token");
+        expect(mockHasher.encrypt).toHaveBeenCalledWith("P4ssword!234");
+        expect(mockUserRepository.updatePassword).toHaveBeenCalledWith("123", "new-hashed-password");
+        expect(mockResetPasswordRepository.deleteAllResetPasswordTokens).toHaveBeenCalledWith("123");
+      });
+    });
+
+    // describe("Failure Cases", () => {})
+  });
 });
-
-// const dbResetPasswordToken = {
-//   id: "456",
-//   token: "fake-test-token",
-//   userId: "123",
-//   expiresAt: new Date(Date.now() + 10 * 60 * 1000),
-//   createdAt: new Date(),
-// };

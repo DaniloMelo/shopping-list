@@ -1,8 +1,9 @@
-import { InternalServerError, ResetPasswordServiceError } from "@/lib/CustomErrors";
+import { InternalServerError, ResetPasswordServiceError, UserValidationsError } from "@/lib/CustomErrors";
 import getBaseUrl from "@/lib/getBaseUrl";
 import { IHasher } from "@/lib/Hasher";
 import { IMailer } from "@/lib/Mailer";
 import { ITokenService } from "@/lib/TokenService";
+import User from "@/models/User";
 import { IResetPasswordRepository } from "@/repository/ResetPasswordRepository";
 import { IUserRepository } from "@/repository/UserRepository";
 
@@ -63,6 +64,56 @@ export default class ResetPasswordService {
       throw new InternalServerError(
         "Ocorreu um erro inesperado ao tentar solicitar a redefinição da senha.",
         "Tente novamente mais tarde.",
+        500,
+        true,
+      );
+    }
+  }
+
+  async executeResetPassword(email: string, token: string, password: string, passwordConfirmation: string) {
+    try {
+      const isUserExists = await this.userRepository.findUserByEmail(email);
+      if (!isUserExists) {
+        throw new ResetPasswordServiceError("User not found.", "Check the email provided.", 404, false);
+      }
+
+      const isResetPasswordTokenExists = await this.resetPasswordRepository.findResetPasswordToken(isUserExists.id);
+      if (!isResetPasswordTokenExists) {
+        throw new ResetPasswordServiceError("Reset password token not found.", "Chech the id provided.", 401, false);
+      }
+
+      await this.hasher.decrypt(token, isResetPasswordTokenExists.token);
+
+      if (isResetPasswordTokenExists.expiresAt < new Date() || !isResetPasswordTokenExists.expiresAt) {
+        await this.resetPasswordRepository.deleteAllResetPasswordTokens(isUserExists.id);
+
+        throw new ResetPasswordServiceError(
+          "Não foi possível redefinir sua senha.",
+          "Faça uma nova solicitação.",
+          401,
+          true,
+          "Tempo esgotado.",
+        );
+      }
+
+      const userModel = new User(isUserExists.name, isUserExists.email, password, passwordConfirmation);
+      const newPassword = userModel.getPassword();
+
+      const newPasswordHashed = await this.hasher.encrypt(newPassword!);
+
+      await this.userRepository.updatePassword(isUserExists.id, newPasswordHashed);
+
+      await this.resetPasswordRepository.deleteAllResetPasswordTokens(isUserExists.id);
+    } catch (error) {
+      console.error("Error during reset password execution: ", error);
+
+      if (error instanceof UserValidationsError || error instanceof ResetPasswordServiceError) {
+        throw error;
+      }
+
+      throw new InternalServerError(
+        "Ocorreu um Erro inesperado ao tentar resetar a senha",
+        "Tente novamente mais tarde",
         500,
         true,
       );
