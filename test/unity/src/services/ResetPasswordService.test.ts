@@ -4,7 +4,7 @@ import { IMailer } from "@/lib/Mailer";
 import { ITokenService } from "@/lib/TokenService";
 import { IResetPasswordRepository } from "@/repository/ResetPasswordRepository";
 import { IUserRepository } from "@/repository/UserRepository";
-import ResetPasswordService from "@/services/auth/ResetPasswordService";
+import ResetPasswordService from "@/services/ResetPasswordService";
 
 const mockUserRepository: jest.Mocked<IUserRepository> = {
   createUser: jest.fn(),
@@ -33,7 +33,7 @@ const mockMailer: jest.Mocked<IMailer> = {
   send: jest.fn(),
 };
 
-describe("src/services/auth/ResetPasswordService.ts", () => {
+describe("src/services/ResetPasswordService.ts", () => {
   let resetPasswordService: ResetPasswordService;
 
   beforeEach(() => {

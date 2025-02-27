@@ -53,9 +53,11 @@ export default function RequestResetPasswordPage() {
         setFormErrorMessage(error.message);
         setFormErrorAction(error.action);
         setIsLoading(false);
+        setIsDisabled(true);
         setTimeout(() => {
           setFormErrorMessage("");
           setFormErrorAction("");
+          setIsDisabled(false);
         }, 5000);
       }
     }

@@ -3,14 +3,14 @@ import Hasher from "@/lib/Hasher";
 import TokenService from "@/lib/TokenService";
 import AuthRepository from "@/repository/AuthRepository";
 import UserRepository from "@/repository/UserRepository";
-import { LoginService } from "@/services/auth/LoginService";
+import AuthService from "@/services/AuthService";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const userRepository = new UserRepository();
 const authRepository = new AuthRepository();
 const hasher = new Hasher();
 const tokenService = new TokenService();
-const loginService = new LoginService(userRepository, authRepository, hasher, tokenService);
+const authService = new AuthService(userRepository, authRepository, hasher, tokenService);
 
 export default async function login(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
@@ -20,7 +20,7 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
   try {
     const { email, password } = req.body;
 
-    const sessionToken = await loginService.login(email, password);
+    const sessionToken = await authService.login(email, password);
 
     res.setHeader(
       "Set-Cookie",

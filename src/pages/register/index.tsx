@@ -70,9 +70,11 @@ export default function RegisterPage() {
         setFormErrorMessage(error.message);
         setFormErrorAction(error.action);
         setIsLoading(false);
+        setIsDisabled(true);
         setTimeout(() => {
           setFormErrorMessage("");
           setFormErrorAction("");
+          setIsDisabled(false);
         }, 5000);
       }
     }
