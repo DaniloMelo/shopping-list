@@ -80,7 +80,7 @@ export default function RegisterPage() {
 
   return (
     <main className="h-screen flex justify-center">
-      <section className=" flex flex-col justify-center items-center w-80 py-10">
+      <section className="flex flex-col justify-center items-center w-80 py-10">
         <Logo size="sm" />
 
         <h1 className="text-xl self-start mt-10 mb-5">Cadastre-se</h1>
@@ -136,9 +136,11 @@ export default function RegisterPage() {
 
           <AuthButton label="Cadastrar" disabled={isDisabled} loading={isLoading} />
 
-          <Link className="text-blue-800 hover:text-blue-500 text-end text-sm" href="/">
-            Esqueceu sua senha?
-          </Link>
+          <p className="text-blue-800 text-end text-sm">
+            <Link href="/request-reset-password" className="hover:text-blue-500 ">
+              Esqueceu sua senha?
+            </Link>
+          </p>
         </form>
 
         <Link href="/login" className="mt-10">

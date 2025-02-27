@@ -5,11 +5,11 @@ import { PublicError } from "@/lib/CustomErrors";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
-import { IoIosMail } from "react-icons/io";
 import { MdLock } from "react-icons/md";
 
-export default function LoginPage() {
-  const [user, setUser] = useState({ email: "", password: "" });
+export default function ExecuteResetPasswordPage() {
+  const [password, setPassword] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isDisabled, setIsDisabled] = useState(true);
   const [formErrorMessage, setFormErrorMessage] = useState("");
@@ -18,25 +18,27 @@ export default function LoginPage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (!user.email.includes("@") || !user.email.includes(".com") || user.password.length < 8) {
+    if (password.length < 8 || passwordConfirmation.length < 8) {
       setIsDisabled(true);
     } else {
       setIsDisabled(false);
     }
-  }, [user]);
+  }, [password, passwordConfirmation]);
 
   async function handleFormSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setIsLoading(true);
     setFormErrorMessage("");
     setFormErrorAction("");
     setFormSuccess("");
-    setIsLoading(true);
 
     try {
-      const response = await fetch("/api/v1/login", {
+      const { token, email } = router.query;
+
+      const response = await fetch("api/v1/execute-reset-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(user),
+        body: JSON.stringify({ email, token, password, passwordConfirmation }),
       });
 
       if (!response.ok) {
@@ -44,16 +46,17 @@ export default function LoginPage() {
         if (errorData.isPublicError) throw new PublicError(errorData.message, errorData.action);
       }
 
-      setFormSuccess("Aguarde...");
-      setUser({ email: "", password: "" });
+      setFormSuccess("Senha Alterada. Aguarde...");
+      setPassword("");
+      setPasswordConfirmation("");
       setIsDisabled(true);
       setIsLoading(false);
-      setTimeout(() => router.push("/"), 2000);
+      setTimeout(() => router.push("/login"), 3000);
     } catch (error) {
       if (error instanceof PublicError) {
+        setIsLoading(false);
         setFormErrorMessage(error.message);
         setFormErrorAction(error.action);
-        setIsLoading(false);
         setTimeout(() => {
           setFormErrorMessage("");
           setFormErrorAction("");
@@ -63,28 +66,28 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="h-screen flex justify-center items-center">
+    <main className="h-screen flex justify-center">
       <section className="flex flex-col justify-center items-center w-80 py-10">
         <Logo size="sm" />
 
-        <h1 className="text-xl self-start mt-10 mb-5">Entrar</h1>
+        <h1 className="text-xl self-start mt-10 mb-5">Redefinicição de senha</h1>
 
         <form className="w-full flex flex-col gap-5" onSubmit={handleFormSubmit}>
           <AuthInput
-            Icon={IoIosMail}
-            placeholder="Email"
-            type="email"
-            value={user.email}
-            onChange={(e) => setUser({ ...user, email: e.target.value })}
+            Icon={MdLock}
+            placeholder="Senha"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
 
           <AuthInput
             Icon={MdLock}
-            placeholder="Senha"
+            placeholder="Confirme a senha"
             type="password"
-            value={user.password}
-            onChange={(e) => setUser({ ...user, password: e.target.value })}
+            value={passwordConfirmation}
+            onChange={(e) => setPasswordConfirmation(e.target.value)}
             required
           />
 
@@ -101,18 +104,14 @@ export default function LoginPage() {
             </div>
           )}
 
-          <AuthButton label="Entrar" disabled={isDisabled} loading={isLoading} />
+          <AuthButton label="Enviar" loading={isLoading} disabled={isDisabled} />
 
           <p className="text-blue-800 text-end text-sm">
-            <Link href="/request-reset-password" className="hover:text-blue-500 ">
-              Esqueceu sua senha?
+            <Link href="/login" className="hover:text-blue-500 ">
+              Voltar para o login
             </Link>
           </p>
         </form>
-
-        <Link href="/register" className="mt-10">
-          Não tem uma conta? <span className="text-blue-800 hover:text-blue-500">Cadastrar</span>
-        </Link>
       </section>
     </main>
   );
