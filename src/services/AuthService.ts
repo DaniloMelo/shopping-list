@@ -1,6 +1,7 @@
 import {
   InternalServerError,
   LoginServiceError,
+  LogoutServiceError,
   RegisterServiceError,
   TokenServiceError,
   UserValidationsError,
@@ -90,6 +91,26 @@ export default class AuthService {
 
       throw new InternalServerError(
         "Ocorreu um Erro inesperado ao tentar realizar o login",
+        "Tente novamente mais tarde",
+        500,
+        true,
+      );
+    }
+  }
+
+  async logout(email: string): Promise<void> {
+    try {
+      const user = await this.userRepository.findUserByEmail(email);
+      if (!user) {
+        throw new LogoutServiceError("User not found.", "Check email or id provided.", 404, false);
+      }
+
+      await this.authRepository.deleteAllTokens(user.id);
+    } catch (error) {
+      console.error("Error during user logout: ", error);
+
+      throw new InternalServerError(
+        "Ocorreu um Erro inesperado ao tentar realizar o logout",
         "Tente novamente mais tarde",
         500,
         true,
