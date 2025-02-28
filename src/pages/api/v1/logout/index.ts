@@ -19,6 +19,7 @@ export default async function logout(req: NextApiRequest, res: NextApiResponse) 
 
   try {
     const { email } = req.body;
+    console.log("Email no endpoint ===> ", email);
 
     await authService.logout(email);
 

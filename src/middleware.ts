@@ -13,7 +13,7 @@ export async function middleware(req: NextRequest) {
     await tokenService.verify(sessionToken);
 
     const response = NextResponse.next();
-    response.headers.set("x-user-id", sessionToken);
+    response.headers.set("x-user-data", sessionToken);
 
     return response;
   } catch {
