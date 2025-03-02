@@ -45,12 +45,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   const cookies = context.req.headers.cookie || "";
+  console.log("COOKIE DO GSSP ==> ", cookies);
   const baseUrl = getBaseUrl();
 
   try {
     const tokenFromCookieResult = await fetch(`${baseUrl}/api/v1/find-session-token`, {
       headers: { cookie: cookies },
-      credentials: "include",
     });
     const tokenFromCookieData = await tokenFromCookieResult.json();
     if (new Date(tokenFromCookieData.expiresAt) < new Date()) {
@@ -61,9 +61,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const payload = await tokenService.verify(tokenFromCookieData.token || "");
 
-    const fetchUserResponse = await fetch(`${baseUrl}/api/v1/find-user/${payload.userId}`, {
-      credentials: "include",
-    });
+    const fetchUserResponse = await fetch(`${baseUrl}/api/v1/find-user/${payload.userId}`);
     const fetchUserData = await fetchUserResponse.json();
 
     return {
