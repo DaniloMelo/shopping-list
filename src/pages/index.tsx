@@ -61,7 +61,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const payload = await tokenService.verify(tokenFromCookieData.token || "");
 
-    const fetchUserResponse = await fetch(`${baseUrl}/api/v1/find-user/${payload.userId}`);
+    const fetchUserResponse = await fetch(`${baseUrl}/api/v1/find-user/${payload.userId}`, {
+      credentials: "include",
+    });
     const fetchUserData = await fetchUserResponse.json();
 
     return {
