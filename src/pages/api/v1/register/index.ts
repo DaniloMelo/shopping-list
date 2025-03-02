@@ -1,12 +1,16 @@
 import UserRepository from "@/repository/UserRepository";
 import Hasher from "@/lib/Hasher";
 import { NextApiRequest, NextApiResponse } from "next";
-import RegisterService from "@/services/auth/RegisterService";
 import { InternalServerError, RegisterServiceError, UserValidationsError } from "@/lib/CustomErrors";
+import AuthService from "@/services/AuthService";
+import AuthRepository from "@/repository/AuthRepository";
+import TokenService from "@/lib/TokenService";
 
 const userRepository = new UserRepository();
+const authRepository = new AuthRepository();
 const hasher = new Hasher();
-const registerService = new RegisterService(userRepository, hasher);
+const tokenService = new TokenService();
+const authService = new AuthService(userRepository, authRepository, hasher, tokenService);
 
 export default async function register(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
@@ -16,7 +20,7 @@ export default async function register(req: NextApiRequest, res: NextApiResponse
   try {
     const { name, email, password, passwordConfirmation } = req.body;
 
-    await registerService.register({ name, email, password, passwordConfirmation });
+    await authService.register({ name, email, password, passwordConfirmation });
 
     return res.status(201).json({ message: "User Created." });
   } catch (error) {

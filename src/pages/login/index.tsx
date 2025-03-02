@@ -36,6 +36,7 @@ export default function LoginPage() {
       const response = await fetch("/api/v1/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(user),
       });
 
@@ -54,9 +55,11 @@ export default function LoginPage() {
         setFormErrorMessage(error.message);
         setFormErrorAction(error.action);
         setIsLoading(false);
+        setIsDisabled(true);
         setTimeout(() => {
           setFormErrorMessage("");
           setFormErrorAction("");
+          setIsDisabled(false);
         }, 5000);
       }
     }

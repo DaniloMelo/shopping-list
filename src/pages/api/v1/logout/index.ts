@@ -1,4 +1,4 @@
-import { InternalServerError, LoginServiceError, TokenServiceError } from "@/lib/CustomErrors";
+import { InternalServerError, LogoutServiceError } from "@/lib/CustomErrors";
 import Hasher from "@/lib/Hasher";
 import TokenService from "@/lib/TokenService";
 import AuthRepository from "@/repository/AuthRepository";
@@ -12,29 +12,24 @@ const hasher = new Hasher();
 const tokenService = new TokenService();
 const authService = new AuthService(userRepository, authRepository, hasher, tokenService);
 
-export default async function login(req: NextApiRequest, res: NextApiResponse) {
+export default async function logout(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
-    return res.status(403).json({ message: "Method Not Allowed." });
+    return res.status(405).json({ message: "Internal Server Error." });
   }
 
   try {
-    const { email, password } = req.body;
+    const { email } = req.body;
 
-    const sessionToken = await authService.login(email, password);
+    await authService.logout(email);
 
-    const isProduction = process.env.NODE_ENV === "production";
     res.setHeader(
       "Set-Cookie",
-      `sessionToken=${sessionToken}; HttpOnly; ${isProduction ? "Secure;" : ""} SameSite=Strict; Path=/; Max-Age=86400`,
+      "sessionToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; SameSite=Strict",
     );
 
-    return res.status(200).json({ message: "Login Successfull." });
+    return res.status(200).json({ message: "Logout Successfull" });
   } catch (error) {
-    if (
-      error instanceof LoginServiceError ||
-      error instanceof TokenServiceError ||
-      error instanceof InternalServerError
-    ) {
+    if (error instanceof LogoutServiceError || error instanceof InternalServerError) {
       return res
         .status(error.statusCode)
         .json({ message: error.message, action: error.action, isPublicError: error.isPublicError });

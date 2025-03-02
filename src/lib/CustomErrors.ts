@@ -32,6 +32,20 @@ export class LoginServiceError extends CustomError {
   }
 }
 
+export class LogoutServiceError extends CustomError {
+  constructor(message: string, action: string, statusCode: number, isPublicError: boolean, cause?: unknown) {
+    super(message, action, statusCode, isPublicError, cause);
+    this.name = "LogoutServiceError";
+  }
+}
+
+export class UserServiceError extends CustomError {
+  constructor(message: string, action: string, statusCode: number, isPublicError: boolean, cause?: unknown) {
+    super(message, action, statusCode, isPublicError, cause);
+    this.name = "UserServiceError";
+  }
+}
+
 export class ResetPasswordServiceError extends CustomError {
   constructor(message: string, action: string, statusCode: number, isPublicError: boolean, cause?: unknown) {
     super(message, action, statusCode, isPublicError, cause);

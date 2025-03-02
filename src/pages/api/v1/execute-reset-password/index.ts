@@ -4,7 +4,7 @@ import Mailer from "@/lib/Mailer";
 import TokenService from "@/lib/TokenService";
 import ResetPasswordRepository from "@/repository/ResetPasswordRepository";
 import UserRepository from "@/repository/UserRepository";
-import ResetPasswordService from "@/services/auth/ResetPasswordService";
+import ResetPasswordService from "@/services/ResetPasswordService";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const userRepository = new UserRepository();

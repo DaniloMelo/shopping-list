@@ -57,9 +57,11 @@ export default function ExecuteResetPasswordPage() {
         setIsLoading(false);
         setFormErrorMessage(error.message);
         setFormErrorAction(error.action);
+        setIsDisabled(true);
         setTimeout(() => {
           setFormErrorMessage("");
           setFormErrorAction("");
+          setIsDisabled(false);
         }, 5000);
       }
     }
@@ -75,7 +77,7 @@ export default function ExecuteResetPasswordPage() {
         <form className="w-full flex flex-col gap-5" onSubmit={handleFormSubmit}>
           <AuthInput
             Icon={MdLock}
-            placeholder="Senha"
+            placeholder="Nova Senha"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}

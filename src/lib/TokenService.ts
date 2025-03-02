@@ -6,7 +6,7 @@ export interface ITokenService {
   verify(token: string): Promise<JWTPayload>;
 }
 
-export default class TokenService {
+export default class TokenService implements ITokenService {
   private secretKey: Uint8Array;
 
   constructor() {
