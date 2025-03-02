@@ -17,10 +17,13 @@ export default async function findSessionToken(req: NextApiRequest, res: NextApi
   }
 
   try {
-    const tokenFromReq = req.headers.cookie;
-    const token = tokenFromReq?.split("=")[1];
+    const token = req.cookies.sessionToken;
+    console.log("token nos cookies ===> ", token);
 
     const sessionTokenFromDatabase = await authService.findSessionToken(token!);
+    console.log("Token do db ==> ", sessionTokenFromDatabase);
+
+    console.log("Tokens são iguais??? ", token === sessionTokenFromDatabase?.token);
     res.status(200).json(sessionTokenFromDatabase);
   } catch (error) {
     console.error(error);
