@@ -14,8 +14,6 @@ export default async function findUser(req: NextApiRequest, res: NextApiResponse
   try {
     const { id } = req.query;
 
-    console.log(id);
-
     const user = await userService.findUserById(id as string);
 
     return res.status(200).json(user);

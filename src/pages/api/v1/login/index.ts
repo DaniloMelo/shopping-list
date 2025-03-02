@@ -22,9 +22,10 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
 
     const sessionToken = await authService.login(email, password);
 
+    const isProduction = process.env.NODE_ENV === "production";
     res.setHeader(
       "Set-Cookie",
-      `sessionToken=${sessionToken}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=86400`,
+      `sessionToken=${sessionToken}; HttpOnly; ${isProduction ? "Secure;" : ""} SameSite=Strict; Path=/; Max-Age=86400`,
     );
 
     return res.status(200).json({ message: "Login Successfull." });

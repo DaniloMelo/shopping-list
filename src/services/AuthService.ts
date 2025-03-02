@@ -73,8 +73,10 @@ export default class AuthService {
         throw new LoginServiceError("Credenciais inválidas.", "Verifique suas credenciais.", 400, true);
       }
 
+      await this.authRepository.deleteAllTokens(isUserExists.id);
+
       const sessionToken = await this.tokenService.generate({ userId: isUserExists.id });
-      const expirationTime = new Date(Date.now() + 60 * 60 * 1000);
+      const expirationTime = new Date(Date.now() + 1440 * 60 * 1000);
       await this.authRepository.createSessionToken({
         token: sessionToken,
         userId: isUserExists.id,
@@ -115,6 +117,19 @@ export default class AuthService {
         500,
         true,
       );
+    }
+  }
+
+  async findSessionToken(token: string) {
+    try {
+      const sessionToken = await this.authRepository.findToken(token);
+      if (!sessionToken) {
+        throw new Error("Session token not found");
+      }
+
+      return sessionToken;
+    } catch (error) {
+      console.error("Error during find session token service: ", error);
     }
   }
 }

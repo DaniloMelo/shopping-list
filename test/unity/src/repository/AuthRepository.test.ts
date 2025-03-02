@@ -5,7 +5,7 @@ jest.mock("../../../../src/lib/prisma", () => ({
   prisma: {
     sessionToken: {
       create: jest.fn(),
-      findUnique: jest.fn(),
+      findFirst: jest.fn(),
       deleteMany: jest.fn(),
     },
   },
@@ -43,11 +43,11 @@ describe("src/repository/AuthRepository.ts", () => {
         expiresAt: new Date(Date.now() + 60 * 60 * 1000),
       };
 
-      (prisma.sessionToken.findUnique as jest.Mock).mockResolvedValue(tokenObj);
+      (prisma.sessionToken.findFirst as jest.Mock).mockResolvedValue(tokenObj);
 
       await authRepository.findToken(tokenToFind);
 
-      expect(prisma.sessionToken.findUnique).toHaveBeenCalledWith({
+      expect(prisma.sessionToken.findFirst).toHaveBeenCalledWith({
         where: { token: tokenToFind },
       });
     });
@@ -69,11 +69,11 @@ describe("src/repository/AuthRepository.ts", () => {
     test("Should return null when trying to find a token that doesn't exist", async () => {
       const tokenToFind = "unexistent-token";
 
-      (prisma.sessionToken.findUnique as jest.Mock).mockResolvedValue(null);
+      (prisma.sessionToken.findFirst as jest.Mock).mockResolvedValue(null);
 
       await authRepository.findToken(tokenToFind);
 
-      expect(prisma.sessionToken.findUnique).toHaveBeenCalledWith({
+      expect(prisma.sessionToken.findFirst).toHaveBeenCalledWith({
         where: { token: tokenToFind },
       });
     });

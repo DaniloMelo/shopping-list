@@ -28,7 +28,7 @@ export default class AuthRepository implements IAuthRepository {
   }
 
   async findToken(token: string): Promise<ISessionToken | null> {
-    return await prisma.sessionToken.findUnique({
+    return await prisma.sessionToken.findFirst({
       where: { token },
     });
   }
