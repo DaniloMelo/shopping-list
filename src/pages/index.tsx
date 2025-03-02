@@ -50,6 +50,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     const tokenFromCookieResult = await fetch(`${baseUrl}/api/v1/find-session-token`, {
       headers: { cookie: cookies },
+      credentials: "include",
     });
     const tokenFromCookieData = await tokenFromCookieResult.json();
     if (new Date(tokenFromCookieData.expiresAt) < new Date()) {
