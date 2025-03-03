@@ -54,7 +54,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     });
     const tokenFromCookieData = await tokenFromCookieResult.json();
     console.log("Token do cookie no getServerSideProps: ", tokenFromCookieData); //
-    if (new Date(tokenFromCookieData.expiresAt) < new Date()) {
+    if (new Date() > new Date(tokenFromCookieData.expiresAt)) {
       return {
         redirect: { destination: "/login", permanent: false },
       };
