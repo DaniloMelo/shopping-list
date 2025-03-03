@@ -5,6 +5,7 @@ const tokenService = new TokenService();
 
 export async function middleware(req: NextRequest) {
   const sessionToken = req.cookies.get("sessionToken")?.value;
+  console.log("Token no middleware: ", sessionToken); //
   if (!sessionToken) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
@@ -16,7 +17,8 @@ export async function middleware(req: NextRequest) {
     response.headers.set("x-user-data", sessionToken);
 
     return response;
-  } catch {
+  } catch (error) {
+    console.error("Erro ao verificar token no middleware: ", error);
     return NextResponse.redirect(new URL("/login", req.url));
   }
 }

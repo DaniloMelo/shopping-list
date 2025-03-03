@@ -38,6 +38,7 @@ export default function Home(props: IHomeProps) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const sessionToken = context.req.headers["x-user-data"] as string;
+  console.log("Token no getServerSideProps: ", sessionToken);
   if (!sessionToken) {
     return {
       redirect: { destination: "/login", permanent: false },
@@ -45,7 +46,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   const cookies = context.req.headers.cookie || "";
-  console.log("COOKIE DO GSSP ==> ", cookies);
   const baseUrl = getBaseUrl();
 
   try {
@@ -53,6 +53,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       headers: { cookie: cookies },
     });
     const tokenFromCookieData = await tokenFromCookieResult.json();
+    console.log("Token do cookie no getServerSideProps: ", tokenFromCookieData); //
     if (new Date(tokenFromCookieData.expiresAt) < new Date()) {
       return {
         redirect: { destination: "/login", permanent: false },
@@ -67,7 +68,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
       props: { userId: fetchUserData.id, userEmail: fetchUserData.email },
     };
-  } catch {
+  } catch (error) {
+    console.error("Erro no getServerSideProps: ", error);
     return {
       redirect: { destination: "/login", permanent: false },
     };

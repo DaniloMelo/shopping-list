@@ -49,6 +49,7 @@ export default function LoginPage() {
       setUser({ email: "", password: "" });
       setIsDisabled(true);
       setIsLoading(false);
+      console.log("Redirecionando para a home..."); //
       setTimeout(() => router.push("/"), 2000);
     } catch (error) {
       if (error instanceof PublicError) {

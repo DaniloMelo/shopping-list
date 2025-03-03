@@ -23,10 +23,10 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
     const sessionToken = await authService.login(email, password);
 
     const isProduction = process.env.NODE_ENV === "production";
-    res.setHeader(
-      "Set-Cookie",
-      `sessionToken=${sessionToken}; HttpOnly; ${isProduction ? "Secure;" : ""} SameSite=Strict; Path=/; Max-Age=86400`,
-    );
+    const cookieString = `sessionToken=${sessionToken}; HttpOnly; ${isProduction ? "Secure;" : ""} SameSite=Strict; Path=/; Max-Age=86400`;
+    res.setHeader("Set-Cookie", cookieString);
+
+    console.log("Cookie setado: ", cookieString); //
 
     return res.status(200).json({ message: "Login Successfull." });
   } catch (error) {
