@@ -5,8 +5,9 @@ const tokenService = new TokenService();
 
 export async function middleware(req: NextRequest) {
   const sessionToken = req.cookies.get("sessionToken")?.value;
-  console.log("Token no middleware: ", sessionToken); //
+  console.log("Token no middleware: ", sessionToken);
   if (!sessionToken) {
+    console.log("Redirecionando para login: Token não encontrado");
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
