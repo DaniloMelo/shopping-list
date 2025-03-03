@@ -38,7 +38,7 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
       res,
       httpOnly: true,
       secure: isProduction ? true : false,
-      sameSite: "strict",
+      sameSite: "lax",
       path: "/",
       maxAge: 86400,
       domain: previewDomain ? currentDomain : process.env.COOKIE_DOMAIN,
