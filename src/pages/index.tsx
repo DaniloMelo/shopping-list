@@ -37,7 +37,8 @@ export default function Home(props: IHomeProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const sessionToken = context.req.headers["x-user-data"] as string;
+  // const sessionToken = context.req.headers["x-user-data"] as string;
+  const sessionToken = context.req.cookies.sessionToken;
   console.log("Token no getServerSideProps: ", sessionToken);
   if (!sessionToken) {
     return {
@@ -45,15 +46,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const cookies = context.req.headers.cookie || "";
+  // const cookies = context.req.headers.cookie || "";
   const baseUrl = getBaseUrl();
 
   try {
     const tokenFromCookieResult = await fetch(`${baseUrl}/api/v1/find-session-token`, {
-      headers: { cookie: cookies },
+      headers: { cookie: sessionToken },
     });
     const tokenFromCookieData = await tokenFromCookieResult.json();
-    console.log("Token do cookie no getServerSideProps: ", tokenFromCookieData); //
+    console.log("Token do cookie no getServerSideProps recurado do db ===> ", tokenFromCookieData); //
     if (new Date() > new Date(tokenFromCookieData.expiresAt)) {
       return {
         redirect: { destination: "/login", permanent: false },

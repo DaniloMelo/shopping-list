@@ -25,12 +25,19 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
 
     const isProduction = process.env.NODE_ENV === "production";
 
-    const currentDomain = req.headers.host;
-    const previewDomain = currentDomain?.includes("vercel.app");
+    // const currentDomain = req.headers.host;
+    // const previewDomain = currentDomain?.includes("vercel.app");
+
+    // console.log({
+    //   currentDomain,
+    //   previewDomain,
+    // });
 
     console.log({
-      currentDomain,
-      previewDomain,
+      vercel_url: process.env.VERCEL_URL,
+      next_piblic_vercel_url: process.env.NEXT_PUBLIC_VERCEL_URL,
+      vercel_project_production_url: process.env.VERCEL_PROJECT_PRODUCTION_URL,
+      node_env: process.env.NODE_ENV,
     });
 
     setCookie("sessionToken", sessionToken, {
@@ -38,10 +45,10 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
       res,
       httpOnly: true,
       secure: isProduction ? true : false,
-      sameSite: "lax",
+      sameSite: "strict",
       path: "/",
       maxAge: 86400,
-      domain: previewDomain ? currentDomain : process.env.COOKIE_DOMAIN,
+      domain: process.env.VERCEL_URL || process.env.COOKIE_DOMAIN,
     });
 
     // const cookieString = `sessionToken=${sessionToken}; HttpOnly; ${isProduction ? "Secure;" : ""} SameSite=Strict; Path=/; Max-Age=86400`;
