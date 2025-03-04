@@ -48,7 +48,7 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
       sameSite: "strict",
       path: "/",
       maxAge: 86400,
-      domain: ".vercel.app",
+      //domain: ".vercel.app",
     });
 
     // const cookieString = `sessionToken=${sessionToken}; HttpOnly; ${isProduction ? "Secure;" : ""} SameSite=Strict; Path=/; Max-Age=86400`;
