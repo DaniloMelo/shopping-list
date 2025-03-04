@@ -37,8 +37,13 @@ export default function Home(props: IHomeProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  // const sessionToken = context.req.headers["x-user-data"] as string;
+  console.log("Cookies no getServerSideProps:", context.req.headers.cookie);
+  console.log("Cookies parsed:", context.req.cookies);
+
   const sessionToken = context.req.cookies.sessionToken;
+  console.log("Token de sessão no getServerSideProps:", sessionToken);
+
+  // const sessionToken = context.req.headers["x-user-data"] as string;
   console.log("Token no getServerSideProps: ", sessionToken);
   if (!sessionToken) {
     return {

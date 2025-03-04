@@ -4,10 +4,40 @@ import TokenService from "./lib/TokenService";
 const tokenService = new TokenService();
 
 export async function middleware(req: NextRequest) {
-  const sessionToken = req.cookies.get("sessionToken")?.value;
-  console.log("Token no middleware: ", sessionToken);
+  // const sessionToken = req.cookies.get("sessionToken")?.value;
+  // console.log("Token no middleware: ", sessionToken);
+  // if (!sessionToken) {
+  //   console.log("Redirecionando para login: Token não encontrado");
+  //   return NextResponse.redirect(new URL("/login", req.url));
+  // }
+
+  // try {
+  //   await tokenService.verify(sessionToken);
+
+  //   const response = NextResponse.next();
+  //   response.headers.set("x-user-data", sessionToken);
+
+  //   return response;
+  // } catch (error) {
+  //   console.error("Erro ao verificar token no middleware: ", error);
+  //   return NextResponse.redirect(new URL("/login", req.url));
+  // }
+
+  // Log todos os cookies recebidos
+  console.log("Todos os cookies recebidos:", req.cookies);
+
+  // Log do cookie específico de sessão
+  const sessionTokenCookie = req.cookies.get("sessionToken");
+  console.log("Cookie sessionToken:", sessionTokenCookie);
+
+  const sessionToken = sessionTokenCookie?.value;
+  console.log("Valor do token no middleware:", sessionToken);
+
   if (!sessionToken) {
-    console.log("Redirecionando para login: Token não encontrado");
+    console.log("Detalhes do redirecionamento:", {
+      currentUrl: req.url,
+      loginUrl: new URL("/login", req.url).toString(),
+    });
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
@@ -19,7 +49,7 @@ export async function middleware(req: NextRequest) {
 
     return response;
   } catch (error) {
-    console.error("Erro ao verificar token no middleware: ", error);
+    console.error("Erro detalhado na verificação do token:", error);
     return NextResponse.redirect(new URL("/login", req.url));
   }
 }
