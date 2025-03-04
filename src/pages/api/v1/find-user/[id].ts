@@ -13,11 +13,15 @@ export default async function findUser(req: NextApiRequest, res: NextApiResponse
 
   try {
     const { id } = req.query;
+    if (!id) return res.status(400).json({ message: "User ID is required." });
 
     const user = await userService.findUserById(id as string);
+    if (!user) return res.status(404).json({ message: "User not found." });
 
     return res.status(200).json(user);
   } catch (error) {
+    console.error("Internal Error in find-user endpoint: ", error);
+
     if (error instanceof UserServiceError) {
       return res.status(error.statusCode).json(error);
     }
