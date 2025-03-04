@@ -18,11 +18,7 @@ export default async function findUser(req: NextApiRequest, res: NextApiResponse
     const user = await userService.findUserById(id as string);
     if (!user) return res.status(404).json({ message: "User not found." });
 
-    return res.status(200).json({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-    });
+    return res.status(200).json(user);
   } catch (error) {
     console.error("Internal Error in find-user endpoint: ", error);
 
