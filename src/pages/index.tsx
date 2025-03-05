@@ -126,8 +126,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     // Extração manual do token
     const cookieHeader = context.req.headers.cookie || "";
-    const sessionTokenMatch = cookieHeader.match(/sessionToken=([^;]+)/);
-    const sessionToken = sessionTokenMatch ? decodeURIComponent(sessionTokenMatch[1]) : undefined;
+    // const sessionTokenMatch = cookieHeader.match(/sessionToken=([^;]+)/);
+    // const sessionToken = sessionTokenMatch ? decodeURIComponent(sessionTokenMatch[1]) : undefined;
+
+    const sessionToken = context.req.cookies.sessionToken;
 
     console.log("Token de Sessão Extraído:", sessionToken);
 
