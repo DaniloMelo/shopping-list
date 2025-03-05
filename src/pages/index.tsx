@@ -171,7 +171,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     console.log("Status da Resposta de Busca de Usuário:", fetchUserResponse.status);
 
     if (!fetchUserResponse.ok) {
-      console.error("Erro ao buscar usuário:", await fetchUserResponse.text());
+      // console.error("Erro ao buscar usuário:", await fetchUserResponse.text());
+      const errorData = await fetchUserResponse.json();
+      console.error("Erro ao buscar usuário:", errorData);
       return {
         redirect: {
           destination: "/login",
