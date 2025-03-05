@@ -163,7 +163,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const baseUrl = getBaseUrl();
     const fetchUserResponse = await fetch(`${baseUrl}/api/v1/find-user/${payload.userId}`, {
       headers: {
-        // Cookie: cookieHeader,
+        Cookie: sessionToken,
         "Content-Type": "application/json",
       },
     });
