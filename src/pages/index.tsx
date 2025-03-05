@@ -129,6 +129,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     // const sessionTokenMatch = cookieHeader.match(/sessionToken=([^;]+)/);
     // const sessionToken = sessionTokenMatch ? decodeURIComponent(sessionTokenMatch[1]) : undefined;
 
+    const allCookies = context.req.headers.cookie || "";
     const sessionToken = context.req.cookies.sessionToken;
 
     console.log("Token de Sessão Extraído:", sessionToken);
@@ -163,7 +164,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const baseUrl = getBaseUrl();
     const fetchUserResponse = await fetch(`${baseUrl}/api/v1/find-user/${payload.userId}`, {
       headers: {
-        Cookie: `sessionToken=${sessionToken}`,
+        Cookie: allCookies,
         "Content-Type": "application/json",
       },
     });
@@ -171,9 +172,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     console.log("Status da Resposta de Busca de Usuário:", fetchUserResponse.status);
 
     if (!fetchUserResponse.ok) {
-      // console.error("Erro ao buscar usuário:", await fetchUserResponse.text());
-      const errorData = await fetchUserResponse.json();
-      console.error("Erro ao buscar usuário:", errorData);
+      //console.error("Erro ao buscar usuário:", await fetchUserResponse.text());
+      const responseData = await fetchUserResponse.json();
+      console.error("Erro ao buscar usuário: ", responseData);
       return {
         redirect: {
           destination: "/login",
