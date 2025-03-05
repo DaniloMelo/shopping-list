@@ -160,8 +160,26 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       };
     }
 
-    // Busca de usuário com tratamento de erro
     const baseUrl = getBaseUrl();
+
+    // Busca o token de sessão
+    const fetchSessionTokenResponse = await fetch(`${baseUrl}/api/v1/find-session-token`, {
+      headers: {
+        Cookie: allCookies,
+        "Content-Type": "application/json",
+      },
+    });
+    if (!fetchSessionTokenResponse.ok) {
+      console.error("Erro ao buscar o token de sessão: ", await fetchSessionTokenResponse.text());
+      return {
+        redirect: {
+          destination: "/login",
+          permanent: false,
+        },
+      };
+    }
+
+    // Busca de usuário com tratamento de erro
     const fetchUserResponse = await fetch(`${baseUrl}/api/v1/find-user/${payload.userId}`, {
       headers: {
         Cookie: allCookies,
