@@ -125,7 +125,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     console.log("Cookies Parsed:", context.req.cookies);
 
     // Extração manual do token
-    const cookieHeader = context.req.headers.cookie || "";
+    // const cookieHeader = context.req.headers.cookie || "";
     // const sessionTokenMatch = cookieHeader.match(/sessionToken=([^;]+)/);
     // const sessionToken = sessionTokenMatch ? decodeURIComponent(sessionTokenMatch[1]) : undefined;
 
@@ -163,7 +163,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const baseUrl = getBaseUrl();
     const fetchUserResponse = await fetch(`${baseUrl}/api/v1/find-user/${payload.userId}`, {
       headers: {
-        Cookie: cookieHeader,
+        // Cookie: cookieHeader,
         "Content-Type": "application/json",
       },
     });
