@@ -190,6 +190,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const fetchSessionTokenData = await fetchSessionTokenResponse.json();
     console.log("Token de sessão ===> ", fetchSessionTokenData);
 
+    if (new Date(fetchSessionTokenData.expiresAt) < new Date()) {
+      return {
+        redirect: {
+          destination: "/login",
+          permanent: false,
+        },
+      };
+    }
+
     console.log("Status da Resposta de Busca de Usuário:", fetchUserResponse.status);
 
     if (!fetchUserResponse.ok) {
