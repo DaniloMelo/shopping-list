@@ -23,14 +23,13 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
 
     const sessionToken = await authService.login(email, password);
 
-    const isProduction = process.env.NODE_ENV === "production";
-
     setCookie("sessionToken", sessionToken, {
       req,
       res,
       httpOnly: true,
-      secure: isProduction ? true : false,
+      secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
+      domain: ".vercel.app",
       path: "/",
       maxAge: 86400,
     });
