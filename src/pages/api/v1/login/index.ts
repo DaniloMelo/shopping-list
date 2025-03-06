@@ -28,7 +28,7 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
       res,
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      sameSite: "none",
       //domain: ".vercel.app",
       path: "/",
       maxAge: 86400,
