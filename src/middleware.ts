@@ -16,7 +16,8 @@ export async function middleware(req: NextRequest) {
     response.headers.set("x-user-data", sessionToken);
 
     return response;
-  } catch {
+  } catch (error) {
+    console.error("Error in middleware: ", error);
     return NextResponse.redirect(new URL("/login", req.url));
   }
 }

@@ -4,6 +4,7 @@ import TokenService from "@/lib/TokenService";
 import AuthRepository from "@/repository/AuthRepository";
 import UserRepository from "@/repository/UserRepository";
 import AuthService from "@/services/AuthService";
+import { deleteCookie } from "cookies-next";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const userRepository = new UserRepository();
@@ -22,10 +23,7 @@ export default async function logout(req: NextApiRequest, res: NextApiResponse) 
 
     await authService.logout(email);
 
-    res.setHeader(
-      "Set-Cookie",
-      "sessionToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; SameSite=Strict",
-    );
+    deleteCookie("sessionToken", { req, res, path: "/" });
 
     return res.status(200).json({ message: "Logout Successfull" });
   } catch (error) {

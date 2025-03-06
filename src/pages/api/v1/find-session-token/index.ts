@@ -3,6 +3,7 @@ import TokenService from "@/lib/TokenService";
 import AuthRepository from "@/repository/AuthRepository";
 import UserRepository from "@/repository/UserRepository";
 import AuthService from "@/services/AuthService";
+import { getCookie } from "cookies-next";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const userRepository = new UserRepository();
@@ -17,15 +18,21 @@ export default async function findSessionToken(req: NextApiRequest, res: NextApi
   }
 
   try {
-    const token = req.cookies.sessionToken;
-    console.log("token nos cookies ===> ", token);
+    const token = getCookie("sessionToken", { req, res }) as string;
+
+    if (!token) {
+      return res.status(401).json({ message: "Invalid session" });
+    }
 
     const sessionTokenFromDatabase = await authService.findSessionToken(token!);
-    console.log("Token do db ==> ", sessionTokenFromDatabase);
 
-    console.log("Tokens são iguais??? ", token === sessionTokenFromDatabase?.token);
+    if (!sessionTokenFromDatabase) {
+      return res.status(401).json({ message: "Invalid or expired session" });
+    }
+
     res.status(200).json(sessionTokenFromDatabase);
   } catch (error) {
-    console.error(error);
+    console.error("Error on find-session-token endpoint", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 }
