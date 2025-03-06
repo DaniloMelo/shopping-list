@@ -188,7 +188,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     });
 
     const fetchSessionTokenData = await fetchSessionTokenResponse.json();
-    console.log(fetchSessionTokenData);
+    console.log("Token de sessão ===> ", fetchSessionTokenData);
 
     console.log("Status da Resposta de Busca de Usuário:", fetchUserResponse.status);
 
