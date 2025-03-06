@@ -73,8 +73,6 @@ export default class AuthService {
         throw new LoginServiceError("Credenciais inválidas.", "Verifique suas credenciais.", 400, true);
       }
 
-      await this.authRepository.deleteAllTokens(isUserExists.id);
-
       const sessionToken = await this.tokenService.generate({ userId: isUserExists.id });
       const expirationTime = new Date(Date.now() + 1440 * 60 * 1000);
       await this.authRepository.createSessionToken({

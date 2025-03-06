@@ -37,37 +37,75 @@ export default function Home(props: IHomeProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const sessionToken = context.req.headers["x-user-data"] as string;
-  if (!sessionToken) {
-    return {
-      redirect: { destination: "/login", permanent: false },
-    };
-  }
-
-  const cookies = context.req.headers.cookie || "";
-  console.log("COOKIE DO GSSP ==> ", cookies);
-  const baseUrl = getBaseUrl();
-
   try {
-    const tokenFromCookieResult = await fetch(`${baseUrl}/api/v1/find-session-token`, {
-      headers: { cookie: cookies },
-    });
-    const tokenFromCookieData = await tokenFromCookieResult.json();
-    if (new Date(tokenFromCookieData.expiresAt) < new Date()) {
+    const allCookies = context.req.headers.cookie || "";
+    const sessionToken = context.req.cookies.sessionToken;
+
+    if (!sessionToken) {
       return {
         redirect: { destination: "/login", permanent: false },
       };
     }
 
-    const payload = await tokenService.verify(tokenFromCookieData.token || "");
+    let payload;
 
-    const fetchUserResponse = await fetch(`${baseUrl}/api/v1/find-user/${payload.userId}`);
+    try {
+      payload = await tokenService.verify(sessionToken);
+    } catch (verifyError) {
+      console.error("Token verification error: ", verifyError);
+      return {
+        redirect: { destination: "/login", permanent: false },
+      };
+    }
+
+    const baseUrl = getBaseUrl();
+
+    const fetchSessionTokenResponse = await fetch(`${baseUrl}/api/v1/find-session-token`, {
+      headers: {
+        Cookie: allCookies,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!fetchSessionTokenResponse.ok) {
+      console.error("Error during fetch session token: ", await fetchSessionTokenResponse.text());
+      return {
+        redirect: { destination: "/login", permanent: false },
+      };
+    }
+
+    const fetchSessionTokenData = await fetchSessionTokenResponse.json();
+
+    if (new Date(fetchSessionTokenData.expiresAt) < new Date()) {
+      return {
+        redirect: { destination: "/login", permanent: false },
+      };
+    }
+
+    const fetchUserResponse = await fetch(`${baseUrl}/api/v1/find-user/${payload.userId}`, {
+      headers: {
+        Cookie: allCookies,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!fetchUserResponse.ok) {
+      console.error("Error during fetch user: ", await fetchUserResponse.text());
+      return {
+        redirect: { destination: "/login", permanent: false },
+      };
+    }
+
     const fetchUserData = await fetchUserResponse.json();
 
     return {
-      props: { userId: fetchUserData.id, userEmail: fetchUserData.email },
+      props: {
+        userId: fetchUserData.id,
+        userEmail: fetchUserData.email,
+      },
     };
-  } catch {
+  } catch (error) {
+    console.error("Error on getServerSideProps home page: ", error);
     return {
       redirect: { destination: "/login", permanent: false },
     };
