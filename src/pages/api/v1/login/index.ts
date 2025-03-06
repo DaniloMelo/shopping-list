@@ -47,7 +47,7 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
       secure: isProduction ? true : false,
       sameSite: "strict",
       path: "/",
-      maxAge: 86400,
+      maxAge: 180, //86400
       //domain: ".vercel.app",
     });
 
