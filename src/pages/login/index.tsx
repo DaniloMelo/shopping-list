@@ -36,7 +36,6 @@ export default function LoginPage() {
       const response = await fetch("/api/v1/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        //credentials: "include",
         body: JSON.stringify(user),
       });
 
@@ -49,7 +48,6 @@ export default function LoginPage() {
       setUser({ email: "", password: "" });
       setIsDisabled(true);
       setIsLoading(false);
-      console.log("Redirecionando para a home..."); //
       setTimeout(() => router.push("/"), 2000);
     } catch (error) {
       if (error instanceof PublicError) {

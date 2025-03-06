@@ -35,8 +35,6 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
       maxAge: 86400,
     });
 
-    console.log("Cookie setado: ====>", res.getHeader("Set-Cookie"));
-
     return res.status(200).json({ message: "Login Successfull." });
   } catch (error) {
     if (

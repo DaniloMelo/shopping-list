@@ -19,26 +19,20 @@ export default async function findSessionToken(req: NextApiRequest, res: NextApi
 
   try {
     const token = getCookie("sessionToken", { req, res }) as string;
-    console.log("token nos cookies (usando getCookie) ===> ", token);
-
-    console.log("todos os cookies raw ===> ", req.cookies);
-    console.log("token nos cookies raw ===> ", req.cookies.sessionToken);
 
     if (!token) {
-      return res.status(401).json({ message: "Sessão inválida" });
+      return res.status(401).json({ message: "Invalid session" });
     }
 
     const sessionTokenFromDatabase = await authService.findSessionToken(token!);
-    console.log("Token do db ==> ", sessionTokenFromDatabase);
 
     if (!sessionTokenFromDatabase) {
-      return res.status(401).json({ message: "Sessão inválida ou expirada" });
+      return res.status(401).json({ message: "Invalid or expired session" });
     }
 
-    console.log("Tokens são iguais??? ", token === sessionTokenFromDatabase?.token);
     res.status(200).json(sessionTokenFromDatabase);
   } catch (error) {
-    console.error("Erro ao buscar token de sessão:", error);
-    res.status(500).json({ message: "Erro interno do servidor" });
+    console.error("Error on find-session-token endpoint", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 }
