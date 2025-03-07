@@ -3,5 +3,5 @@ export default function getBaseUrl() {
     return "http://localhost:3000";
   }
 
-  return `https://${process.env.VERCEL_URL}`;
+  return process.env.NEXT_PUBLIC_BASE_URL || `https://${process.env.VERCEL_URL}`;
 }
