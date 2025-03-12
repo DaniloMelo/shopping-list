@@ -21,7 +21,7 @@ model User {
   createdAt          DateTime             @default(now())
   SessionToken       SessionToken[]
   ResetPasswordToken ResetPasswordToken[]
-  ShoppingList       ShoppingList?
+  ShoppingList       ShoppingList[]
 }
 
 model SessionToken {
@@ -43,21 +43,12 @@ model ResetPasswordToken {
 }
 
 model ShoppingList {
-  id        String    @id @default(uuid())
-  userId    String    @unique
-  user      User      @relation(fields: [userId], references: [id])
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Product   Product[]
-}
-
-model Product {
-  id             String       @id @default(uuid())
-  name           String
-  price          Float
-  quantity       Int
-  shoppingListId String
-  shoppingList   ShoppingList @relation(fields: [shoppingListId], references: [id])
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  id              String   @id @default(uuid())
+  productName     String
+  productPrice    Float
+  productQuantity Int
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
