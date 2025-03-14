@@ -46,4 +46,21 @@ export default class ShoppingListService {
       );
     }
   }
+
+  async listProducts(userId: string) {
+    try {
+      const list = await this.shoppingListRepository.findAll(userId);
+
+      return list;
+    } catch (error) {
+      console.error("Error when trying to get product list: ", error);
+
+      throw new InternalServerError(
+        "Ocorreu um erro inesperado ao tentar buscar a lista de produtos.",
+        "Tente novamente mais tarde.",
+        500,
+        true,
+      );
+    }
+  }
 }
