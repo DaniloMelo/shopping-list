@@ -1,33 +1,41 @@
+import FilterProducts from "@/components/FilterProducts";
+import { ProductProps } from "@/components/Product";
+import ProductsList from "@/components/ProductsList";
+import filterProducts from "@/lib/filterProducts";
 import getBaseUrl from "@/lib/getBaseUrl";
 import TokenService from "@/lib/TokenService";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
 const tokenService = new TokenService();
 
 interface IHomeProps {
-  userId: string;
+  shoppingList: ProductProps[];
   userEmail: string;
 }
 
-export default function Home(props: IHomeProps) {
+export default function Home({ shoppingList, userEmail }: IHomeProps) {
+  const [search, setSearch] = useState("");
   const router = useRouter();
+
+  const filteredProducts = filterProducts(search, shoppingList);
 
   async function handleLogout() {
     await fetch("api/v1/logout", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: props.userEmail }),
+      body: JSON.stringify({ email: userEmail }),
     });
 
     router.push("/login");
   }
 
   return (
-    <main>
-      <h1>Home page</h1>
+    <main className="flex flex-col items-center">
+      <FilterProducts value={search} onSearchChange={setSearch} />
 
-      <p>{props.userId}</p>
+      <ProductsList shoppingList={filteredProducts} />
 
       <button onClick={handleLogout} className="border">
         Sair
@@ -98,9 +106,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const fetchUserData = await fetchUserResponse.json();
 
+    const fetchShoppingListResponse = await fetch(`${baseUrl}/api/v1/list-products/${payload.userId}`);
+    if (!fetchShoppingListResponse.ok) {
+      console.error("Error during fetch shoppingList");
+    }
+
+    const fetchShoppingListData = await fetchShoppingListResponse.json();
+
     return {
       props: {
-        userId: fetchUserData.id,
+        shoppingList: fetchShoppingListData,
         userEmail: fetchUserData.email,
       },
     };
