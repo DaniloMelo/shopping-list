@@ -106,7 +106,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const fetchUserData = await fetchUserResponse.json();
 
-    const fetchShoppingListResponse = await fetch(`${baseUrl}/api/v1/list-products/${payload.userId}`);
+    const fetchShoppingListResponse = await fetch(`${baseUrl}/api/v1/list-products/${payload.userId}`, {
+      headers: {
+        Cookie: allCookies,
+        "Content-Type": "application/json",
+      },
+    });
+
     if (!fetchShoppingListResponse.ok) {
       console.error("Error during fetch shoppingList");
     }
