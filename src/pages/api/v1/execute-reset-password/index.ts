@@ -1,4 +1,4 @@
-import { InternalServerError, ResetPasswordServiceError, UserValidationsError } from "@/lib/CustomErrors";
+import { InternalServerError, ModelValidationError, ResetPasswordServiceError } from "@/lib/CustomErrors";
 import Hasher from "@/lib/Hasher";
 import Mailer from "@/lib/Mailer";
 import TokenService from "@/lib/TokenService";
@@ -35,7 +35,7 @@ export default async function ExecuteResetPassword(req: NextApiRequest, res: Nex
     if (
       error instanceof ResetPasswordServiceError ||
       error instanceof InternalServerError ||
-      error instanceof UserValidationsError
+      error instanceof ModelValidationError
     ) {
       return res
         .status(error.statusCode)

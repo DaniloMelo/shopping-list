@@ -1,7 +1,7 @@
 import UserRepository from "@/repository/UserRepository";
 import Hasher from "@/lib/Hasher";
 import { NextApiRequest, NextApiResponse } from "next";
-import { InternalServerError, RegisterServiceError, UserValidationsError } from "@/lib/CustomErrors";
+import { InternalServerError, ModelValidationError, RegisterServiceError } from "@/lib/CustomErrors";
 import AuthService from "@/services/AuthService";
 import AuthRepository from "@/repository/AuthRepository";
 import TokenService from "@/lib/TokenService";
@@ -25,7 +25,7 @@ export default async function register(req: NextApiRequest, res: NextApiResponse
     return res.status(201).json({ message: "User Created." });
   } catch (error) {
     if (
-      error instanceof UserValidationsError ||
+      error instanceof ModelValidationError ||
       error instanceof RegisterServiceError ||
       error instanceof InternalServerError
     ) {

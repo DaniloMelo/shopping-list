@@ -2,12 +2,15 @@ import {
   InternalServerError,
   LoginServiceError,
   LogoutServiceError,
+  ModelValidationError,
   RegisterServiceError,
   TokenServiceError,
-  UserValidationsError,
 } from "@/lib/CustomErrors";
 import { IHasher } from "@/lib/Hasher";
 import { ITokenService } from "@/lib/TokenService";
+import Email from "@/models/Email";
+import Name from "@/models/Name";
+import Password from "@/models/Password";
 import User from "@/models/User";
 import { IAuthRepository } from "@/repository/AuthRepository";
 import { IUserRepository } from "@/repository/UserRepository";
@@ -29,7 +32,10 @@ export default class AuthService {
 
   async register({ name, email, password, passwordConfirmation }: INewUserData): Promise<void> {
     try {
-      const user = new User(name, email, password, passwordConfirmation);
+      const userName = new Name(name);
+      const userEmail = new Email(email);
+      const userPassword = new Password(password, passwordConfirmation);
+      const user = new User(userName, userEmail, userPassword);
       const newUser = user.getUser()!;
 
       const isUserExists = await this.userRepository.findUserByEmail(email);
@@ -46,7 +52,7 @@ export default class AuthService {
 
       await this.userRepository.createUser(userWithHashedPassword);
     } catch (error) {
-      if (error instanceof UserValidationsError || error instanceof RegisterServiceError) {
+      if (error instanceof ModelValidationError || error instanceof RegisterServiceError) {
         throw error;
       }
 
