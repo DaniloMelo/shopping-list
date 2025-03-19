@@ -1,5 +1,8 @@
-import { InternalServerError, ProductValidationsError } from "@/lib/CustomErrors";
+import { InternalServerError, ModelValidationError } from "@/lib/CustomErrors";
+import Name from "@/models/Name";
+import Price from "@/models/Price";
 import Product from "@/models/Product";
+import Quantity from "@/models/Quantity";
 import { IShoppingListRepository } from "@/repository/ShoppingListRepository";
 import { IUserRepository } from "@/repository/UserRepository";
 
@@ -18,7 +21,10 @@ export default class ShoppingListService {
 
   async createProduct({ productName, productPrice, productQuantity, userId }: INewProduct) {
     try {
-      const productModel = new Product(productName, productPrice, productQuantity);
+      const productNameObj = new Name(productName);
+      const productPriceObj = new Price(productPrice);
+      const productQuantityObj = new Quantity(productQuantity);
+      const productModel = new Product(productNameObj, productPriceObj, productQuantityObj);
       const product = productModel.getProduct()!;
 
       const user = await this.userRepository.findUserById(userId);
@@ -32,7 +38,7 @@ export default class ShoppingListService {
         userId: newProduct.userId!,
       });
     } catch (error) {
-      if (error instanceof ProductValidationsError) {
+      if (error instanceof ModelValidationError) {
         throw error;
       }
 

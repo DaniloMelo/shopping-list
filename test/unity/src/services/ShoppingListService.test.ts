@@ -50,7 +50,7 @@ describe("src/services/ShoppingListService.ts", () => {
     });
 
     describe("Failure Cases", () => {
-      test("Should throw ProductValidationError if product name is invalid", async () => {
+      test("Should throw ModelValidationError if product name is invalid", async () => {
         const newProduct = {
           productName: " ",
           productPrice: 199.99,
@@ -58,10 +58,10 @@ describe("src/services/ShoppingListService.ts", () => {
           userId: "123456",
         };
 
-        await expect(shoppingListService.createProduct(newProduct)).rejects.toThrow("Nome do produto inválido.");
+        await expect(shoppingListService.createProduct(newProduct)).rejects.toThrow("Nome inválido.");
       });
 
-      test("Should throw ProductValidationError if product price is invalid", async () => {
+      test("Should throw ModelValidationError if product price is invalid", async () => {
         const newProduct = {
           productName: "Mouse",
           productPrice: 0,
@@ -69,10 +69,10 @@ describe("src/services/ShoppingListService.ts", () => {
           userId: "123456",
         };
 
-        await expect(shoppingListService.createProduct(newProduct)).rejects.toThrow("Preço do produto inválido.");
+        await expect(shoppingListService.createProduct(newProduct)).rejects.toThrow("Preço inválido.");
       });
 
-      test("Should throw ProductValidationError if product quantity is invalid", async () => {
+      test("Should throw ModelValidationError if product quantity is invalid", async () => {
         const newProduct = {
           productName: "Mouse",
           productPrice: 199.99,
@@ -80,7 +80,7 @@ describe("src/services/ShoppingListService.ts", () => {
           userId: "123456",
         };
 
-        await expect(shoppingListService.createProduct(newProduct)).rejects.toThrow("Quantidade do produto inválida.");
+        await expect(shoppingListService.createProduct(newProduct)).rejects.toThrow("Quantidade inválida.");
       });
 
       test("Should throw InternalServerError if a unexpected error occurs", async () => {
