@@ -1,9 +1,9 @@
-import { InternalServerError, ResetPasswordServiceError, UserValidationsError } from "@/lib/CustomErrors";
+import { InternalServerError, ModelValidationError, ResetPasswordServiceError } from "@/lib/CustomErrors";
 import getBaseUrl from "@/lib/getBaseUrl";
 import { IHasher } from "@/lib/Hasher";
 import { IMailer } from "@/lib/Mailer";
 import { ITokenService } from "@/lib/TokenService";
-import User from "@/models/User";
+import Password from "@/models/Password";
 import { IResetPasswordRepository } from "@/repository/ResetPasswordRepository";
 import { IUserRepository } from "@/repository/UserRepository";
 
@@ -101,8 +101,8 @@ export default class ResetPasswordService {
         );
       }
 
-      const userModel = new User(isUserExists.name, isUserExists.email, password, passwordConfirmation);
-      const newPassword = userModel.getPassword();
+      const passwordModel = new Password(password, passwordConfirmation);
+      const newPassword = passwordModel.getValue();
 
       const newPasswordHashed = await this.hasher.encrypt(newPassword!);
 
@@ -112,7 +112,7 @@ export default class ResetPasswordService {
     } catch (error) {
       console.error("Error during reset password execution: ", error);
 
-      if (error instanceof UserValidationsError || error instanceof ResetPasswordServiceError) {
+      if (error instanceof ModelValidationError || error instanceof ResetPasswordServiceError) {
         throw error;
       }
 

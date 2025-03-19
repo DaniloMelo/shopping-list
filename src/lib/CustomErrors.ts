@@ -11,17 +11,10 @@ class CustomError extends Error {
   }
 }
 
-export class UserValidationsError extends CustomError {
+export class ModelValidationError extends CustomError {
   constructor(message: string, action: string, statusCode: number, isPublicError: boolean, cause?: unknown) {
     super(message, action, statusCode, isPublicError, cause);
-    this.name = "UserValidationsError2";
-  }
-}
-
-export class ProductValidationsError extends CustomError {
-  constructor(message: string, action: string, statusCode: number, isPublicError: boolean, cause?: unknown) {
-    super(message, action, statusCode, isPublicError, cause);
-    this.name = "ProductValidationsError";
+    this.name = "ModelValidationError";
   }
 }
 

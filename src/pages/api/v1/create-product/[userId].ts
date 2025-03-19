@@ -1,4 +1,4 @@
-import { InternalServerError, ProductValidationsError } from "@/lib/CustomErrors";
+import { InternalServerError, ModelValidationError } from "@/lib/CustomErrors";
 import ShoppingListRepository from "@/repository/ShoppingListRepository";
 import UserRepository from "@/repository/UserRepository";
 import ShoppingListService from "@/services/ShoppingListService";
@@ -21,7 +21,7 @@ export default async function createProduct(req: NextApiRequest, res: NextApiRes
 
     return res.status(201).json({ message: "Product created." });
   } catch (error) {
-    if (error instanceof ProductValidationsError || error instanceof InternalServerError) {
+    if (error instanceof ModelValidationError || error instanceof InternalServerError) {
       return res
         .status(error.statusCode)
         .json({ message: error.message, action: error.action, isPublicError: error.isPublicError });

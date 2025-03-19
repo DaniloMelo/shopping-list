@@ -1,41 +1,60 @@
+import Email from "@/models/Email";
+import Name from "@/models/Name";
+import Password from "@/models/Password";
 import User from "@/models/User";
+
+class MockNameClass extends Name {
+  constructor() {
+    super("John Doe");
+  }
+
+  getValue() {
+    return "John Doe";
+  }
+}
+
+class MockEmailClass extends Email {
+  constructor() {
+    super("john@email.com");
+  }
+
+  getValue() {
+    return "john@email.com";
+  }
+}
+
+class MockPasswordClass extends Password {
+  constructor() {
+    super("P4ssword!23", "P4ssword!23");
+  }
+
+  getValue() {
+    return "P4ssword!23";
+  }
+}
 
 describe("src/models/User.ts", () => {
   describe("Successful Cases", () => {
     test("Shold return a new user object", () => {
-      const user = new User("John Doe", "john@email.com", "P4ssword!23", "P4ssword!23");
+      const mockNameObj = new MockNameClass();
+      const mockEmailObj = new MockEmailClass();
+      const mockPasswordObj = new MockPasswordClass();
 
-      expect(user.getUser()).toEqual({
+      const user = new User(mockNameObj, mockEmailObj, mockPasswordObj);
+
+      const newUSer = user.getUser();
+
+      expect(newUSer).toEqual({
         name: "John Doe",
         email: "john@email.com",
         password: "P4ssword!23",
       });
-    });
-  });
 
-  describe("Failure Cases", () => {
-    test("Shold return an error when name is not valid", () => {
-      const user = new User(" ", "john@email.com", "P4ssword!23", "P4ssword!23");
-
-      expect(() => user.getUser()).toThrow("Nome inválido.");
-    });
-
-    test("Should return an error when email is not valid", () => {
-      const user = new User("John Doe", "invalid-email", "P4ssword!23", "P4ssword!23");
-
-      expect(() => user.getUser()).toThrow("Email inválido.");
-    });
-
-    test("Shold return an error when password is not valid", () => {
-      const user = new User("John Doe", "john@email.com", "invalid-password", "invalid-password");
-
-      expect(() => user.getUser()).toThrow("Formato de senha inválida.");
-    });
-
-    test("Should return an error when passwords not match", () => {
-      const user = new User("John Doe", "john@email.com", "P4ssword!23", "P4ssword!24");
-
-      expect(() => user.getUser()).toThrow("As senhas não são iguais.");
+      // expect(user.getUser()).toEqual({
+      //   name: "John Doe",
+      //   email: "john@email.com",
+      //   password: "P4ssword!23",
+      // });
     });
   });
 });

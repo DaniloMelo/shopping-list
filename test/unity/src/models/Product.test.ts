@@ -1,35 +1,53 @@
+import Name from "@/models/Name";
+import Price from "@/models/Price";
 import Product from "@/models/Product";
+import Quantity from "@/models/Quantity";
+
+class MockNameClass extends Name {
+  constructor() {
+    super("Mouse");
+  }
+
+  getValue() {
+    return "Mouse";
+  }
+}
+
+class MockPriceClass extends Price {
+  constructor() {
+    super(199.99);
+  }
+
+  getValue() {
+    return 199.99;
+  }
+}
+
+class MockQuantityClass extends Quantity {
+  constructor() {
+    super(1);
+  }
+
+  getValue() {
+    return 1;
+  }
+}
 
 describe("src/models/Product.ts", () => {
   describe("Successfull Cases", () => {
     test("Should create a new product", () => {
-      const product = new Product("Mouse", 199.99, 1);
+      const mockNameObj = new MockNameClass();
+      const mockPriceObj = new MockPriceClass();
+      const mockQuantityObj = new MockQuantityClass();
 
-      expect(product.getProduct()).toEqual({
+      const product = new Product(mockNameObj, mockPriceObj, mockQuantityObj);
+      const newProduct = product.getProduct();
+
+      expect(newProduct).toEqual({
         name: "Mouse",
         price: 199.99,
         quantity: 1,
       });
-    });
-  });
-
-  describe("Failure Cases", () => {
-    test("Should throw an error if name is not valid", () => {
-      const product = new Product(" ", 199.99, 1);
-
-      expect(() => product.getProduct()).toThrow("Nome do produto inválido.");
-    });
-
-    test("Should throw an error if price is not valid", () => {
-      const product = new Product("Mouse", 0, 1);
-
-      expect(() => product.getProduct()).toThrow("Preço do produto inválido.");
-    });
-
-    test("Should throw an error if quantity is not valid", () => {
-      const product = new Product("Mouse", 199.99, 0);
-
-      expect(() => product.getProduct()).toThrow("Quantidade do produto inválida.");
     });
   });
 });
