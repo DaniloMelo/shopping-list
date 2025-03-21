@@ -22,7 +22,7 @@ export default function Home({ shoppingList, userEmail }: IHomeProps) {
   const filteredProducts = filterProducts(search, shoppingList);
 
   async function handleLogout() {
-    await fetch("api/v1/logout", {
+    await fetch("api/v1/auth/logout", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: userEmail }),
@@ -68,7 +68,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const baseUrl = getBaseUrl();
 
-    const fetchSessionTokenResponse = await fetch(`${baseUrl}/api/v1/find-session-token`, {
+    const fetchSessionTokenResponse = await fetch(`${baseUrl}/api/v1/auth/find-session-token`, {
       headers: {
         Cookie: allCookies,
         "Content-Type": "application/json",
@@ -90,7 +90,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       };
     }
 
-    const fetchUserResponse = await fetch(`${baseUrl}/api/v1/find-user/${payload.userId}`, {
+    const fetchUserResponse = await fetch(`${baseUrl}/api/v1/auth/find-user/${payload.userId}`, {
       headers: {
         Cookie: allCookies,
         "Content-Type": "application/json",
