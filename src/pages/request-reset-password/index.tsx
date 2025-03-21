@@ -32,7 +32,7 @@ export default function RequestResetPasswordPage() {
     setFormSucces("");
 
     try {
-      const response = await fetch("api/v1/request-reset-password", {
+      const response = await fetch("api/v1/auth/request-reset-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
