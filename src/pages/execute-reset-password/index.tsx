@@ -35,7 +35,7 @@ export default function ExecuteResetPasswordPage() {
     try {
       const { token, email } = router.query;
 
-      const response = await fetch("api/v1/execute-reset-password", {
+      const response = await fetch("api/v1/auth/execute-reset-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, token, password, passwordConfirmation }),
