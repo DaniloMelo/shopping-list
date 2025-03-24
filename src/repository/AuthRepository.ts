@@ -17,7 +17,7 @@ export interface ITokenObj {
 export interface IAuthRepository {
   createSessionToken(tokenObj: ITokenObj): Promise<void>;
   findToken(token: string): Promise<ISessionToken | null>;
-  deleteAllTokens(userId: string): Promise<void>;
+  deleteAllSessionTokens(userId: string): Promise<void>;
 }
 
 export default class AuthRepository implements IAuthRepository {
@@ -33,7 +33,7 @@ export default class AuthRepository implements IAuthRepository {
     });
   }
 
-  async deleteAllTokens(userId: string): Promise<void> {
+  async deleteAllSessionTokens(userId: string): Promise<void> {
     await prisma.sessionToken.deleteMany({
       where: { userId },
     });

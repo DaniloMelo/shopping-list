@@ -17,6 +17,7 @@ describe("src/repository/AuthRepository.ts", () => {
   beforeEach(() => {
     authRepository = new AuthRepository();
   });
+
   describe("Successfull Cases", () => {
     test("Should login user and create a session token", async () => {
       const newTokenObj: ITokenObj = {
@@ -57,7 +58,7 @@ describe("src/repository/AuthRepository.ts", () => {
 
       (prisma.sessionToken.deleteMany as jest.Mock).mockResolvedValue(null);
 
-      await authRepository.deleteAllTokens(userId);
+      await authRepository.deleteAllSessionTokens(userId);
 
       expect(prisma.sessionToken.deleteMany).toHaveBeenCalledWith({
         where: { userId },
@@ -83,7 +84,7 @@ describe("src/repository/AuthRepository.ts", () => {
 
       (prisma.sessionToken.deleteMany as jest.Mock).mockResolvedValue(null);
 
-      await authRepository.deleteAllTokens(userId);
+      await authRepository.deleteAllSessionTokens(userId);
 
       expect(prisma.sessionToken.deleteMany).toHaveBeenCalledWith({
         where: { userId },
