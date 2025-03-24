@@ -15,7 +15,7 @@ const mockUserRepository: jest.Mocked<IUserRepository> = {
 const mockAuthRepository: jest.Mocked<IAuthRepository> = {
   createSessionToken: jest.fn(),
   findToken: jest.fn(),
-  deleteAllTokens: jest.fn(),
+  deleteAllSessionTokens: jest.fn(),
 };
 
 const mockHasher: jest.Mocked<IHasher> = {
@@ -95,11 +95,13 @@ describe("src/service/AuthService.ts", () => {
         mockUserRepository.findUserByEmail.mockResolvedValue(userData);
         mockHasher.decrypt.mockResolvedValue(true);
         mockTokenService.generate.mockResolvedValue(sessionToken);
+        mockAuthRepository.deleteAllSessionTokens(userData.id);
 
         const result = await authService.login(userData.email, userData.password);
         expect(result).toBe(sessionToken);
       });
     });
+
     describe("Failure Cases", () => {
       test("Should throw an error if user don't exist", async () => {
         mockUserRepository.findUserByEmail.mockResolvedValue(null);

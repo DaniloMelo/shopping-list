@@ -79,6 +79,8 @@ export default class AuthService {
         throw new LoginServiceError("Credenciais inválidas.", "Verifique suas credenciais.", 400, true);
       }
 
+      await this.authRepository.deleteAllSessionTokens(isUserExists.id);
+
       const sessionToken = await this.tokenService.generate({ userId: isUserExists.id });
       const expirationTime = new Date(Date.now() + 1440 * 60 * 1000);
       await this.authRepository.createSessionToken({
@@ -111,7 +113,7 @@ export default class AuthService {
         throw new LogoutServiceError("User not found.", "Check email or id provided.", 404, false);
       }
 
-      await this.authRepository.deleteAllTokens(user.id);
+      await this.authRepository.deleteAllSessionTokens(user.id);
     } catch (error) {
       console.error("Error during user logout: ", error);
 
