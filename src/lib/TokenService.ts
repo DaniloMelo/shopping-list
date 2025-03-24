@@ -26,7 +26,7 @@ export default class TokenService implements ITokenService {
     return new SignJWT(payload as JWTPayload)
       .setProtectedHeader({ alg: "HS256" })
       .setIssuedAt()
-      .setExpirationTime("2m") //.setExpirationTime("24h")
+      .setExpirationTime("24h")
       .sign(this.secretKey);
   }
 

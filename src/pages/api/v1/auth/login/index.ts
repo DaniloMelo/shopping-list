@@ -30,7 +30,7 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
       path: "/",
-      maxAge: 120, // maxAge: 86400,
+      maxAge: 86400,
     });
 
     return res.status(200).json({ message: "Login Successfull." });

@@ -82,7 +82,7 @@ export default class AuthService {
       await this.authRepository.deleteAllSessionTokens(isUserExists.id);
 
       const sessionToken = await this.tokenService.generate({ userId: isUserExists.id });
-      const expirationTime = new Date(Date.now() + 2 * 60 * 1000); // new Date(Date.now() + 1440 * 60 * 1000);
+      const expirationTime = new Date(Date.now() + 1440 * 60 * 1000);
       await this.authRepository.createSessionToken({
         token: sessionToken,
         userId: isUserExists.id,
