@@ -6,7 +6,7 @@ export interface ProductsListProps {
 
 export default function ProductsList({ shoppingList }: ProductsListProps) {
   return (
-    <div className="px-4 pt-4 w-full max-w-[1000px]">
+    <div className="flex flex-col w-full gap-y-4 py-10">
       {shoppingList.map((p) => {
         return (
           <Product
