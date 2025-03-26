@@ -3,7 +3,6 @@ import Modal from "@/components/Modal";
 import OpenModalButton from "@/components/OpenModalButton";
 import { ProductProps } from "@/components/Product";
 import ProductsList from "@/components/ProductsList";
-import filterProducts from "@/lib/filterProducts";
 import getBaseUrl from "@/lib/getBaseUrl";
 import TokenService from "@/lib/TokenService";
 import { GetServerSideProps } from "next";
@@ -23,8 +22,6 @@ export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
   const [modalOpen, setModalOpen] = useState(false);
   const router = useRouter();
 
-  const filteredProducts = filterProducts(search, shoppingList);
-
   async function handleLogout() {
     await fetch("api/v1/auth/logout", {
       method: "POST",
@@ -41,7 +38,7 @@ export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
 
       <OpenModalButton click={() => setModalOpen(true)} desktopType />
 
-      <ProductsList initialProducts={filteredProducts} userId={userId} />
+      <ProductsList initialProducts={shoppingList} userId={userId} search={search} />
 
       <OpenModalButton click={() => setModalOpen(true)} />
 

@@ -1,3 +1,4 @@
+import filterProducts from "@/lib/filterProducts";
 import LoadingSpinner from "./LoadingSpinner";
 import Product, { ProductProps } from "./Product";
 import useSWR from "swr";
@@ -5,6 +6,7 @@ import useSWR from "swr";
 export interface ProductsListProps {
   initialProducts: ProductProps[];
   userId: string;
+  search: string;
 }
 
 async function fetcher(url: string) {
@@ -13,7 +15,7 @@ async function fetcher(url: string) {
   return products;
 }
 
-export default function ProductsList({ initialProducts, userId }: ProductsListProps) {
+export default function ProductsList({ initialProducts, userId, search }: ProductsListProps) {
   const { data, error } = useSWR(`/api/v1/product/list-products/${userId}`, fetcher, {
     fallback: initialProducts,
   });
@@ -34,9 +36,11 @@ export default function ProductsList({ initialProducts, userId }: ProductsListPr
     );
   }
 
+  const filteredData = filterProducts(search, data);
+
   return (
     <div className="flex flex-col w-full gap-y-4 py-10">
-      {data.map((p: ProductProps) => {
+      {filteredData.map((p: ProductProps) => {
         return (
           <Product
             key={p.id}
