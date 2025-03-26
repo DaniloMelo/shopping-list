@@ -3,6 +3,7 @@ import ModalInput from "./ModalInput";
 import { useState } from "react";
 import { PublicError } from "@/lib/CustomErrors";
 import { CgSpinner } from "react-icons/cg";
+import { useSWRConfig } from "swr";
 
 interface ModalProps {
   isOpen: boolean;
@@ -26,7 +27,10 @@ export default function Modal({ isOpen, userId, setModalOpen }: ModalProps) {
     productQuantity: "",
   });
 
-  async function handleSubmit() {
+  const { mutate } = useSWRConfig();
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
     setErrorMessage("");
     setErrorAction("");
     setIsLoading(true);
@@ -48,10 +52,16 @@ export default function Modal({ isOpen, userId, setModalOpen }: ModalProps) {
           throw new PublicError(errorData.message, errorData.action);
         }
       }
+
+      mutate(`/api/v1/product/list-products/${userId}`);
+      setModalOpen(false);
+      setIsLoading(false);
+      setProduct({ productName: "", productPrice: "", productQuantity: "" });
     } catch (error) {
       if (error instanceof PublicError) {
         setErrorMessage(error.message);
         setErrorAction(error.action);
+        setIsLoading(false);
         setTimeout(() => {
           setErrorMessage("");
           setErrorAction("");
@@ -71,7 +81,7 @@ export default function Modal({ isOpen, userId, setModalOpen }: ModalProps) {
 
         <h2 className="text-lg mb-6 text-zinc-300">Adicione um novo produto</h2>
 
-        <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
+        <form className="flex flex-col gap-5" onSubmit={(e) => handleSubmit(e)}>
           <ModalInput
             type="text"
             placeholder="Nome"

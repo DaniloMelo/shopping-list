@@ -41,7 +41,7 @@ export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
 
       <OpenModalButton click={() => setModalOpen(true)} desktopType />
 
-      <ProductsList shoppingList={filteredProducts} />
+      <ProductsList initialProducts={filteredProducts} userId={userId} />
 
       <OpenModalButton click={() => setModalOpen(true)} />
 
