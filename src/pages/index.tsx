@@ -33,7 +33,7 @@ export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
   }
 
   return (
-    <main className={`flex flex-col items-center overflow-y-hidden`}>
+    <main className={`flex flex-col items-center`}>
       <FilterProducts value={search} onSearchChange={setSearch} />
 
       <OpenModalButton click={() => setModalOpen(true)} desktopType />
