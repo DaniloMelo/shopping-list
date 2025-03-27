@@ -1,7 +1,8 @@
 import FilterProducts from "@/components/FilterProducts";
+import Modal from "@/components/Modal";
+import OpenModalButton from "@/components/OpenModalButton";
 import { ProductProps } from "@/components/Product";
 import ProductsList from "@/components/ProductsList";
-import filterProducts from "@/lib/filterProducts";
 import getBaseUrl from "@/lib/getBaseUrl";
 import TokenService from "@/lib/TokenService";
 import { GetServerSideProps } from "next";
@@ -13,13 +14,13 @@ const tokenService = new TokenService();
 interface IHomeProps {
   shoppingList: ProductProps[];
   userEmail: string;
+  userId: string;
 }
 
-export default function Home({ shoppingList, userEmail }: IHomeProps) {
+export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
   const [search, setSearch] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
   const router = useRouter();
-
-  const filteredProducts = filterProducts(search, shoppingList);
 
   async function handleLogout() {
     await fetch("api/v1/auth/logout", {
@@ -32,10 +33,16 @@ export default function Home({ shoppingList, userEmail }: IHomeProps) {
   }
 
   return (
-    <main className="flex flex-col items-center">
+    <main className={`flex flex-col items-center`}>
       <FilterProducts value={search} onSearchChange={setSearch} />
 
-      <ProductsList shoppingList={filteredProducts} />
+      <OpenModalButton click={() => setModalOpen(true)} desktopType />
+
+      <ProductsList initialProducts={shoppingList} userId={userId} search={search} />
+
+      <OpenModalButton click={() => setModalOpen(true)} />
+
+      <Modal isOpen={modalOpen} setModalOpen={setModalOpen} userId={userId} />
 
       <button onClick={handleLogout} className="border">
         Sair
@@ -123,6 +130,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       props: {
         shoppingList: fetchShoppingListData,
         userEmail: fetchUserData.email,
+        userId: fetchUserData.id,
       },
     };
   } catch (error) {

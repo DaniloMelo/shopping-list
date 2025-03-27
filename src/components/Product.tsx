@@ -13,7 +13,7 @@ export default function Product({ productName, productPrice, productQuantity }: 
   const [isDetailsHidden, setIsDetailsHidden] = useState(false);
 
   return (
-    <div className="mb-4 p-3 bg-zinc-800 text-zinc-300 rounded-md">
+    <div className="p-3 bg-zinc-800 text-zinc-300 rounded-md">
       <div className="flex justify-between cursor-pointer" onClick={() => setIsDetailsHidden(!isDetailsHidden)}>
         <p className="font-semibold">{productName}</p>
         <div className="ml-4 text-xl items-start">
