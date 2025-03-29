@@ -1,3 +1,4 @@
+import { InternalServerError } from "@/lib/CustomErrors";
 import { IShoppingListRepository } from "@/repository/ShoppingListRepository";
 import { IUserRepository } from "@/repository/UserRepository";
 import ShoppingListService from "@/services/ShoppingListService";
@@ -83,7 +84,7 @@ describe("src/services/ShoppingListService.ts", () => {
         await expect(shoppingListService.createProduct(newProduct)).rejects.toThrow("Quantidade inválida.");
       });
 
-      test("Should throw InternalServerError if a unexpected error occurs", async () => {
+      test("Should throw InternalServerError if a unexpected error occurs during product creation", async () => {
         const newProduct = {
           productName: "Mouse",
           productPrice: 199.99,
@@ -91,20 +92,13 @@ describe("src/services/ShoppingListService.ts", () => {
           userId: "123456",
         };
 
-        const user = {
-          id: "123456",
-          name: "John Doe",
-          email: "john@email.com",
-          password: "P4ssword!23",
-          createdAt: new Date(),
-        };
+        mockUserRepository.findUserById.mockRejectedValue(new Error("Unexpected error."));
 
-        (mockUserRepository.findUserById as jest.Mock).mockResolvedValue(user);
-        (mockShoppingListRepository.create as jest.Mock).mockRejectedValue(new Error("Unexpected error."));
-
-        await expect(shoppingListService.createProduct(newProduct)).rejects.toThrow(
-          "Ocorreu um erro inesperado ao tentar adicionar um novo produto.",
-        );
+        await expect(shoppingListService.createProduct(newProduct)).rejects.toThrow(InternalServerError);
+        await shoppingListService.createProduct(newProduct).catch((error) => {
+          expect(error.message).toBe("Ocorreu um erro inesperado ao tentar adicionar um novo produto.");
+        });
+        expect(mockUserRepository.findUserById).toHaveBeenCalledWith("123456");
       });
     });
   });
@@ -124,7 +118,7 @@ describe("src/services/ShoppingListService.ts", () => {
           },
         ];
 
-        (mockShoppingListRepository.findAll as jest.Mock).mockResolvedValue(dbProducts);
+        mockShoppingListRepository.findAll.mockResolvedValue(dbProducts);
 
         const result = await shoppingListService.listProducts("123abc");
 
@@ -133,7 +127,7 @@ describe("src/services/ShoppingListService.ts", () => {
       });
 
       test("Should return an empty array if the user has no products", async () => {
-        (mockShoppingListRepository.findAll as jest.Mock).mockResolvedValue([]);
+        mockShoppingListRepository.findAll.mockResolvedValue([]);
 
         const result = await shoppingListService.listProducts("123abc");
 
@@ -143,21 +137,14 @@ describe("src/services/ShoppingListService.ts", () => {
     });
 
     describe("Failure Cases", () => {
-      test("Should throw InternalServerError if a unexpected error occurs", async () => {
-        const user = {
-          id: "123456",
-          name: "John Doe",
-          email: "john@email.com",
-          password: "P4ssword!23",
-          createdAt: new Date(),
-        };
+      test("Should throw InternalServerError if a unexpected error occurs during get product list", async () => {
+        mockShoppingListRepository.findAll.mockRejectedValue(new Error("Unexpected error."));
 
-        (mockUserRepository.findUserById as jest.Mock).mockResolvedValue(user);
-        (mockShoppingListRepository.findAll as jest.Mock).mockRejectedValue(new Error("Unexpected error."));
-
-        await expect(shoppingListService.listProducts("123abc")).rejects.toThrow(
-          "Ocorreu um erro inesperado ao tentar buscar a lista de produtos.",
-        );
+        await expect(shoppingListService.listProducts("123abc")).rejects.toThrow(InternalServerError);
+        await shoppingListService.listProducts("123abc").catch((error) => {
+          expect(error.message).toBe("Ocorreu um erro inesperado ao tentar buscar a lista de produtos.");
+        });
+        expect(mockShoppingListRepository.findAll).toHaveBeenCalledWith("123abc");
       });
     });
   });
