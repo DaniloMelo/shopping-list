@@ -1,4 +1,4 @@
-import { LoginServiceError } from "@/lib/CustomErrors";
+import { InternalServerError, LoginServiceError, LogoutServiceError } from "@/lib/CustomErrors";
 import { IHasher } from "@/lib/Hasher";
 import { ITokenService } from "@/lib/TokenService";
 import { IAuthRepository } from "@/repository/AuthRepository";
@@ -51,6 +51,13 @@ describe("src/service/AuthService.ts", () => {
         mockUserRepository.createUser.mockResolvedValue(undefined);
 
         await expect(authService.register(user)).resolves.toBeUndefined();
+        expect(mockUserRepository.findUserByEmail).toHaveBeenCalledWith("john@email.com");
+        expect(mockHasher.encrypt).toHaveBeenCalledWith("P4ssword!23");
+        expect(mockUserRepository.createUser).toHaveBeenCalledWith({
+          ...user,
+          password: "hashed-password",
+          passwordConfirmation: undefined,
+        });
       });
     });
 
@@ -75,6 +82,24 @@ describe("src/service/AuthService.ts", () => {
         mockUserRepository.findUserByEmail.mockResolvedValue(existingUser);
 
         await expect(authService.register(newUser)).rejects.toThrow("Credenciais inválidas");
+        expect(mockUserRepository.findUserByEmail).toHaveBeenCalledWith("john@email.com");
+      });
+
+      test("Should throw InternalServerError if unexpected error occurs during register", async () => {
+        const newUser = {
+          name: "John Doe",
+          email: "john@email.com",
+          password: "P4ssword!23",
+          passwordConfirmation: "P4ssword!23",
+        };
+
+        mockUserRepository.findUserByEmail.mockRejectedValue(new Error("Unexpected error."));
+
+        await expect(authService.register(newUser)).rejects.toThrow(InternalServerError);
+        await authService.register(newUser).catch((error) => {
+          expect(error.message).toBe("Ocorreu um Erro inesperado ao tentar realizar o cadastro.");
+        });
+        expect(mockUserRepository.findUserByEmail).toHaveBeenCalledWith("john@email.com");
       });
     });
   });
@@ -99,6 +124,10 @@ describe("src/service/AuthService.ts", () => {
 
         const result = await authService.login(userData.email, userData.password);
         expect(result).toBe(sessionToken);
+        expect(mockUserRepository.findUserByEmail).toHaveBeenCalledWith("john@email.com");
+        expect(mockHasher.decrypt).toHaveBeenCalledWith("P4ssword!23", "P4ssword!23");
+        expect(mockTokenService.generate).toHaveBeenCalledWith({ userId: userData.id });
+        expect(mockAuthRepository.deleteAllSessionTokens).toHaveBeenCalledWith("123");
       });
     });
 
@@ -107,9 +136,10 @@ describe("src/service/AuthService.ts", () => {
         mockUserRepository.findUserByEmail.mockResolvedValue(null);
 
         await expect(authService.login("unexistent@email.com", "unexistent")).rejects.toThrow(LoginServiceError);
+        expect(mockUserRepository.findUserByEmail).toHaveBeenCalledWith("unexistent@email.com");
       });
 
-      test("Shold throw an error if password is incorrect", async () => {
+      test("Should throw an error if password is incorrect", async () => {
         const userData = {
           id: "123",
           name: "John Doe",
@@ -122,12 +152,62 @@ describe("src/service/AuthService.ts", () => {
         mockHasher.decrypt.mockResolvedValue(false);
 
         await expect(() => authService.login("john@email.com", "wrong-password")).rejects.toThrow(LoginServiceError);
+        expect(mockUserRepository.findUserByEmail).toHaveBeenCalledWith("john@email.com");
+        expect(mockHasher.decrypt).toHaveBeenCalledWith("wrong-password", "P4ssword!23");
+      });
+
+      test("Should throw InternalServerError if unexpected error occurs during login", async () => {
+        mockUserRepository.findUserByEmail.mockRejectedValue(new Error("Unexpected error."));
+
+        await expect(authService.login("john@email.com", "P4ssword!23")).rejects.toThrow(InternalServerError);
+        await authService.login("john@email.com", "P4ssword!23").catch((error) => {
+          expect(error.message).toBe("Ocorreu um Erro inesperado ao tentar realizar o login.");
+        });
+        expect(mockUserRepository.findUserByEmail).toHaveBeenCalledWith("john@email.com");
       });
     });
   });
 
   describe("logout method", () => {
-    describe("Successfull Cases", () => {});
-    describe("Failure Cases", () => {});
+    describe("Successfull Cases", () => {
+      test("Should logout user successfully", async () => {
+        const user = {
+          id: "123",
+          name: "John Doe",
+          email: "john@email.com",
+          password: "P4ssword!23",
+          createdAt: new Date(Date.now()),
+        };
+
+        mockUserRepository.findUserByEmail.mockResolvedValue(user);
+        mockAuthRepository.deleteAllSessionTokens.mockResolvedValue(undefined);
+
+        await expect(authService.logout("john@email.com")).resolves.toBeUndefined();
+        expect(mockUserRepository.findUserByEmail).toHaveBeenCalledWith("john@email.com");
+        expect(mockAuthRepository.deleteAllSessionTokens).toHaveBeenCalledWith("123");
+      });
+    });
+
+    describe("Failure Cases", () => {
+      test("Should throw an error if user don't exist", async () => {
+        mockUserRepository.findUserByEmail.mockResolvedValue(null);
+
+        await expect(authService.logout("john@email.com")).rejects.toThrow(LogoutServiceError);
+        await authService.logout("john@email.com").catch((error) => {
+          expect(error.message).toBe("User not found.");
+        });
+        expect(mockUserRepository.findUserByEmail).toHaveBeenCalledWith("john@email.com");
+      });
+
+      test("Should throw InternalServerError if unexpected error occurs during logout", async () => {
+        mockUserRepository.findUserByEmail.mockRejectedValue(new Error("Unexpected error"));
+
+        await expect(authService.logout("john@email.com")).rejects.toThrow(InternalServerError);
+        await authService.logout("john@email.com").catch((error) => {
+          expect(error.message).toBe("Ocorreu um Erro inesperado ao tentar realizar o logout.");
+        });
+        expect(mockUserRepository.findUserByEmail).toHaveBeenCalledWith("john@email.com");
+      });
+    });
   });
 });
