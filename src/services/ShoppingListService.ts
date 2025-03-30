@@ -1,9 +1,9 @@
-import { InternalServerError, ModelValidationError } from "@/lib/CustomErrors";
+import { InternalServerError, ModelValidationError, ProductServiceError } from "@/lib/CustomErrors";
 import Name from "@/models/Name";
 import Price from "@/models/Price";
 import Product from "@/models/Product";
 import Quantity from "@/models/Quantity";
-import { IShoppingListRepository } from "@/repository/ShoppingListRepository";
+import { IShoppingListRepository, IUpdateProduct } from "@/repository/ShoppingListRepository";
 import { IUserRepository } from "@/repository/UserRepository";
 
 export interface INewProduct {
@@ -63,6 +63,69 @@ export default class ShoppingListService {
 
       throw new InternalServerError(
         "Ocorreu um erro inesperado ao tentar buscar a lista de produtos.",
+        "Tente novamente mais tarde.",
+        500,
+        true,
+      );
+    }
+  }
+
+  async fullUpdateProduct(productId: string, product: IUpdateProduct) {
+    try {
+      const productName = new Name(product.productName).getValue();
+      const productPrice = new Price(product.productPrice).getValue();
+      const productQuantity = new Quantity(product.productQuantity).getValue();
+
+      if (!productName || !productPrice || !productQuantity) {
+        throw new ProductServiceError(
+          "Name, Price and Quantity are required",
+          "Provide Name, Price and Quantity",
+          400,
+          false,
+        );
+      }
+
+      const updatedProduct = {
+        productName,
+        productPrice,
+        productQuantity,
+      };
+
+      await this.shoppingListRepository.fullUpdate(productId, updatedProduct);
+    } catch (error) {
+      console.log("Error during full update product: ", error);
+
+      if (error instanceof ModelValidationError || error instanceof ProductServiceError) {
+        throw error;
+      }
+
+      throw new InternalServerError(
+        "Ocorreu um Erro inesperado ao tentar atualizar o produto.",
+        "Tente novamente mais tarde.",
+        500,
+        true,
+      );
+    }
+  }
+
+  async partialUpdateProduct(productId: string, product: Partial<INewProduct>) {
+    const updatedProduct = {
+      productName: product.productName ? new Name(product.productName).getValue() : undefined,
+      productPrice: product.productPrice ? new Price(product.productPrice).getValue() : undefined,
+      productQuantity: product.productQuantity ? new Quantity(product.productQuantity).getValue() : undefined,
+    };
+
+    try {
+      await this.shoppingListRepository.partialUpdate(productId, updatedProduct);
+    } catch (error) {
+      console.log("Error during partial updated product: ", error);
+
+      if (error instanceof ModelValidationError) {
+        throw error;
+      }
+
+      throw new InternalServerError(
+        "Ocorreu um Erro inesperado ao tentar atualizar o produto.",
         "Tente novamente mais tarde.",
         500,
         true,
