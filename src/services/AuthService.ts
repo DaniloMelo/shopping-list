@@ -59,8 +59,8 @@ export default class AuthService {
       console.error("Error during user register: ", error);
 
       throw new InternalServerError(
-        "Ocorreu um Erro inesperado ao tentar realizar o cadastro",
-        "Tente novamente mais tarde",
+        "Ocorreu um Erro inesperado ao tentar realizar o cadastro.",
+        "Tente novamente mais tarde.",
         500,
         true,
       );
@@ -98,8 +98,8 @@ export default class AuthService {
       console.error("Error during user login: ", error);
 
       throw new InternalServerError(
-        "Ocorreu um Erro inesperado ao tentar realizar o login",
-        "Tente novamente mais tarde",
+        "Ocorreu um Erro inesperado ao tentar realizar o login.",
+        "Tente novamente mais tarde.",
         500,
         true,
       );
@@ -117,8 +117,12 @@ export default class AuthService {
     } catch (error) {
       console.error("Error during user logout: ", error);
 
+      if (error instanceof LogoutServiceError) {
+        throw error;
+      }
+
       throw new InternalServerError(
-        "Ocorreu um Erro inesperado ao tentar realizar o logout",
+        "Ocorreu um Erro inesperado ao tentar realizar o logout.",
         "Tente novamente mais tarde",
         500,
         true,
