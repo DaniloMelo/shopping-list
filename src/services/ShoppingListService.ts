@@ -70,53 +70,28 @@ export default class ShoppingListService {
     }
   }
 
-  async fullUpdateProduct(productId: string, product: IUpdateProduct) {
+  async updateProduct(userId: string, productId: string, product: Partial<IUpdateProduct>) {
     try {
-      const productName = new Name(product.productName).getValue();
-      const productPrice = new Price(product.productPrice).getValue();
-      const productQuantity = new Quantity(product.productQuantity).getValue();
+      const isProductExist = await this.shoppingListRepository.findById(productId);
+      if (!isProductExist) {
+        throw new ProductServiceError("Product not found", "Verify the provided ID", 404, false);
+      }
 
-      if (!productName || !productPrice || !productQuantity) {
-        throw new ProductServiceError(
-          "Name, Price and Quantity are required",
-          "Provide Name, Price and Quantity",
-          400,
-          false,
-        );
+      if (isProductExist.userId !== userId) {
+        throw new ProductServiceError("You don't have permision to update product", "Permision Denied", 403, false);
       }
 
       const updatedProduct = {
-        productName,
-        productPrice,
-        productQuantity,
+        productName: product.productName ? new Name(product.productName).getValue() : undefined,
+        productPrice: product.productPrice ? new Price(product.productPrice).getValue() : undefined,
+        productQuantity: product.productQuantity ? new Quantity(product.productQuantity).getValue() : undefined,
       };
 
-      await this.shoppingListRepository.fullUpdate(productId, updatedProduct);
-    } catch (error) {
-      console.log("Error during full update product: ", error);
-
-      if (error instanceof ModelValidationError || error instanceof ProductServiceError) {
-        throw error;
-      }
-
-      throw new InternalServerError(
-        "Ocorreu um Erro inesperado ao tentar atualizar o produto.",
-        "Tente novamente mais tarde.",
-        500,
-        true,
+      const updatedProductWithoutUndefined = Object.fromEntries(
+        Object.entries(updatedProduct).filter((item) => item[1] !== undefined),
       );
-    }
-  }
 
-  async partialUpdateProduct(productId: string, product: Partial<INewProduct>) {
-    const updatedProduct = {
-      productName: product.productName ? new Name(product.productName).getValue() : undefined,
-      productPrice: product.productPrice ? new Price(product.productPrice).getValue() : undefined,
-      productQuantity: product.productQuantity ? new Quantity(product.productQuantity).getValue() : undefined,
-    };
-
-    try {
-      await this.shoppingListRepository.partialUpdate(productId, updatedProduct);
+      await this.shoppingListRepository.update(productId, updatedProductWithoutUndefined);
     } catch (error) {
       console.log("Error during partial updated product: ", error);
 
