@@ -1,4 +1,4 @@
-import { InternalServerError } from "@/lib/CustomErrors";
+import { InternalServerError, ModelValidationError, ProductServiceError } from "@/lib/CustomErrors";
 import { IShoppingListRepository } from "@/repository/ShoppingListRepository";
 import { IUserRepository } from "@/repository/UserRepository";
 import ShoppingListService from "@/services/ShoppingListService";
@@ -13,6 +13,8 @@ const mockUserRepository: jest.Mocked<IUserRepository> = {
 const mockShoppingListRepository: jest.Mocked<IShoppingListRepository> = {
   create: jest.fn(),
   findAll: jest.fn(),
+  findById: jest.fn(),
+  update: jest.fn(),
 };
 
 describe("src/services/ShoppingListService.ts", () => {
@@ -145,6 +147,195 @@ describe("src/services/ShoppingListService.ts", () => {
           expect(error.message).toBe("Ocorreu um erro inesperado ao tentar buscar a lista de produtos.");
         });
         expect(mockShoppingListRepository.findAll).toHaveBeenCalledWith("123abc");
+      });
+    });
+  });
+
+  describe("updateProduct method:", () => {
+    describe("Successfull Cases", () => {
+      test("Should update product successfully", async () => {
+        const dbProduct = {
+          id: "098zxc",
+          createdAt: new Date(),
+          userId: "123abc",
+          productName: "Mouse",
+          productPrice: 199.99,
+          productQuantity: 1,
+          updatedAt: new Date(),
+        };
+
+        const updatedProduct = {
+          productName: "Updated-name",
+          productPrice: 299.99,
+          productQuantity: 2,
+        };
+
+        mockShoppingListRepository.findById.mockResolvedValue(dbProduct);
+
+        await expect(shoppingListService.updateProduct("123abc", "098zxc", updatedProduct)).resolves.toBeUndefined();
+        expect(mockShoppingListRepository.findById).toHaveBeenCalledWith("098zxc");
+      });
+    });
+
+    describe("Failure Cases", () => {
+      test("Should throw ProductServiceError when product not found", async () => {
+        const updatedProduct = {
+          productName: "Updated-name",
+          productPrice: 299.99,
+          productQuantity: 2,
+        };
+
+        mockShoppingListRepository.findById.mockResolvedValue(null);
+
+        await expect(
+          shoppingListService.updateProduct("123abc", "unexistent-product-id", updatedProduct),
+        ).rejects.toThrow(ProductServiceError);
+
+        expect(mockShoppingListRepository.findById).toHaveBeenCalledWith("unexistent-product-id");
+
+        await shoppingListService
+          .updateProduct("123abc", "unexistent-product-id", updatedProduct)
+          .catch((error) => expect(error.message).toBe("Product not found."));
+      });
+
+      test("Should throw ProductServiceError when user ID and product ID are different", async () => {
+        const dbProduct = {
+          id: "098zxc",
+          createdAt: new Date(),
+          userId: "123abc",
+          productName: "Mouse",
+          productPrice: 199.99,
+          productQuantity: 1,
+          updatedAt: new Date(),
+        };
+
+        const updatedProduct = {
+          productName: "Updated-name",
+          productPrice: 299.99,
+          productQuantity: 2,
+        };
+
+        mockShoppingListRepository.findById.mockResolvedValue(dbProduct);
+
+        await expect(shoppingListService.updateProduct("different-user-id", "098zxc", updatedProduct)).rejects.toThrow(
+          ProductServiceError,
+        );
+
+        expect(mockShoppingListRepository.findById).toHaveBeenCalledWith("098zxc");
+
+        await shoppingListService
+          .updateProduct("different-user-id", "098zxc", updatedProduct)
+          .catch((error) => expect(error.message).toBe("Permision Denied."));
+      });
+
+      test("Should throw ModelValidationError if product name is invalid", async () => {
+        const dbProduct = {
+          id: "098zxc",
+          createdAt: new Date(),
+          userId: "123abc",
+          productName: "Mouse",
+          productPrice: 199.99,
+          productQuantity: 1,
+          updatedAt: new Date(),
+        };
+
+        const updatedProduct = {
+          productName: "x",
+          productPrice: 299.99,
+          productQuantity: 2,
+        };
+
+        mockShoppingListRepository.findById.mockResolvedValue(dbProduct);
+
+        await expect(shoppingListService.updateProduct("123abc", "098zxc", updatedProduct)).rejects.toThrow(
+          ModelValidationError,
+        );
+
+        expect(mockShoppingListRepository.findById).toHaveBeenCalledWith("098zxc");
+
+        await shoppingListService
+          .updateProduct("123abc", "098zxc", updatedProduct)
+          .catch((error) => expect(error.message).toBe("Nome inválido."));
+      });
+
+      test("Should throw ModelValidationError if product price is invalid", async () => {
+        const dbProduct = {
+          id: "098zxc",
+          createdAt: new Date(),
+          userId: "123abc",
+          productName: "Mouse",
+          productPrice: 199.99,
+          productQuantity: 1,
+          updatedAt: new Date(),
+        };
+
+        const updatedProduct = {
+          productName: "Updated-name",
+          productPrice: 0,
+          productQuantity: 2,
+        };
+
+        mockShoppingListRepository.findById.mockResolvedValue(dbProduct);
+
+        await expect(shoppingListService.updateProduct("123abc", "098zxc", updatedProduct)).rejects.toThrow(
+          ModelValidationError,
+        );
+
+        expect(mockShoppingListRepository.findById).toHaveBeenCalledWith("098zxc");
+
+        await shoppingListService
+          .updateProduct("123abc", "098zxc", updatedProduct)
+          .catch((error) => expect(error.message).toBe("Preço inválido."));
+      });
+
+      test("Should throw ModelValidationError if product quantity is invalid", async () => {
+        const dbProduct = {
+          id: "098zxc",
+          createdAt: new Date(),
+          userId: "123abc",
+          productName: "Mouse",
+          productPrice: 199.99,
+          productQuantity: 1,
+          updatedAt: new Date(),
+        };
+
+        const updatedProduct = {
+          productName: "Updated-name",
+          productPrice: 2,
+          productQuantity: 0,
+        };
+
+        mockShoppingListRepository.findById.mockResolvedValue(dbProduct);
+
+        await expect(shoppingListService.updateProduct("123abc", "098zxc", updatedProduct)).rejects.toThrow(
+          ModelValidationError,
+        );
+
+        expect(mockShoppingListRepository.findById).toHaveBeenCalledWith("098zxc");
+
+        await shoppingListService
+          .updateProduct("123abc", "098zxc", updatedProduct)
+          .catch((error) => expect(error.message).toBe("Quantidade inválida."));
+      });
+
+      test("Should throw InternalServerError if a unexpected error occurs", async () => {
+        const updatedProduct = {
+          productName: "Updated-name",
+          productPrice: 299.99,
+          productQuantity: 2,
+        };
+
+        mockShoppingListRepository.findById.mockRejectedValue(new Error("Unexpected Error."));
+
+        await expect(shoppingListService.updateProduct("123abc", "098zxc", updatedProduct)).rejects.toThrow(
+          InternalServerError,
+        );
+
+        expect(mockShoppingListRepository.findById).toHaveBeenCalledWith("098zxc");
+
+        await shoppingListService
+          .updateProduct("123abc", "098zxc", updatedProduct)
+          .catch((error) => expect(error.message).toBe("Ocorreu um Erro inesperado ao tentar atualizar o produto."));
       });
     });
   });

@@ -21,7 +21,7 @@ export interface IShoppingListRepository {
   create(newProductObj: INewProduct): Promise<void>;
   findAll(userId: string): Promise<IDbProduct[] | []>;
   findById(productId: string): Promise<IDbProduct | null>;
-  update(productId: string, product: Partial<IUpdateProduct>): Promise<void>;
+  update(productId: string, product: IUpdateProduct): Promise<void>;
 }
 
 export default class ShoppingListRepository implements IShoppingListRepository {
@@ -43,10 +43,10 @@ export default class ShoppingListRepository implements IShoppingListRepository {
     });
   }
 
-  async update(productId: string, PartialProduct: Partial<INewProduct>): Promise<void> {
+  async update(productId: string, product: IUpdateProduct): Promise<void> {
     await prisma.shoppingList.update({
       where: { id: productId },
-      data: PartialProduct,
+      data: product,
     });
   }
 }

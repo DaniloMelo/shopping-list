@@ -10,7 +10,7 @@ const shoppingListRepository = new ShoppingListRepository();
 const shoppingListService = new ShoppingListService(userRepository, shoppingListRepository);
 
 export default async function updateProduct(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== "PATCH") {
+  if (req.method !== "PUT") {
     return res.status(405).json({ message: "Method Not Allowed" });
   }
 
