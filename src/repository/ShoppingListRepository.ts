@@ -11,9 +11,17 @@ export interface IDbProduct {
   updatedAt: Date;
 }
 
+export interface IUpdateProduct {
+  productName: string;
+  productPrice: number;
+  productQuantity: number;
+}
+
 export interface IShoppingListRepository {
   create(newProductObj: INewProduct): Promise<void>;
   findAll(userId: string): Promise<IDbProduct[] | []>;
+  findById(productId: string): Promise<IDbProduct | null>;
+  update(productId: string, product: IUpdateProduct): Promise<void>;
 }
 
 export default class ShoppingListRepository implements IShoppingListRepository {
@@ -26,6 +34,19 @@ export default class ShoppingListRepository implements IShoppingListRepository {
   async findAll(userId: string): Promise<IDbProduct[] | []> {
     return await prisma.shoppingList.findMany({
       where: { userId },
+    });
+  }
+
+  async findById(productId: string): Promise<IDbProduct | null> {
+    return await prisma.shoppingList.findUnique({
+      where: { id: productId },
+    });
+  }
+
+  async update(productId: string, product: IUpdateProduct): Promise<void> {
+    await prisma.shoppingList.update({
+      where: { id: productId },
+      data: product,
     });
   }
 }

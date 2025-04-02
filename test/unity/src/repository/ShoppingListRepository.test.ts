@@ -6,6 +6,8 @@ jest.mock("../../../../src/lib/prisma", () => ({
     shoppingList: {
       create: jest.fn(),
       findMany: jest.fn(),
+      findUnique: jest.fn(),
+      update: jest.fn(),
     },
   },
 }));
@@ -26,7 +28,7 @@ describe("src/repository/ShoppingListRepository.ts", () => {
         userId: "123456",
       };
 
-      (prisma.shoppingList.create as jest.Mock).mockResolvedValue(null);
+      (prisma.shoppingList.create as jest.Mock).mockResolvedValue(undefined);
 
       await shoppingListRepository.create(newProduct);
 
@@ -57,6 +59,39 @@ describe("src/repository/ShoppingListRepository.ts", () => {
       });
       expect(result).toEqual(dbProducts);
     });
+
+    test("Should find a product by product ID", async () => {
+      const dbProduct = {
+        id: "098zxc",
+        createdAt: new Date(),
+        userId: "123abc",
+        productName: "Mouse",
+        productPrice: 199.99,
+        productQuantity: 1,
+        updatedAt: new Date(),
+      };
+
+      (prisma.shoppingList.findUnique as jest.Mock).mockResolvedValue(dbProduct);
+
+      const result = await shoppingListRepository.findById("098zxc");
+
+      expect(prisma.shoppingList.findUnique).toHaveBeenCalledWith({
+        where: { id: "098zxc" },
+      });
+
+      expect(result).toEqual(dbProduct);
+    });
+
+    test("Should update product", async () => {
+      (prisma.shoppingList.update as jest.Mock).mockResolvedValue(undefined);
+
+      await shoppingListRepository.update("098zxc", { productName: "updated-name" });
+
+      expect(prisma.shoppingList.update).toHaveBeenCalledWith({
+        where: { id: "098zxc" },
+        data: { productName: "updated-name" },
+      });
+    });
   });
 
   describe("Failure Cases", () => {
@@ -69,6 +104,18 @@ describe("src/repository/ShoppingListRepository.ts", () => {
         where: { userId: "123abc" },
       });
       expect(result).toEqual([]);
+    });
+
+    test("Should return null if product don't exist when find by ID", async () => {
+      (prisma.shoppingList.findUnique as jest.Mock).mockResolvedValue(null);
+
+      const result = await shoppingListRepository.findById("unexistent-id");
+
+      expect(prisma.shoppingList.findUnique).toHaveBeenCalledWith({
+        where: { id: "unexistent-id" },
+      });
+
+      expect(result).toBeNull();
     });
   });
 });
