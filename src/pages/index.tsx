@@ -3,6 +3,7 @@ import Modal from "@/components/Modal";
 import OpenModalButton from "@/components/OpenModalButton";
 import { ProductProps } from "@/components/Product";
 import ProductsList from "@/components/ProductsList";
+import UpdateProductModal from "@/components/UpdateProductModal";
 import getBaseUrl from "@/lib/getBaseUrl";
 import TokenService from "@/lib/TokenService";
 import { GetServerSideProps } from "next";
@@ -20,6 +21,7 @@ interface IHomeProps {
 export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
   const [search, setSearch] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
+  const [updateProductModalOpen, setUpdatedProductModalOpen] = useState(false);
   const router = useRouter();
 
   async function handleLogout() {
@@ -38,11 +40,22 @@ export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
 
       <OpenModalButton click={() => setModalOpen(true)} desktopType />
 
-      <ProductsList initialProducts={shoppingList} userId={userId} search={search} />
+      <ProductsList
+        initialProducts={shoppingList}
+        userId={userId}
+        search={search}
+        onUpdateProductModalOPen={setUpdatedProductModalOpen}
+      />
 
       <OpenModalButton click={() => setModalOpen(true)} />
 
       <Modal isOpen={modalOpen} setModalOpen={setModalOpen} userId={userId} />
+
+      <UpdateProductModal
+        isModalOpen={updateProductModalOpen}
+        onModalOpen={setUpdatedProductModalOpen}
+        userId={userId}
+      />
 
       <button onClick={handleLogout} className="border">
         Sair
