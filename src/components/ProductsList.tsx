@@ -2,11 +2,14 @@ import filterProducts from "@/lib/filterProducts";
 import LoadingSpinner from "./LoadingSpinner";
 import Product, { ProductProps } from "./Product";
 import useSWR from "swr";
+import useProduct from "@/hooks/useProduct";
+import { useEffect } from "react";
 
 export interface ProductsListProps {
   initialProducts: ProductProps[];
   userId: string;
   search: string;
+  onUpdateProductModalOPen(visibility: boolean): void;
 }
 
 async function fetcher(url: string) {
@@ -15,10 +18,17 @@ async function fetcher(url: string) {
   return products;
 }
 
-export default function ProductsList({ initialProducts, userId, search }: ProductsListProps) {
+export default function ProductsList({ initialProducts, userId, search, onUpdateProductModalOPen }: ProductsListProps) {
+  const { addInitialProducts } = useProduct();
   const { data, error } = useSWR(`/api/v1/product/list-products/${userId}`, fetcher, {
     fallback: initialProducts,
   });
+
+  useEffect(() => {
+    if (data) {
+      addInitialProducts(data);
+    }
+  }, [data, addInitialProducts]);
 
   if (error) {
     return (
@@ -44,9 +54,11 @@ export default function ProductsList({ initialProducts, userId, search }: Produc
         return (
           <Product
             key={p.id}
+            id={p.id}
             productName={p.productName}
             productPrice={p.productPrice}
             productQuantity={p.productQuantity}
+            onUpdateModalOpen={onUpdateProductModalOPen}
           />
         );
       })}
