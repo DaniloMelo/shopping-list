@@ -38,11 +38,11 @@ export default class ShoppingListService {
         userId: newProduct.userId!,
       });
     } catch (error) {
+      console.error("Error during product creation: ", error);
+
       if (error instanceof ModelValidationError) {
         throw error;
       }
-
-      console.error("Error during product creation: ", error);
 
       throw new InternalServerError(
         "Ocorreu um erro inesperado ao tentar adicionar um novo produto.",
@@ -104,9 +104,38 @@ export default class ShoppingListService {
         productQuantity: updatedProducModel.quantity,
       });
     } catch (error) {
-      console.log("Error during partial updated product: ", error);
+      console.error("Error during partial updated product: ", error);
 
       if (error instanceof ModelValidationError || error instanceof ProductServiceError) {
+        throw error;
+      }
+
+      throw new InternalServerError(
+        "Ocorreu um Erro inesperado ao tentar atualizar o produto.",
+        "Tente novamente mais tarde.",
+        500,
+        true,
+      );
+    }
+  }
+
+  async deleteProduct(productId: string, userId: string) {
+    try {
+      const isProductExists = await this.shoppingListRepository.findById(productId);
+
+      if (!isProductExists) {
+        throw new ProductServiceError("Product not found.", "Verify the provided ID", 404, false);
+      }
+
+      if (isProductExists.userId !== userId) {
+        throw new ProductServiceError("Permision Denied.", "Permision Denied.", 403, false);
+      }
+
+      await this.shoppingListRepository.deleteById(productId);
+    } catch (error) {
+      console.error("Error during delete product: ", error);
+
+      if (error instanceof ProductServiceError) {
         throw error;
       }
 

@@ -15,6 +15,7 @@ const mockShoppingListRepository: jest.Mocked<IShoppingListRepository> = {
   findAll: jest.fn(),
   findById: jest.fn(),
   update: jest.fn(),
+  deleteById: jest.fn(),
 };
 
 describe("src/services/ShoppingListService.ts", () => {
@@ -151,7 +152,7 @@ describe("src/services/ShoppingListService.ts", () => {
     });
   });
 
-  describe("updateProduct method:", () => {
+  describe("updateProduct method: ", () => {
     describe("Successfull Cases", () => {
       test("Should update product successfully", async () => {
         const dbProduct = {
@@ -198,7 +199,7 @@ describe("src/services/ShoppingListService.ts", () => {
           .catch((error) => expect(error.message).toBe("Product not found."));
       });
 
-      test("Should throw ProductServiceError when user ID and product ID are different", async () => {
+      test("Should throw ProductServiceError when user ID and user ID in product are different", async () => {
         const dbProduct = {
           id: "098zxc",
           createdAt: new Date(),
@@ -336,6 +337,69 @@ describe("src/services/ShoppingListService.ts", () => {
         await shoppingListService
           .updateProduct("123abc", "098zxc", updatedProduct)
           .catch((error) => expect(error.message).toBe("Ocorreu um Erro inesperado ao tentar atualizar o produto."));
+      });
+    });
+  });
+
+  describe("deleteProduct method: ", () => {
+    describe("Successfull Cases", () => {
+      test("Should delete product", async () => {
+        const dbProduct = {
+          id: "098zxc",
+          createdAt: new Date(),
+          userId: "123abc",
+          productName: "Mouse",
+          productPrice: 199.99,
+          productQuantity: 1,
+          updatedAt: new Date(),
+        };
+
+        mockShoppingListRepository.findById.mockResolvedValue(dbProduct);
+        mockShoppingListRepository.deleteById.mockResolvedValue(undefined);
+
+        await expect(shoppingListService.deleteProduct("098zxc", "123abc")).resolves.toBeUndefined();
+        expect(mockShoppingListRepository.findById).toHaveBeenCalledWith("098zxc");
+        expect(mockShoppingListRepository.deleteById).toHaveBeenCalledWith("098zxc");
+      });
+    });
+
+    describe("Failure Cases", () => {
+      test("Should throw ProductServiceError when product not found", async () => {
+        mockShoppingListRepository.findById.mockResolvedValue(null);
+
+        await expect(shoppingListService.deleteProduct("unexistent-product-id", "abc123")).rejects.toThrow(
+          ProductServiceError,
+        );
+
+        expect(mockShoppingListRepository.findById).toHaveBeenCalledWith("unexistent-product-id");
+
+        await shoppingListService
+          .deleteProduct("unexistent-product-id", "abc123")
+          .catch((error) => expect(error.message).toBe("Product not found."));
+      });
+
+      test("Should throw ProductServiceError when user ID and user ID in product are different", async () => {
+        const dbProduct = {
+          id: "098zxc",
+          createdAt: new Date(),
+          userId: "123abc",
+          productName: "Mouse",
+          productPrice: 199.99,
+          productQuantity: 1,
+          updatedAt: new Date(),
+        };
+
+        mockShoppingListRepository.findById.mockResolvedValue(dbProduct);
+
+        await expect(shoppingListService.deleteProduct("098zxc", "different-user-id")).rejects.toThrow(
+          ProductServiceError,
+        );
+
+        expect(mockShoppingListRepository.findById).toHaveBeenCalledWith("098zxc");
+
+        await shoppingListService
+          .deleteProduct("098zxc", "different-user-id")
+          .catch((error) => expect(error.message).toBe("Permision Denied."));
       });
     });
   });
