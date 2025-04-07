@@ -2,21 +2,46 @@ import useProduct from "@/hooks/useProduct";
 import NumberFormatter from "@/lib/NumberFormatter";
 import { useState } from "react";
 import { IoIosArrowUp } from "react-icons/io";
+import { useSWRConfig } from "swr";
 
 export interface ProductProps {
   id: string;
+  userId: string;
   productName: string;
   productPrice: number;
   productQuantity: number;
   onUpdateModalOpen(visibility: boolean): void;
 }
 
-export default function Product({ id, productName, productPrice, productQuantity, onUpdateModalOpen }: ProductProps) {
+export default function Product({
+  id,
+  userId,
+  productName,
+  productPrice,
+  productQuantity,
+  onUpdateModalOpen,
+}: ProductProps) {
   const [isDetailsHidden, setIsDetailsHidden] = useState(false);
   const { productToUpdate } = useProduct();
 
+  const { mutate } = useSWRConfig();
+
   function handleProductToUpdate() {
     productToUpdate({ id, productName, productPrice, productQuantity });
+  }
+
+  async function handleProductToDelete(productId: string) {
+    try {
+      await fetch(`/api/v1/product/delete-product/${productId}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId }),
+      });
+
+      mutate(`/api/v1/product/list-products/${userId}`);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
@@ -48,7 +73,12 @@ export default function Product({ id, productName, productPrice, productQuantity
             Editar
           </button>
 
-          <button className="bg-red-700 hover:bg-red-800 py-1 px-4 rounded-md">Excluir</button>
+          <button
+            className="bg-red-700 hover:bg-red-800 py-1 px-4 rounded-md"
+            onClick={() => handleProductToDelete(id)}
+          >
+            Excluir
+          </button>
         </div>
       </div>
     </div>
