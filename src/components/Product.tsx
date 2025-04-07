@@ -2,21 +2,59 @@ import useProduct from "@/hooks/useProduct";
 import NumberFormatter from "@/lib/NumberFormatter";
 import { useState } from "react";
 import { IoIosArrowUp } from "react-icons/io";
+import { useSWRConfig } from "swr";
+import ConfirmationDialog from "./ConfirmationDialog";
+import { useFetch } from "@/hooks/useFetch";
 
 export interface ProductProps {
   id: string;
+  userId: string;
   productName: string;
   productPrice: number;
   productQuantity: number;
   onUpdateModalOpen(visibility: boolean): void;
 }
 
-export default function Product({ id, productName, productPrice, productQuantity, onUpdateModalOpen }: ProductProps) {
+export default function Product({
+  id,
+  userId,
+  productName,
+  productPrice,
+  productQuantity,
+  onUpdateModalOpen,
+}: ProductProps) {
   const [isDetailsHidden, setIsDetailsHidden] = useState(false);
+  const [isDialogOpen, SetIsDialogOpen] = useState(false);
+  const [dialogConfirmation, setDialogConfirmation] = useState(false);
   const { productToUpdate } = useProduct();
+  const { deleteProduct } = useFetch();
+
+  const { mutate } = useSWRConfig();
+
+  console.log("fora => ", dialogConfirmation);
 
   function handleProductToUpdate() {
     productToUpdate({ id, productName, productPrice, productQuantity });
+  }
+
+  async function handleDeleteProduct() {
+    try {
+      await deleteProduct(id, userId);
+      mutate(`/api/v1/product/list-products/${userId}`);
+
+      setDialogConfirmation(false);
+      SetIsDialogOpen(false);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  function handleDeleteProductConfirmation(confirmation: boolean) {
+    if (confirmation) {
+      handleDeleteProduct();
+    } else {
+      SetIsDialogOpen(false);
+    }
   }
 
   return (
@@ -48,9 +86,17 @@ export default function Product({ id, productName, productPrice, productQuantity
             Editar
           </button>
 
-          <button className="bg-red-700 hover:bg-red-800 py-1 px-4 rounded-md">Excluir</button>
+          <button className="bg-red-700 hover:bg-red-800 py-1 px-4 rounded-md" onClick={() => SetIsDialogOpen(true)}>
+            Excluir
+          </button>
         </div>
       </div>
+
+      <ConfirmationDialog
+        isOpen={isDialogOpen}
+        message={`Deseja excluir ${productName}?`}
+        onConfirmation={handleDeleteProductConfirmation}
+      />
     </div>
   );
 }

@@ -9,7 +9,7 @@ const shoppingListRepository = new ShoppingListRepository();
 const shoppingListService = new ShoppingListService(userRepository, shoppingListRepository);
 
 export default async function deleteProduct(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== "POST") {
+  if (req.method !== "DELETE") {
     return res.status(405).json({ message: "Method not allowed." });
   }
 

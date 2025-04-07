@@ -55,6 +55,7 @@ export default function ProductsList({ initialProducts, userId, search, onUpdate
           <Product
             key={p.id}
             id={p.id}
+            userId={userId}
             productName={p.productName}
             productPrice={p.productPrice}
             productQuantity={p.productQuantity}
