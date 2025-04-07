@@ -3,6 +3,8 @@ import NumberFormatter from "@/lib/NumberFormatter";
 import { useState } from "react";
 import { IoIosArrowUp } from "react-icons/io";
 import { useSWRConfig } from "swr";
+import ConfirmationDialog from "./ConfirmationDialog";
+import { useFetch } from "@/hooks/useFetch";
 
 export interface ProductProps {
   id: string;
@@ -22,25 +24,36 @@ export default function Product({
   onUpdateModalOpen,
 }: ProductProps) {
   const [isDetailsHidden, setIsDetailsHidden] = useState(false);
+  const [isDialogOpen, SetIsDialogOpen] = useState(false);
+  const [dialogConfirmation, setDialogConfirmation] = useState(false);
   const { productToUpdate } = useProduct();
+  const { deleteProduct } = useFetch();
 
   const { mutate } = useSWRConfig();
+
+  console.log("fora => ", dialogConfirmation);
 
   function handleProductToUpdate() {
     productToUpdate({ id, productName, productPrice, productQuantity });
   }
 
-  async function handleProductToDelete(productId: string) {
+  async function handleDeleteProduct() {
     try {
-      await fetch(`/api/v1/product/delete-product/${productId}`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId }),
-      });
-
+      await deleteProduct(id, userId);
       mutate(`/api/v1/product/list-products/${userId}`);
+
+      setDialogConfirmation(false);
+      SetIsDialogOpen(false);
     } catch (error) {
       console.error(error);
+    }
+  }
+
+  function handleDeleteProductConfirmation(confirmation: boolean) {
+    if (confirmation) {
+      handleDeleteProduct();
+    } else {
+      SetIsDialogOpen(false);
     }
   }
 
@@ -73,14 +86,17 @@ export default function Product({
             Editar
           </button>
 
-          <button
-            className="bg-red-700 hover:bg-red-800 py-1 px-4 rounded-md"
-            onClick={() => handleProductToDelete(id)}
-          >
+          <button className="bg-red-700 hover:bg-red-800 py-1 px-4 rounded-md" onClick={() => SetIsDialogOpen(true)}>
             Excluir
           </button>
         </div>
       </div>
+
+      <ConfirmationDialog
+        isOpen={isDialogOpen}
+        message={`Deseja excluir ${productName}?`}
+        onConfirmation={handleDeleteProductConfirmation}
+      />
     </div>
   );
 }
