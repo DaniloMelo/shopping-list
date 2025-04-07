@@ -8,6 +8,7 @@ jest.mock("../../../../src/lib/prisma", () => ({
       findMany: jest.fn(),
       findUnique: jest.fn(),
       update: jest.fn(),
+      delete: jest.fn(),
     },
   },
 }));
@@ -83,13 +84,29 @@ describe("src/repository/ShoppingListRepository.ts", () => {
     });
 
     test("Should update product", async () => {
+      const updatedProduct = {
+        productName: "Updated Name",
+        productPrice: 199.99,
+        productQuantity: 1,
+      };
+
       (prisma.shoppingList.update as jest.Mock).mockResolvedValue(undefined);
 
-      await shoppingListRepository.update("098zxc", { productName: "updated-name" });
+      await shoppingListRepository.update("098zxc", updatedProduct);
 
       expect(prisma.shoppingList.update).toHaveBeenCalledWith({
         where: { id: "098zxc" },
-        data: { productName: "updated-name" },
+        data: updatedProduct,
+      });
+    });
+
+    test("Should delete product", async () => {
+      (prisma.shoppingList.delete as jest.Mock).mockResolvedValue(undefined);
+
+      await shoppingListRepository.deleteById("098zxc");
+
+      expect(prisma.shoppingList.delete).toHaveBeenCalledWith({
+        where: { id: "098zxc" },
       });
     });
   });
