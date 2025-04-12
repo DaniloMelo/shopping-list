@@ -25,13 +25,11 @@ export default function Product({
 }: ProductProps) {
   const [isDetailsHidden, setIsDetailsHidden] = useState(false);
   const [isDialogOpen, SetIsDialogOpen] = useState(false);
-  // const [dialogConfirmation, setDialogConfirmation] = useState(false);
   const { productToUpdate } = useProduct();
   const { deleteProduct } = useFetch();
-
   const { mutate } = useSWRConfig();
 
-  function handleProductToUpdate() {
+  function handleUpdateProduct() {
     productToUpdate({ id, productName, productPrice, productQuantity });
   }
 
@@ -40,7 +38,6 @@ export default function Product({
       await deleteProduct(id, userId);
       mutate(`/api/v1/product/list-products/${userId}`);
 
-      // setDialogConfirmation(false);
       SetIsDialogOpen(false);
     } catch (error) {
       console.error(error);
@@ -78,7 +75,7 @@ export default function Product({
             className="bg-blue-700 hover:bg-blue-800 py-1 px-4 rounded-md"
             onClick={() => {
               onUpdateModalOpen(true);
-              handleProductToUpdate();
+              handleUpdateProduct();
             }}
           >
             Editar
