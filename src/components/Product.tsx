@@ -25,13 +25,11 @@ export default function Product({
 }: ProductProps) {
   const [isDetailsHidden, setIsDetailsHidden] = useState(false);
   const [isDialogOpen, SetIsDialogOpen] = useState(false);
-  const [dialogConfirmation, setDialogConfirmation] = useState(false);
+  // const [dialogConfirmation, setDialogConfirmation] = useState(false);
   const { productToUpdate } = useProduct();
   const { deleteProduct } = useFetch();
 
   const { mutate } = useSWRConfig();
-
-  console.log("fora => ", dialogConfirmation);
 
   function handleProductToUpdate() {
     productToUpdate({ id, productName, productPrice, productQuantity });
@@ -42,7 +40,7 @@ export default function Product({
       await deleteProduct(id, userId);
       mutate(`/api/v1/product/list-products/${userId}`);
 
-      setDialogConfirmation(false);
+      // setDialogConfirmation(false);
       SetIsDialogOpen(false);
     } catch (error) {
       console.error(error);
