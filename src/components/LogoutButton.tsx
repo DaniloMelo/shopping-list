@@ -1,3 +1,4 @@
+import { useFetch } from "@/hooks/useFetch";
 import { useRouter } from "next/router";
 import { TbLogout } from "react-icons/tb";
 
@@ -7,14 +8,10 @@ interface LogoutButtonProps {
 
 export default function LogoutButton({ userEmail }: LogoutButtonProps) {
   const Router = useRouter();
+  const { logout } = useFetch();
 
   async function handleLogout(userEmail: string) {
-    await fetch("api/v1/auth/logout", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: userEmail }),
-    });
-
+    await logout(userEmail);
     Router.push("/login");
   }
 
