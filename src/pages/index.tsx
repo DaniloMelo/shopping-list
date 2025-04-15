@@ -1,14 +1,17 @@
+import { IoMdMenu } from "react-icons/io";
 import FilterProducts from "@/components/FilterProducts";
+import Menu from "@/components/Menu";
 import Modal from "@/components/Modal";
 import OpenModalButton from "@/components/OpenModalButton";
 import { ProductProps } from "@/components/Product";
 import ProductsList from "@/components/ProductsList";
 import UpdateProductModal from "@/components/UpdateProductModal";
+import calcTotal from "@/lib/calcTotal";
 import getBaseUrl from "@/lib/getBaseUrl";
 import TokenService from "@/lib/TokenService";
 import { GetServerSideProps } from "next";
-import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Header from "@/components/Header";
 
 const tokenService = new TokenService();
 
@@ -22,29 +25,48 @@ export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
   const [search, setSearch] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [updateProductModalOpen, setUpdatedProductModalOpen] = useState(false);
-  const router = useRouter();
+  const [updatedProducts, setUpdatedProducts] = useState<ProductProps[]>(shoppingList);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [total, setTotal] = useState("");
 
-  async function handleLogout() {
-    await fetch("api/v1/auth/logout", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: userEmail }),
-    });
-
-    router.push("/login");
-  }
+  useEffect(() => {
+    setTotal(calcTotal(updatedProducts));
+  }, [updatedProducts]);
 
   return (
     <main className={`flex flex-col items-center`}>
+      <Header userEmail={userEmail} />
+
+      <span
+        className={`self-start cursor-pointer mt-2 text-zinc-300 hover:text-zinc-400 xl:hidden ${menuOpen ? "opacity-0" : "opacity-100"}`}
+        onClick={() => setMenuOpen(true)}
+      >
+        <IoMdMenu className="text-3xl" />
+      </span>
+
+      <Menu userEmail={userEmail} isOpen={menuOpen} onMenuOpen={setMenuOpen} />
+
       <FilterProducts value={search} onSearchChange={setSearch} />
 
       <OpenModalButton click={() => setModalOpen(true)} desktopType />
+
+      {updatedProducts.length === 0 ? (
+        <div className="my-10">
+          <p className="text-zinc-300">Sua lista de compras está vazia.</p>
+        </div>
+      ) : (
+        <div className="flex items-end w-full px-2 gap-x-2 mt-4">
+          <p className="text-xl">Total: </p>
+          <span className="text-zinc-300">{total}</span>
+        </div>
+      )}
 
       <ProductsList
         initialProducts={shoppingList}
         userId={userId}
         search={search}
         onUpdateProductModalOPen={setUpdatedProductModalOpen}
+        onUpdateProduct={setUpdatedProducts}
       />
 
       <OpenModalButton click={() => setModalOpen(true)} />
@@ -56,10 +78,6 @@ export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
         onModalOpen={setUpdatedProductModalOpen}
         userId={userId}
       />
-
-      <button onClick={handleLogout} className="border">
-        Sair
-      </button>
     </main>
   );
 }

@@ -8,20 +8,23 @@ const montserrat = Montserrat({
 
 type LogoProps = {
   size: "sm" | "md" | "lg";
+  removeName?: boolean;
 };
 
-export default function Logo({ size }: LogoProps) {
+export default function Logo({ size, removeName }: LogoProps) {
   return (
     <div className={`${montserrat.variable} flex flex-col items-center`}>
       <Image
         src="/shopping-bags-svgrepo-com.svg"
         alt="Logo Lista de Compras"
-        width={size === "sm" ? 100 : size === "md" ? 150 : 200}
-        height={size === "sm" ? 100 : size === "md" ? 150 : 200}
+        width={size === "sm" ? 50 : size === "md" ? 75 : 100}
+        height={size === "sm" ? 50 : size === "md" ? 75 : 100}
         priority
       />
 
-      <p className={`${size === "sm" ? "text-md" : size === "md" ? "text-xl" : "text-3xl"} mt-2 font-montserrat`}>
+      <p
+        className={`${removeName && "hidden"} ${size === "sm" ? "text-sm" : size === "md" ? "text-" : "text-3xl"} mt-2 font-montserrat`}
+      >
         Lista de Compras
       </p>
     </div>

@@ -8,7 +8,7 @@ interface IFilterProductsProps {
 
 export default function FilterProducts({ value, onSearchChange }: IFilterProductsProps) {
   return (
-    <div className="flex justify-between items-center border-b border-zinc-400 text-zinc-300 focus-within:border-zinc-200 hover:border-zinc-200 px-2 mb-2 mt-4 w-8/12 max-w-[500px]">
+    <div className="flex justify-between items-center border-b border-zinc-400 text-zinc-300 focus-within:border-zinc-200 hover:border-zinc-200 px-2 mb-2 mt-10 w-8/12 max-w-[500px]">
       <input
         className="border-none outline-none bg-black "
         type="text"

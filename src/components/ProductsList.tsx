@@ -10,6 +10,7 @@ export interface ProductsListProps {
   userId: string;
   search: string;
   onUpdateProductModalOPen(visibility: boolean): void;
+  onUpdateProduct(productList: ProductProps[]): void;
 }
 
 async function fetcher(url: string) {
@@ -18,7 +19,13 @@ async function fetcher(url: string) {
   return products;
 }
 
-export default function ProductsList({ initialProducts, userId, search, onUpdateProductModalOPen }: ProductsListProps) {
+export default function ProductsList({
+  initialProducts,
+  userId,
+  search,
+  onUpdateProductModalOPen,
+  onUpdateProduct,
+}: ProductsListProps) {
   const { addInitialProducts } = useProduct();
   const { data, error } = useSWR(`/api/v1/product/list-products/${userId}`, fetcher, {
     fallback: initialProducts,
@@ -27,8 +34,9 @@ export default function ProductsList({ initialProducts, userId, search, onUpdate
   useEffect(() => {
     if (data) {
       addInitialProducts(data);
+      onUpdateProduct(data);
     }
-  }, [data, addInitialProducts]);
+  }, [data, addInitialProducts, onUpdateProduct]);
 
   if (error) {
     return (
