@@ -67,7 +67,7 @@ export default function LoginPage() {
   return (
     <main className="h-screen flex justify-center items-center">
       <section className="flex flex-col justify-center items-center w-80 py-10">
-        <Logo size="sm" />
+        <Logo size="md" />
 
         <h1 className="text-xl self-start mt-10 mb-5">Entrar</h1>
 
