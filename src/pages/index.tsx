@@ -10,8 +10,8 @@ import calcTotal from "@/lib/calcTotal";
 import getBaseUrl from "@/lib/getBaseUrl";
 import TokenService from "@/lib/TokenService";
 import { GetServerSideProps } from "next";
-
 import { useEffect, useState } from "react";
+import Header from "@/components/Header";
 
 const tokenService = new TokenService();
 
@@ -35,8 +35,10 @@ export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
 
   return (
     <main className={`flex flex-col items-center`}>
+      <Header userEmail={userEmail} />
+
       <span
-        className={`self-start cursor-pointer mt-2 text-zinc-300 hover:text-zinc-400 xl:hidden ${menuOpen ? "hidden" : "block"}`}
+        className={`self-start cursor-pointer mt-2 text-zinc-300 hover:text-zinc-400 xl:hidden ${menuOpen ? "opacity-0" : "opacity-100"}`}
         onClick={() => setMenuOpen(true)}
       >
         <IoMdMenu className="text-3xl" />
@@ -47,6 +49,7 @@ export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
       <FilterProducts value={search} onSearchChange={setSearch} />
 
       <OpenModalButton click={() => setModalOpen(true)} desktopType />
+
       {updatedProducts.length === 0 ? (
         <div className="my-10">
           <p className="text-zinc-300">Sua lista de compras está vazia.</p>
@@ -57,6 +60,7 @@ export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
           <span className="text-zinc-300">{total}</span>
         </div>
       )}
+
       <ProductsList
         initialProducts={shoppingList}
         userId={userId}
@@ -64,8 +68,11 @@ export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
         onUpdateProductModalOPen={setUpdatedProductModalOpen}
         onUpdateProduct={setUpdatedProducts}
       />
+
       <OpenModalButton click={() => setModalOpen(true)} />
+
       <Modal isOpen={modalOpen} setModalOpen={setModalOpen} userId={userId} />
+
       <UpdateProductModal
         isModalOpen={updateProductModalOpen}
         onModalOpen={setUpdatedProductModalOpen}
