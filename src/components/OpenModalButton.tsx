@@ -10,7 +10,7 @@ export default function OpenModalButton({ desktopType, click }: OpenModalButtonP
   const mobileCSS = "block sm:hidden fixed right-4 bottom-4 rounded-full p-3 active:bg-blue-900 active:scale-110";
 
   return (
-    <button className={`bg-blue-800 transition ${desktopType ? desktopCSS : mobileCSS}`} onClick={click}>
+    <button className={`bg-blue-800 transition text-zinc-200 ${desktopType ? desktopCSS : mobileCSS}`} onClick={click}>
       {desktopType ? "Adicionar" : <IoAddSharp className="text-4xl" />}
     </button>
   );

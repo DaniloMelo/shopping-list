@@ -86,12 +86,12 @@ export default function UpdateProductModal({ isModalOpen, onModalOpen, userId }:
     <div
       className={`flex justify-center items-center fixed h-screen w-screen bg-zinc-700/50 backdrop-blur-sm z-10 ${isModalOpen ? "fixed" : "hidden"}`}
     >
-      <section className="flex flex-col flex-1 max-w-4xl p-8 mx-8 bg-black rounded-lg">
+      <section className="flex flex-col flex-1 max-w-4xl p-8 mx-8 rounded-lg bg-primaryLightBG dark:bg-primaryDarkBG">
         <button className="self-end hover:text-zinc-500" onClick={() => onModalOpen(false)}>
           X
         </button>
 
-        <h2 className="text-lg mb-6 text-zinc-300">Edite um produto</h2>
+        <h2 className="text-lg mb-6 text-lightTxt dark:text-darkTxt">Edite um produto</h2>
 
         <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
           <ModalInput
@@ -127,7 +127,10 @@ export default function UpdateProductModal({ isModalOpen, onModalOpen, userId }:
             </div>
           )}
 
-          <button className="bg-cyan-700 hover:bg-cyan-900 py-2 rounded-md" disabled={isLoading && true}>
+          <button
+            className="rounded-md py-2 bg-cyan-700 hover:bg-cyan-900 text-zinc-300 outline-blue-300"
+            disabled={isLoading && true}
+          >
             <div className="flex justify-center">
               <CgSpinner className={`${isLoading ? "animate-spin" : "hidden"} text-2xl mx-2`} />
               {isLoading ? "Editando..." : "Editar"}

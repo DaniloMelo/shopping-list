@@ -53,7 +53,7 @@ export default function Product({
   }
 
   return (
-    <div className="p-3 bg-zinc-800 text-zinc-300 rounded-md">
+    <div className="p-3 rounded-md bg-secondaryLightBG dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 shadow-md dark:shadow-none">
       <div className="flex justify-between cursor-pointer" onClick={() => setIsDetailsHidden(!isDetailsHidden)}>
         <p className="font-semibold">{productName}</p>
         <div className="ml-4 text-xl items-start">
@@ -72,7 +72,7 @@ export default function Product({
 
         <div className="flex justify-start items-center gap-x-4 mt-6">
           <button
-            className="bg-blue-700 hover:bg-blue-800 py-1 px-4 rounded-md"
+            className="bg-blue-700 hover:bg-blue-800 text-zinc-200 py-1 px-4 rounded-md"
             onClick={() => {
               onUpdateModalOpen(true);
               handleUpdateProduct();
@@ -81,7 +81,10 @@ export default function Product({
             Editar
           </button>
 
-          <button className="bg-red-700 hover:bg-red-800 py-1 px-4 rounded-md" onClick={() => SetIsDialogOpen(true)}>
+          <button
+            className="bg-red-700 hover:bg-red-800 text-zinc-200 py-1 px-4 rounded-md"
+            onClick={() => SetIsDialogOpen(true)}
+          >
             Excluir
           </button>
         </div>

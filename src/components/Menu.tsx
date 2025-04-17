@@ -17,7 +17,7 @@ export default function Menu({ userEmail, isOpen, onMenuOpen }: MenuProps) {
       />
 
       <nav
-        className={`fixed top-0 left-0 flex flex-col h-screen gap-y-5 w-60 bg-zinc-800 p-4 z-30 transform transition-transform duration-300 ease-in-out 
+        className={`fixed top-0 left-0 flex flex-col h-screen gap-y-5 w-60 bg-secondaryLightBG dark:bg-secondaryDarkBG p-4 z-30 transform transition-transform duration-300 ease-in-out 
           ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
         <RiCloseLargeLine className="self-end text-xl hover:text-zinc-400" onClick={() => onMenuOpen(false)} />

@@ -6,11 +6,18 @@ export default {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  darkMode: "class",
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        // background: "var(--background)",
+        // foreground: "var(--foreground)",
+        primaryLightBG: "var(--primary-ligth-bg)",
+        secondaryLightBG: "var(--secondary-light-bg)",
+        lightTxt: "var(--light-txt)",
+        primaryDarkBG: "var(--primary-dark-bg)",
+        secondaryDarkBG: "var(--secondary-dark-bg)",
+        darkTxt: "var(--dark-txt)",
       },
       fontFamily: {
         montserrat: ["var(--font-montserrat)", "system-ui", "sans-serif"],

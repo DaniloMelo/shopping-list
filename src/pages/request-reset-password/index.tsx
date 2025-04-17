@@ -68,9 +68,9 @@ export default function RequestResetPasswordPage() {
       <section className="flex flex-col justify-center items-center w-80 py-10">
         <Logo size="md" />
 
-        <h1 className="text-xl self-start mt-10 mb-5">Redefinicição de senha</h1>
+        <h1 className="text-xl self-start mt-10 mb-5">Redefinição de senha</h1>
 
-        <p className="text-sm text-zinc-400 mb-10">
+        <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-10">
           Caso tenha um usuário cadastrado e válido, receberá um email com instruções de como redefinir a sua senha.
         </p>
 
