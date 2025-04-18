@@ -1,6 +1,7 @@
 import Container from "./Container";
 import Logo from "./Logo";
 import LogoutButton from "./LogoutButton";
+import ToggleThemeButton from "./ToggleThemeButton";
 
 interface HeaderProps {
   userEmail: string;
@@ -14,7 +15,7 @@ export default function Header({ userEmail }: HeaderProps) {
           <Logo size="sm" removeName />
 
           <div className="flex justify-center items-center gap-x-5">
-            <span>To-do: troca de tema</span>
+            <ToggleThemeButton />
             <div className="w-40 ">
               <LogoutButton userEmail={userEmail} />
             </div>

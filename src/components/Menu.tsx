@@ -1,5 +1,6 @@
 import LogoutButton from "./LogoutButton";
 import { RiCloseLargeLine } from "react-icons/ri";
+import ToggleThemeButton from "./ToggleThemeButton";
 
 interface MenuProps {
   userEmail: string;
@@ -17,14 +18,21 @@ export default function Menu({ userEmail, isOpen, onMenuOpen }: MenuProps) {
       />
 
       <nav
-        className={`fixed top-0 left-0 flex flex-col h-screen gap-y-5 w-60 bg-secondaryLightBG dark:bg-secondaryDarkBG p-4 z-30 transform transition-transform duration-300 ease-in-out 
+        className={`fixed top-0 left-0 flex flex-col justify-between h-screen gap-y-5 w-60 bg-secondaryLightBG dark:bg-secondaryDarkBG p-4 z-30 transform transition-transform duration-300 ease-in-out 
           ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
-        <RiCloseLargeLine className="self-end text-xl hover:text-zinc-400" onClick={() => onMenuOpen(false)} />
+        <div className="flex flex-col gap-y-5">
+          <RiCloseLargeLine className="self-end text-xl hover:text-zinc-400" onClick={() => onMenuOpen(false)} />
 
-        <p>To-do: troca de tema</p>
+          <div className="flex items-center">
+            <span className="mr-4">Tema:</span>
+            <ToggleThemeButton />
+          </div>
+        </div>
 
-        <LogoutButton userEmail={userEmail} />
+        <div className="mb-10">
+          <LogoutButton userEmail={userEmail} />
+        </div>
       </nav>
     </>
   );

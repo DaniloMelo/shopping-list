@@ -12,7 +12,6 @@ import TokenService from "@/lib/TokenService";
 import { GetServerSideProps } from "next";
 import { useEffect, useState } from "react";
 import Header from "@/components/Header";
-import useTheme from "@/hooks/useTheme";
 
 const tokenService = new TokenService();
 
@@ -29,8 +28,6 @@ export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
   const [updatedProducts, setUpdatedProducts] = useState<ProductProps[]>(shoppingList);
   const [menuOpen, setMenuOpen] = useState(false);
   const [total, setTotal] = useState("");
-
-  const { toggleTheme } = useTheme();
 
   useEffect(() => {
     setTotal(calcTotal(updatedProducts));
@@ -52,8 +49,6 @@ export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
       <FilterProducts value={search} onSearchChange={setSearch} />
 
       <OpenModalButton click={() => setModalOpen(true)} desktopType />
-
-      <button onClick={toggleTheme}>TEMA</button>
 
       {updatedProducts.length === 0 ? (
         <div className="my-10">
