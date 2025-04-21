@@ -74,12 +74,12 @@ export default function Modal({ isOpen, userId, setModalOpen }: ModalProps) {
     <section
       className={`flex justify-center items-center fixed h-screen w-screen bg-zinc-700/50 backdrop-blur-sm z-10 ${isOpen ? "fixed" : "hidden"}`}
     >
-      <div className="flex flex-col flex-1 max-w-4xl p-8 mx-8 bg-black rounded-lg">
+      <div className="flex flex-col flex-1 max-w-4xl p-8 mx-8 rounded-lg bg-primaryLightBG dark:bg-primaryDarkBG">
         <button className="self-end hover:text-zinc-500" onClick={() => setModalOpen(false)}>
           X
         </button>
 
-        <h2 className="text-lg mb-6 text-zinc-300">Adicione um novo produto</h2>
+        <h2 className="text-lg mb-6 text-lightTxt dark:text-darkTxt">Adicione um novo produto</h2>
 
         <form className="flex flex-col gap-5" onSubmit={(e) => handleSubmit(e)}>
           <ModalInput
@@ -115,7 +115,10 @@ export default function Modal({ isOpen, userId, setModalOpen }: ModalProps) {
             </div>
           )}
 
-          <button className="bg-cyan-700 hover:bg-cyan-900 py-2 rounded-md" disabled={isLoading && true}>
+          <button
+            className="bg-cyan-700 hover:bg-cyan-900 text-zinc-200 outline-blue-300 py-2 rounded-md"
+            disabled={isLoading && true}
+          >
             <div className="flex justify-center">
               <CgSpinner className={`${isLoading ? "animate-spin" : "hidden"} text-2xl mx-2`} />
               {isLoading ? "Adicionando..." : "Adicionar"}
