@@ -10,8 +10,6 @@ export default {
   theme: {
     extend: {
       colors: {
-        // background: "var(--background)",
-        // foreground: "var(--foreground)",
         primaryLightBG: "var(--primary-ligth-bg)",
         secondaryLightBG: "var(--secondary-light-bg)",
         lightTxt: "var(--light-txt)",
