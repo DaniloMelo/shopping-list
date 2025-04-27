@@ -1,40 +1,144 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+<div align="center">
+  <img src="./.github_assets/cover2.png">
+  <div align="center">
+    <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white">
+    <img src="https://img.shields.io/badge/next%20js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white">
+    <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white">
+    <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white">
+    <img src="https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white">
+    <img src="https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white">
+    <img src="https://img.shields.io/badge/Jest-C21325?style=for-the-badge&logo=jest&logoColor=white">
+    <img src="https://img.shields.io/badge/Github%20Actions-282a2e?style=for-the-badge&logo=githubactions&logoColor=367cfe">
+    <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white">
+  </div>
+</div>
 
-## Getting Started
+<br>
+<br>
 
-First, run the development server:
+# 🛒 Shopping List
+
+Uma aplicação prática para ajudar você a não esquecer itens de compra e evitar surpresas no valor total.
+
+## 📃 Descrição
+
+**Shopping List** é uma aplicação fullstack que permite aos usuários gerenciar suas compras em supermercados e outros estabelecimentos. Suas listas ficam salvas e podem ser acessadas e editadas a qualquer momento
+
+Clique [aqui](https://shopping-list-eta-ten.vercel.app/login) para acessar a aplicação.
+
+Caso queira testar sem criar uma conta, utilize:
+
+- **email**: testuser@email.com
+
+- **senha**: T4stusr!6
+
+### 📱 Versão para celular
+
+<div align="center">
+  <img src="./.github_assets/login_mobile.png" width="30%" style="margin: 10px;">
+  <img src="./.github_assets/home_mobile.png" width="30%" style="margin: 10px;">
+  <img src="./.github_assets/home_mobile_white.png" width="30%" style="margin: 10px;">
+</div>
+
+### 💻 Versão para computador
+
+<div align="center">
+  <img src="./.github_assets/login_desk.png" width="45%" style="margin: 10px;">
+  <img src="./.github_assets/home_desk.png" width="45%" style="margin: 10px;">
+</div>
+
+## 🔨 Tecnologias e ferramentas
+
+- Next.js
+- TypeScript
+- Prisma ORM
+- PostgreSQL
+- Tailwind CSS
+- Jest
+- Husky
+- GitHub Actions
+
+## ✨ Funcionalidades
+
+- Cadastro e login de usuários
+- Recuperação de senha por email
+- Listagem e filtragem de produtos
+- Temas light e dark
+- Temas claro e escuro (com detecção automática baseada no dispositivo)
+
+## 📦 Como instalar a aplicação
+
+1. Faça o clone desta aplicação em um diretório de sua preferência
+
+```bash
+git clone https://github.com/DaniloMelo/shopping-list.git
+```
+
+2. Dentro do diretório da aplicação, instale as dependências com o comando:
+
+```bash
+npm install
+```
+
+3. Configure as variáveis de ambiente.
+
+Crie o arquivo `.env.development` com os seguintes valores:
+
+- **POSTGRES_HOST**=localhost
+- **POSTGRES_PORT**=5432
+- **POSTGRES_DB**=local_db
+- **POSTGRES_USER**=local_user
+- **POSTGRES_PASSWORD**=local_password
+- **JWT_SECRET**="local_secret_key"
+
+Crie também um arquivo `.env` com os seguintes valores:
+
+- **DATABASE_URL**="postgresql://local_user:local_password@localhost:5432/local_db?schema=public?"
+- **EMAIL_HOST**=smtp.gmail.com
+- **EMAIL_PORT**=587
+- **EMAIL_USER**=seu_email
+- **EMAIL_PASSWORD**=sua_senha_de_app
+
+  **Importante**: As variáveis de ambiente **EMAIL_USER**, **EMAIL_PASSWORD** são necessárias para que o serviço de recuperação de senha funcione corretamente. Para isso, é necessário um email real. Se for Gmail, configure uma **senha de app** em sua conta. [Saiba mais sobre como gerar uma senha de app no Gmail](https://www.youtube.com/watch?v=nFbZLX2U-5k)
+
+## 🖥️ Como rodar a aplicação
+
+1. Inicie o banco de dados com Docker:
+
+```bash
+npm run services:up
+```
+
+2. Sincronize as migrations, rode o seed e inicie o servidor:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Acesse a aplicação em **http://localhost:3000/**
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## ✅ Testes Automatizados
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+Este projeto utiliza Jest para testes unitários e de integração.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+Além disso, utiliza Husky para validar testes localmente antes dos commits e GitHub Actions para rodar testes em pushs e pull requests.
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Para rodar testes localmente:
 
-## Learn More
+```bash
+npm run test
+```
 
-To learn more about Next.js, take a look at the following resources:
+Para rodar os testes em modo **watch**:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+```bash
+npm run test:watch
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🤝 Contribuição
 
-## Deploy on Vercel
+Contribuições são bem-vindas! Sinta-se à vontade para abrir issues e pull requests.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📝 Licença
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+Este projeto está sob a licença MIT.
