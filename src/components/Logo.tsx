@@ -16,7 +16,7 @@ export default function Logo({ size, removeName }: LogoProps) {
     <div className={`${montserrat.variable} flex flex-col items-center`}>
       <Image
         src="/shopping-bags-svgrepo-com.svg"
-        alt="Logo Lista de Compras"
+        alt="Logo Shopping List"
         width={size === "sm" ? 50 : size === "md" ? 75 : 100}
         height={size === "sm" ? 50 : size === "md" ? 75 : 100}
         priority
@@ -25,7 +25,7 @@ export default function Logo({ size, removeName }: LogoProps) {
       <p
         className={`${removeName && "hidden"} ${size === "sm" ? "text-sm" : size === "md" ? "text-" : "text-3xl"} mt-2 font-montserrat`}
       >
-        Lista de Compras
+        Shopping List
       </p>
     </div>
   );
