@@ -44,7 +44,6 @@ export default function RequestResetPasswordPage() {
       }
 
       setFormSucces("Email Enviado.");
-      setEmail("");
       setIsLoading(false);
       setIsDisabled(true);
       setTimeout(() => router.push("/login"), 3000);
@@ -97,7 +96,9 @@ export default function RequestResetPasswordPage() {
             </div>
           )}
 
-          <AuthButton label="Enviar" loading={isLoading} disabled={isDisabled} />
+          <AuthButton loading={isLoading} disabled={isDisabled}>
+            {isLoading ? "Enviando" : "Enviar"}
+          </AuthButton>
 
           <p className="text-blue-800 text-end text-sm">
             <Link href="/login" className="hover:text-blue-500 ">

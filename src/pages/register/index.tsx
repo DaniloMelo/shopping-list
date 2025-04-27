@@ -61,7 +61,6 @@ export default function RegisterPage() {
       }
 
       setFormSuccess("Usuário Criado! Aguarde...");
-      setNewUser({ name: "", email: "", password: "", passwordConfirmation: "" });
       setIsDisabled(true);
       setIsLoading(false);
       setTimeout(() => router.push("/login"), 2000);
@@ -136,7 +135,9 @@ export default function RegisterPage() {
             </div>
           )}
 
-          <AuthButton label="Cadastrar" disabled={isDisabled} loading={isLoading} />
+          <AuthButton disabled={isDisabled} loading={isLoading}>
+            {isLoading ? "Cadastrando" : "Cadastrar"}
+          </AuthButton>
 
           <p className="text-blue-800 text-end text-sm">
             <Link href="/request-reset-password" className="hover:text-blue-500 ">

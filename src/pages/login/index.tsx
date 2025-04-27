@@ -14,7 +14,6 @@ export default function LoginPage() {
   const [isDisabled, setIsDisabled] = useState(true);
   const [formErrorMessage, setFormErrorMessage] = useState("");
   const [formErrorAction, setFormErrorAction] = useState("");
-  const [formSuccess, setFormSuccess] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -29,7 +28,6 @@ export default function LoginPage() {
     e.preventDefault();
     setFormErrorMessage("");
     setFormErrorAction("");
-    setFormSuccess("");
     setIsLoading(true);
 
     try {
@@ -44,10 +42,7 @@ export default function LoginPage() {
         if (errorData.isPublicError) throw new PublicError(errorData.message, errorData.action);
       }
 
-      setFormSuccess("Aguarde...");
-      setUser({ email: "", password: "" });
       setIsDisabled(true);
-      setIsLoading(false);
       setTimeout(() => router.push("/"), 2000);
     } catch (error) {
       if (error instanceof PublicError) {
@@ -97,13 +92,9 @@ export default function LoginPage() {
             </div>
           )}
 
-          {formSuccess && (
-            <div className="bg-green-900/50 w-full p-5 mt-5 text-sm text-center rounded-md">
-              <p>{formSuccess}</p>
-            </div>
-          )}
-
-          <AuthButton label="Entrar" disabled={isDisabled} loading={isLoading} />
+          <AuthButton disabled={isDisabled} loading={isLoading}>
+            {isLoading ? "Entrando" : "Entrar"}
+          </AuthButton>
 
           <p className="text-blue-800 text-end text-sm">
             <Link href="/request-reset-password" className="hover:text-blue-500 ">
