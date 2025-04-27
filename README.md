@@ -84,6 +84,7 @@ npm install
 
 Crie o arquivo `.env.development` com os seguintes valores:
 
+- **DATABASE_URL**="postgresql://local_user:local_password@localhost:5432/local_db?schema=public?"
 - **POSTGRES_HOST**=localhost
 - **POSTGRES_PORT**=5432
 - **POSTGRES_DB**=local_db
