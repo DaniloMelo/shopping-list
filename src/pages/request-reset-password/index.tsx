@@ -26,10 +26,11 @@ export default function RequestResetPasswordPage() {
 
   async function handleFormSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setIsLoading(true);
     setFormErrorMessage("");
     setFormErrorAction("");
     setFormSucces("");
+    setIsLoading(true);
+    setIsDisabled(true);
 
     try {
       const response = await fetch("api/v1/auth/request-reset-password", {
@@ -44,9 +45,7 @@ export default function RequestResetPasswordPage() {
       }
 
       setFormSucces("Email Enviado.");
-      setEmail("");
       setIsLoading(false);
-      setIsDisabled(true);
       setTimeout(() => router.push("/login"), 3000);
     } catch (error) {
       if (error instanceof PublicError) {
@@ -97,7 +96,9 @@ export default function RequestResetPasswordPage() {
             </div>
           )}
 
-          <AuthButton label="Enviar" loading={isLoading} disabled={isDisabled} />
+          <AuthButton loading={isLoading} disabled={isDisabled}>
+            {isLoading ? "Enviando" : "Enviar"}
+          </AuthButton>
 
           <p className="text-blue-800 text-end text-sm">
             <Link href="/login" className="hover:text-blue-500 ">

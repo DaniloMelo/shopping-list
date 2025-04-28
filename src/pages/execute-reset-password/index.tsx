@@ -27,10 +27,11 @@ export default function ExecuteResetPasswordPage() {
 
   async function handleFormSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setIsLoading(true);
     setFormErrorMessage("");
     setFormErrorAction("");
     setFormSuccess("");
+    setIsLoading(true);
+    setIsDisabled(true);
 
     try {
       const { token, email } = router.query;
@@ -47,9 +48,6 @@ export default function ExecuteResetPasswordPage() {
       }
 
       setFormSuccess("Senha Alterada. Aguarde...");
-      setPassword("");
-      setPasswordConfirmation("");
-      setIsDisabled(true);
       setIsLoading(false);
       setTimeout(() => router.push("/login"), 3000);
     } catch (error) {
@@ -106,7 +104,9 @@ export default function ExecuteResetPasswordPage() {
             </div>
           )}
 
-          <AuthButton label="Enviar" loading={isLoading} disabled={isDisabled} />
+          <AuthButton loading={isLoading} disabled={isDisabled}>
+            {isLoading ? "Alterando" : "Alterar"}
+          </AuthButton>
 
           <p className="text-blue-800 text-end text-sm">
             <Link href="/login" className="hover:text-blue-500 ">
