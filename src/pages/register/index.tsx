@@ -45,6 +45,7 @@ export default function RegisterPage() {
     setFormErrorMessage("");
     setFormErrorAction("");
     setIsLoading(true);
+    setIsDisabled(true);
 
     try {
       const response = await fetch("api/v1/auth/register", {
@@ -61,7 +62,6 @@ export default function RegisterPage() {
       }
 
       setFormSuccess("Usuário Criado! Aguarde...");
-      setIsDisabled(true);
       setIsLoading(false);
       setTimeout(() => router.push("/login"), 2000);
     } catch (error) {

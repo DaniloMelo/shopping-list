@@ -29,6 +29,7 @@ export default function LoginPage() {
     setFormErrorMessage("");
     setFormErrorAction("");
     setIsLoading(true);
+    setIsDisabled(true);
 
     try {
       const response = await fetch("/api/v1/auth/login", {
@@ -42,8 +43,7 @@ export default function LoginPage() {
         if (errorData.isPublicError) throw new PublicError(errorData.message, errorData.action);
       }
 
-      setIsDisabled(true);
-      setTimeout(() => router.push("/"), 2000);
+      router.push("/");
     } catch (error) {
       if (error instanceof PublicError) {
         setFormErrorMessage(error.message);

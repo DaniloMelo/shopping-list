@@ -27,10 +27,11 @@ export default function ExecuteResetPasswordPage() {
 
   async function handleFormSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setIsLoading(true);
     setFormErrorMessage("");
     setFormErrorAction("");
     setFormSuccess("");
+    setIsLoading(true);
+    setIsDisabled(true);
 
     try {
       const { token, email } = router.query;
@@ -47,7 +48,6 @@ export default function ExecuteResetPasswordPage() {
       }
 
       setFormSuccess("Senha Alterada. Aguarde...");
-      setIsDisabled(true);
       setIsLoading(false);
       setTimeout(() => router.push("/login"), 3000);
     } catch (error) {

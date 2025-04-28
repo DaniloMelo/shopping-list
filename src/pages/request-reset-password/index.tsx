@@ -26,10 +26,11 @@ export default function RequestResetPasswordPage() {
 
   async function handleFormSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setIsLoading(true);
     setFormErrorMessage("");
     setFormErrorAction("");
     setFormSucces("");
+    setIsLoading(true);
+    setIsDisabled(true);
 
     try {
       const response = await fetch("api/v1/auth/request-reset-password", {
@@ -45,7 +46,6 @@ export default function RequestResetPasswordPage() {
 
       setFormSucces("Email Enviado.");
       setIsLoading(false);
-      setIsDisabled(true);
       setTimeout(() => router.push("/login"), 3000);
     } catch (error) {
       if (error instanceof PublicError) {
