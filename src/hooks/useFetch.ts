@@ -1,4 +1,16 @@
+import { InewUser } from "@/pages/register";
+
 export function useFetch() {
+  async function register(newUser: InewUser) {
+    const response = await fetch("api/v1/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newUser),
+    });
+
+    return response;
+  }
+
   async function logout(userEmail: string) {
     await fetch("api/v1/auth/logout", {
       method: "POST",
@@ -16,6 +28,7 @@ export function useFetch() {
   }
 
   return {
+    register,
     deleteProduct,
     logout,
   };

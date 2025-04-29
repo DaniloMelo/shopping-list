@@ -4,12 +4,10 @@ import { IoIosMail } from "react-icons/io";
 import { MdLock } from "react-icons/md";
 import AuthInput from "@/components/AuthInput";
 import AuthButton from "@/components/AuthButton";
-import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
-import { PublicError } from "@/lib/CustomErrors";
-import { useRouter } from "next/router";
+import { useRegisterForm } from "@/hooks/useRegisterForm";
 
-interface InewUser {
+export interface InewUser {
   name: string;
   email: string;
   password: string;
@@ -17,67 +15,8 @@ interface InewUser {
 }
 
 export default function RegisterPage() {
-  const [newUser, setNewUser] = useState<InewUser>({ name: "", email: "", password: "", passwordConfirmation: "" });
-  const [isDisabled, setIsDisabled] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
-  const [formErrorMessage, setFormErrorMessage] = useState("");
-  const [formErrorAction, setFormErrorAction] = useState("");
-  const [formSuccess, setFormSuccess] = useState("");
-  const router = useRouter();
-
-  useEffect(() => {
-    if (
-      newUser.name.length < 3 ||
-      newUser.name.trim().length === 0 ||
-      !newUser.email.includes("@") ||
-      !newUser.email.includes(".com") ||
-      newUser.password.length < 8 ||
-      newUser.passwordConfirmation.length < 8
-    ) {
-      setIsDisabled(true);
-    } else {
-      setIsDisabled(false);
-    }
-  }, [newUser]);
-
-  async function handleFormSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setFormErrorMessage("");
-    setFormErrorAction("");
-    setIsLoading(true);
-    setIsDisabled(true);
-
-    try {
-      const response = await fetch("api/v1/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newUser),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        if (errorData.isPublicError) {
-          throw new PublicError(errorData.message, errorData.action);
-        }
-      }
-
-      setFormSuccess("Usuário Criado! Aguarde...");
-      setIsLoading(false);
-      setTimeout(() => router.push("/login"), 2000);
-    } catch (error) {
-      if (error instanceof PublicError) {
-        setFormErrorMessage(error.message);
-        setFormErrorAction(error.action);
-        setIsLoading(false);
-        setIsDisabled(true);
-        setTimeout(() => {
-          setFormErrorMessage("");
-          setFormErrorAction("");
-          setIsDisabled(false);
-        }, 5000);
-      }
-    }
-  }
+  const { newUser, setNewUser, isDisabled, isLoading, formErrorMessage, formErrorAction, formSuccess, handleSubmit } =
+    useRegisterForm();
 
   return (
     <main className="h-screen flex justify-center">
@@ -86,7 +25,7 @@ export default function RegisterPage() {
 
         <h1 className="text-xl self-start mt-10 mb-5">Cadastre-se</h1>
 
-        <form className="w-full flex flex-col gap-5" onSubmit={handleFormSubmit}>
+        <form className="w-full flex flex-col gap-5" onSubmit={handleSubmit}>
           <AuthInput
             Icon={MdPerson}
             placeholder="Nome"
