@@ -5,7 +5,7 @@ import { MdLock } from "react-icons/md";
 import AuthInput from "@/components/AuthInput";
 import AuthButton from "@/components/AuthButton";
 import Link from "next/link";
-import { useRegisterForm } from "@/hooks/useRegisterForm";
+import { useRegisterFetch } from "@/hooks/useRegisterFetch";
 
 export interface InewUser {
   name: string;
@@ -16,7 +16,7 @@ export interface InewUser {
 
 export default function RegisterPage() {
   const { newUser, setNewUser, isDisabled, isLoading, formErrorMessage, formErrorAction, formSuccess, handleSubmit } =
-    useRegisterForm();
+    useRegisterFetch();
 
   return (
     <main className="h-screen flex justify-center">

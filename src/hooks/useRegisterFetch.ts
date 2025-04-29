@@ -10,7 +10,7 @@ interface InewUser {
   passwordConfirmation: string;
 }
 
-export function useRegisterForm() {
+export function useRegisterFetch() {
   const [newUser, setNewUser] = useState<InewUser>({ name: "", email: "", password: "", passwordConfirmation: "" });
   const [isDisabled, setIsDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
