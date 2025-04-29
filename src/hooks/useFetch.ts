@@ -1,11 +1,31 @@
-import { InewUser } from "@/pages/register";
+interface InewUserData {
+  name: string;
+  email: string;
+  password: string;
+  passwordConfirmation: string;
+}
+
+interface ILoginUserData {
+  email: string;
+  password: string;
+}
 
 export function useFetch() {
-  async function register(newUser: InewUser) {
+  async function register(newUser: InewUserData) {
     const response = await fetch("api/v1/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newUser),
+    });
+
+    return response;
+  }
+
+  async function login(userData: ILoginUserData) {
+    const response = await fetch("/api/v1/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(userData),
     });
 
     return response;
@@ -29,6 +49,7 @@ export function useFetch() {
 
   return {
     register,
+    login,
     deleteProduct,
     logout,
   };

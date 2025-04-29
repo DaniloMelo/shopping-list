@@ -7,13 +7,6 @@ import AuthButton from "@/components/AuthButton";
 import Link from "next/link";
 import { useRegisterFetch } from "@/hooks/useRegisterFetch";
 
-export interface InewUser {
-  name: string;
-  email: string;
-  password: string;
-  passwordConfirmation: string;
-}
-
 export default function RegisterPage() {
   const { newUser, setNewUser, isDisabled, isLoading, formErrorMessage, formErrorAction, formSuccess, handleSubmit } =
     useRegisterFetch();

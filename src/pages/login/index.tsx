@@ -1,63 +1,13 @@
 import AuthButton from "@/components/AuthButton";
 import AuthInput from "@/components/AuthInput";
 import Logo from "@/components/Logo";
-import { PublicError } from "@/lib/CustomErrors";
+import { useLoginFetch } from "@/hooks/useLoginFetch";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { FormEvent, useEffect, useState } from "react";
 import { IoIosMail } from "react-icons/io";
 import { MdLock } from "react-icons/md";
 
 export default function LoginPage() {
-  const [user, setUser] = useState({ email: "", password: "" });
-  const [isLoading, setIsLoading] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(true);
-  const [formErrorMessage, setFormErrorMessage] = useState("");
-  const [formErrorAction, setFormErrorAction] = useState("");
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!user.email.includes("@") || !user.email.includes(".com") || user.password.length < 8) {
-      setIsDisabled(true);
-    } else {
-      setIsDisabled(false);
-    }
-  }, [user]);
-
-  async function handleFormSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setFormErrorMessage("");
-    setFormErrorAction("");
-    setIsLoading(true);
-    setIsDisabled(true);
-
-    try {
-      const response = await fetch("/api/v1/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(user),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        if (errorData.isPublicError) throw new PublicError(errorData.message, errorData.action);
-      }
-
-      router.push("/");
-    } catch (error) {
-      if (error instanceof PublicError) {
-        setFormErrorMessage(error.message);
-        setFormErrorAction(error.action);
-        setIsLoading(false);
-        setIsDisabled(true);
-        setTimeout(() => {
-          setFormErrorMessage("");
-          setFormErrorAction("");
-          setIsDisabled(false);
-        }, 5000);
-      }
-    }
-  }
+  const { user, setUser, formErrorMessage, formErrorAction, isDisabled, isLoading, handleSubmit } = useLoginFetch();
 
   return (
     <main className="h-screen flex justify-center items-center">
@@ -66,7 +16,7 @@ export default function LoginPage() {
 
         <h1 className="text-xl self-start mt-10 mb-5">Entrar</h1>
 
-        <form className="w-full flex flex-col gap-5" onSubmit={handleFormSubmit}>
+        <form className="w-full flex flex-col gap-5" onSubmit={handleSubmit}>
           <AuthInput
             Icon={IoIosMail}
             placeholder="Email"

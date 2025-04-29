@@ -71,7 +71,7 @@ export default class AuthService {
     try {
       const isUserExists = await this.userRepository.findUserByEmail(email);
       if (!isUserExists) {
-        throw new LoginServiceError("Usuário não encontrado.", "Verifique suas credenciais.", 404, true);
+        throw new LoginServiceError("Credenciais inválidas.", "Verifique suas credenciais.", 400, true);
       }
 
       const isValidPassword = await this.hasher.decrypt(password, isUserExists.password);
