@@ -39,6 +39,16 @@ export function useFetch() {
     });
   }
 
+  async function requestResetPassword(email: string) {
+    const response = await fetch("api/v1/auth/request-reset-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+
+    return response;
+  }
+
   async function deleteProduct(productId: string, userId: string) {
     await fetch(`/api/v1/product/delete-product/${productId}`, {
       method: "DELETE",
@@ -50,7 +60,8 @@ export function useFetch() {
   return {
     register,
     login,
-    deleteProduct,
     logout,
+    requestResetPassword,
+    deleteProduct,
   };
 }
