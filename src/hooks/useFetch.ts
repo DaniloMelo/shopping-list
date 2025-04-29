@@ -10,6 +10,13 @@ interface ILoginUserData {
   password: string;
 }
 
+interface IExecuteResetPassword {
+  email: string;
+  token: string;
+  password: string;
+  passwordConfirmation: string;
+}
+
 export function useFetch() {
   async function register(newUser: InewUserData) {
     const response = await fetch("api/v1/auth/register", {
@@ -49,6 +56,16 @@ export function useFetch() {
     return response;
   }
 
+  async function executeResetPassword({ email, token, password, passwordConfirmation }: IExecuteResetPassword) {
+    const response = await fetch("api/v1/auth/execute-reset-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, token, password, passwordConfirmation }),
+    });
+
+    return response;
+  }
+
   async function deleteProduct(productId: string, userId: string) {
     await fetch(`/api/v1/product/delete-product/${productId}`, {
       method: "DELETE",
@@ -62,6 +79,7 @@ export function useFetch() {
     login,
     logout,
     requestResetPassword,
+    executeResetPassword,
     deleteProduct,
   };
 }
