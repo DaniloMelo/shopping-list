@@ -82,7 +82,10 @@ describe("src/service/AuthService.ts", () => {
         mockUserRepository.findUserByEmail.mockResolvedValue(existingUser);
 
         await expect(authService.register(newUser)).rejects.toThrow("Credenciais inválidas");
+
         expect(mockUserRepository.findUserByEmail).toHaveBeenCalledWith("john@email.com");
+
+        await authService.register(newUser).catch((error) => expect(error.message).toBe("Credenciais inválidas."));
       });
 
       test("Should throw InternalServerError if unexpected error occurs during register", async () => {
@@ -96,10 +99,12 @@ describe("src/service/AuthService.ts", () => {
         mockUserRepository.findUserByEmail.mockRejectedValue(new Error("Unexpected error."));
 
         await expect(authService.register(newUser)).rejects.toThrow(InternalServerError);
+
+        expect(mockUserRepository.findUserByEmail).toHaveBeenCalledWith("john@email.com");
+
         await authService.register(newUser).catch((error) => {
           expect(error.message).toBe("Ocorreu um Erro inesperado ao tentar realizar o cadastro.");
         });
-        expect(mockUserRepository.findUserByEmail).toHaveBeenCalledWith("john@email.com");
       });
     });
   });
@@ -137,6 +142,10 @@ describe("src/service/AuthService.ts", () => {
 
         await expect(authService.login("unexistent@email.com", "unexistent")).rejects.toThrow(LoginServiceError);
         expect(mockUserRepository.findUserByEmail).toHaveBeenCalledWith("unexistent@email.com");
+
+        await authService
+          .login("unexistent@email.com", "unexistent")
+          .catch((error) => expect(error.message).toBe("Credenciais inválidas."));
       });
 
       test("Should throw an error if password is incorrect", async () => {
@@ -154,6 +163,10 @@ describe("src/service/AuthService.ts", () => {
         await expect(() => authService.login("john@email.com", "wrong-password")).rejects.toThrow(LoginServiceError);
         expect(mockUserRepository.findUserByEmail).toHaveBeenCalledWith("john@email.com");
         expect(mockHasher.decrypt).toHaveBeenCalledWith("wrong-password", "P4ssword!23");
+
+        await authService
+          .login("john@email.com", "wrong-password")
+          .catch((error) => expect(error.message).toBe("Credenciais inválidas."));
       });
 
       test("Should throw InternalServerError if unexpected error occurs during login", async () => {
@@ -193,20 +206,24 @@ describe("src/service/AuthService.ts", () => {
         mockUserRepository.findUserByEmail.mockResolvedValue(null);
 
         await expect(authService.logout("john@email.com")).rejects.toThrow(LogoutServiceError);
+
+        expect(mockUserRepository.findUserByEmail).toHaveBeenCalledWith("john@email.com");
+
         await authService.logout("john@email.com").catch((error) => {
           expect(error.message).toBe("User not found.");
         });
-        expect(mockUserRepository.findUserByEmail).toHaveBeenCalledWith("john@email.com");
       });
 
       test("Should throw InternalServerError if unexpected error occurs during logout", async () => {
         mockUserRepository.findUserByEmail.mockRejectedValue(new Error("Unexpected error"));
 
         await expect(authService.logout("john@email.com")).rejects.toThrow(InternalServerError);
+
+        expect(mockUserRepository.findUserByEmail).toHaveBeenCalledWith("john@email.com");
+
         await authService.logout("john@email.com").catch((error) => {
           expect(error.message).toBe("Ocorreu um Erro inesperado ao tentar realizar o logout.");
         });
-        expect(mockUserRepository.findUserByEmail).toHaveBeenCalledWith("john@email.com");
       });
     });
   });

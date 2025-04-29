@@ -41,6 +41,13 @@ describe("src/services/UserService.ts", () => {
         mockUserRepository.findUserById.mockResolvedValue(null);
 
         await expect(userService.findUserById("321")).rejects.toThrow(UserServiceError);
+
+        expect(mockUserRepository.findUserById).toHaveBeenCalledWith("321");
+
+        await userService.findUserById("321").catch((error) => {
+          expect(error.message).toBe("User not found.");
+          expect(error.action).toBe("Check the id provided");
+        });
       });
     });
   });
