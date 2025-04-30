@@ -26,7 +26,7 @@ export default function Product({
   const [isDetailsHidden, setIsDetailsHidden] = useState(false);
   const [isDialogOpen, SetIsDialogOpen] = useState(false);
   const { productToUpdate } = useProduct();
-  const { deleteProduct } = useFetch();
+  const { fetchDeleteProduct } = useFetch();
   const { mutate } = useSWRConfig();
 
   function handleUpdateProduct() {
@@ -35,7 +35,7 @@ export default function Product({
 
   async function handleDeleteProduct() {
     try {
-      await deleteProduct(id, userId);
+      await fetchDeleteProduct(id, userId);
       mutate(`/api/v1/product/list-products/${userId}`);
 
       SetIsDialogOpen(false);

@@ -66,7 +66,7 @@ export function useFetch() {
     return response;
   }
 
-  async function deleteProduct(productId: string, userId: string) {
+  async function fetchDeleteProduct(productId: string, userId: string) {
     await fetch(`/api/v1/product/delete-product/${productId}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
@@ -80,6 +80,6 @@ export function useFetch() {
     fetchLogout,
     fetchRequestResetPassword,
     fetchExecuteResetPassword,
-    deleteProduct,
+    fetchDeleteProduct,
   };
 }
