@@ -11,7 +11,7 @@ export function useRequestResetPasswordFetch() {
   const [formErrorAction, setFormErrorAction] = useState("");
   const [formSuccess, setFormSucces] = useState("");
 
-  const { requestResetPassword } = useFetch();
+  const { fetchRequestResetPassword } = useFetch();
   const router = useRouter();
 
   useEffect(() => {
@@ -31,7 +31,7 @@ export function useRequestResetPasswordFetch() {
     setIsDisabled(true);
 
     try {
-      const response = await requestResetPassword(email);
+      const response = await fetchRequestResetPassword(email);
 
       if (!response.ok) {
         const ErrorData = await response.json();

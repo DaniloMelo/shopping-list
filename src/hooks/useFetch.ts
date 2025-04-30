@@ -18,7 +18,7 @@ interface IExecuteResetPassword {
 }
 
 export function useFetch() {
-  async function register(newUser: InewUserData) {
+  async function fetchRegister(newUser: InewUserData) {
     const response = await fetch("api/v1/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -28,7 +28,7 @@ export function useFetch() {
     return response;
   }
 
-  async function login(userData: ILoginUserData) {
+  async function fetchLogin(userData: ILoginUserData) {
     const response = await fetch("/api/v1/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -46,7 +46,7 @@ export function useFetch() {
     });
   }
 
-  async function requestResetPassword(email: string) {
+  async function fetchRequestResetPassword(email: string) {
     const response = await fetch("api/v1/auth/request-reset-password", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -56,7 +56,7 @@ export function useFetch() {
     return response;
   }
 
-  async function executeResetPassword({ email, token, password, passwordConfirmation }: IExecuteResetPassword) {
+  async function fetchExecuteResetPassword({ email, token, password, passwordConfirmation }: IExecuteResetPassword) {
     const response = await fetch("api/v1/auth/execute-reset-password", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -75,11 +75,11 @@ export function useFetch() {
   }
 
   return {
-    register,
-    login,
+    fetchRegister,
+    fetchLogin,
     logout,
-    requestResetPassword,
-    executeResetPassword,
+    fetchRequestResetPassword,
+    fetchExecuteResetPassword,
     deleteProduct,
   };
 }

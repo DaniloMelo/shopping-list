@@ -10,7 +10,7 @@ export function useLoginFetch() {
   const [formErrorMessage, setFormErrorMessage] = useState("");
   const [formErrorAction, setFormErrorAction] = useState("");
 
-  const { login } = useFetch();
+  const { fetchLogin } = useFetch();
   const router = useRouter();
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export function useLoginFetch() {
     setIsDisabled(true);
 
     try {
-      const response = await login(user);
+      const response = await fetchLogin(user);
 
       if (!response.ok) {
         const errorData = await response.json();

@@ -18,7 +18,7 @@ export function useRegisterFetch() {
   const [formErrorAction, setFormErrorAction] = useState("");
   const [formSuccess, setFormSuccess] = useState("");
 
-  const { register } = useFetch();
+  const { fetchRegister } = useFetch();
   const router = useRouter();
 
   useEffect(() => {
@@ -44,7 +44,7 @@ export function useRegisterFetch() {
     setIsDisabled(true);
 
     try {
-      const response = await register(newUser);
+      const response = await fetchRegister(newUser);
 
       if (!response.ok) {
         const errorData = await response.json();

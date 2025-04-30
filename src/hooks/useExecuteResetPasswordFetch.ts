@@ -12,7 +12,7 @@ export function useExecuteResetPasswordFetch() {
   const [formErrorAction, setFormErrorAction] = useState("");
   const [formSuccess, setFormSuccess] = useState("");
 
-  const { executeResetPassword } = useFetch();
+  const { fetchExecuteResetPassword } = useFetch();
   const router = useRouter();
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export function useExecuteResetPasswordFetch() {
         throw new Error("Invalid token or email");
       }
 
-      const response = await executeResetPassword({ email, token, password, passwordConfirmation });
+      const response = await fetchExecuteResetPassword({ email, token, password, passwordConfirmation });
 
       if (!response.ok) {
         const errorData = await response.json();
