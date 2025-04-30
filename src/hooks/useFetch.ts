@@ -38,7 +38,7 @@ export function useFetch() {
     return response;
   }
 
-  async function logout(userEmail: string) {
+  async function fetchLogout(userEmail: string) {
     await fetch("api/v1/auth/logout", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -77,7 +77,7 @@ export function useFetch() {
   return {
     fetchRegister,
     fetchLogin,
-    logout,
+    fetchLogout,
     fetchRequestResetPassword,
     fetchExecuteResetPassword,
     deleteProduct,

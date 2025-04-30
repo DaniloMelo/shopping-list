@@ -8,10 +8,10 @@ interface LogoutButtonProps {
 
 export default function LogoutButton({ userEmail }: LogoutButtonProps) {
   const Router = useRouter();
-  const { logout } = useFetch();
+  const { fetchLogout } = useFetch();
 
   async function handleLogout(userEmail: string) {
-    await logout(userEmail);
+    await fetchLogout(userEmail);
     Router.push("/login");
   }
 
