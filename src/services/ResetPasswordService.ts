@@ -25,7 +25,7 @@ export default class ResetPasswordService {
 
       const isResetPasswordTokenExists = await this.resetPasswordRepository.findResetPasswordToken(isUserExists.id);
       if (isResetPasswordTokenExists) {
-        throw new ResetPasswordServiceError("Email já Enviado.", "Verifique sua caixa de entrada.", 200, true);
+        throw new ResetPasswordServiceError("Email já Enviado.", "Verifique sua caixa de entrada.", 400, true);
       }
 
       const resetPasswordToken = await this.tokenService.generate({

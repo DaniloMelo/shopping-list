@@ -1,66 +1,13 @@
 import AuthButton from "@/components/AuthButton";
 import AuthInput from "@/components/AuthInput";
 import Logo from "@/components/Logo";
-import { PublicError } from "@/lib/CustomErrors";
+import { useRequestResetPasswordFetch } from "@/hooks/useRequestResetPasswordFetch";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { FormEvent, useEffect, useState } from "react";
 import { IoIosMail } from "react-icons/io";
 
 export default function RequestResetPasswordPage() {
-  const [email, setEmail] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(true);
-  const [formErrorMessage, setFormErrorMessage] = useState("");
-  const [formErrorAction, setFormErrorAction] = useState("");
-  const [formSuccess, setFormSucces] = useState("");
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!email.includes("@") || !email.includes(".com") || email.trim().length === 0) {
-      setIsDisabled(true);
-    } else {
-      setIsDisabled(false);
-    }
-  }, [email]);
-
-  async function handleFormSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setFormErrorMessage("");
-    setFormErrorAction("");
-    setFormSucces("");
-    setIsLoading(true);
-    setIsDisabled(true);
-
-    try {
-      const response = await fetch("api/v1/auth/request-reset-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-
-      if (!response.ok) {
-        const ErrorData = await response.json();
-        if (ErrorData.isPublicError) throw new PublicError(ErrorData.message, ErrorData.action);
-      }
-
-      setFormSucces("Email Enviado.");
-      setIsLoading(false);
-      setTimeout(() => router.push("/login"), 3000);
-    } catch (error) {
-      if (error instanceof PublicError) {
-        setFormErrorMessage(error.message);
-        setFormErrorAction(error.action);
-        setIsLoading(false);
-        setIsDisabled(true);
-        setTimeout(() => {
-          setFormErrorMessage("");
-          setFormErrorAction("");
-          setIsDisabled(false);
-        }, 5000);
-      }
-    }
-  }
+  const { email, setEmail, formErrorMessage, formErrorAction, formSuccess, isLoading, isDisabled, handleSubmit } =
+    useRequestResetPasswordFetch();
 
   return (
     <main className="h-screen flex justify-center">
@@ -73,7 +20,7 @@ export default function RequestResetPasswordPage() {
           Caso tenha um usuário cadastrado e válido, receberá um email com instruções de como redefinir a sua senha.
         </p>
 
-        <form className="w-full flex flex-col gap-5" onSubmit={handleFormSubmit}>
+        <form className="w-full flex flex-col gap-5" onSubmit={handleSubmit}>
           <AuthInput
             Icon={IoIosMail}
             placeholder="Email"

@@ -1,4 +1,4 @@
-import { ResetPasswordServiceError } from "@/lib/CustomErrors";
+import { InternalServerError, ResetPasswordServiceError } from "@/lib/CustomErrors";
 import { IHasher } from "@/lib/Hasher";
 import { IMailer } from "@/lib/Mailer";
 import { ITokenService } from "@/lib/TokenService";
@@ -80,6 +80,13 @@ describe("src/services/ResetPasswordService.ts", () => {
         await expect(resetPasswordService.requestResetPassword("john@email.com")).rejects.toThrow(
           ResetPasswordServiceError,
         );
+
+        expect(mockUserRepository.findUserByEmail).toHaveBeenCalledWith("john@email.com");
+
+        await resetPasswordService.requestResetPassword("john@email.com").catch((error) => {
+          expect(error.message).toBe("Usuário não encontrado.");
+          expect(error.action).toBe("Verifique suas credenciais.");
+        });
       });
 
       test("Should throw an error if some reset password token already exists", async () => {
@@ -105,6 +112,14 @@ describe("src/services/ResetPasswordService.ts", () => {
         await expect(resetPasswordService.requestResetPassword("john@email.com")).rejects.toThrow(
           ResetPasswordServiceError,
         );
+
+        expect(mockUserRepository.findUserByEmail).toHaveBeenCalledWith("john@email.com");
+        expect(mockResetPasswordRepository.findResetPasswordToken).toHaveBeenCalledWith("123");
+
+        await resetPasswordService.requestResetPassword("john@email.com").catch((error) => {
+          expect(error.message).toBe("Email já Enviado.");
+          expect(error.action).toBe("Verifique sua caixa de entrada.");
+        });
       });
     });
   });
@@ -150,6 +165,15 @@ describe("src/services/ResetPasswordService.ts", () => {
         await expect(
           resetPasswordService.executeResetPassword("john@email.com", "fake-token", "P4ssword!234", "P4ssword!234"),
         ).rejects.toThrow(ResetPasswordServiceError);
+
+        expect(mockUserRepository.findUserByEmail).toHaveBeenCalledWith("john@email.com");
+
+        await resetPasswordService
+          .executeResetPassword("john@email.com", "fake-token", "P4ssword!234", "P4ssword!234")
+          .catch((error) => {
+            expect(error.message).toBe("Usuário não encontrado");
+            expect(error.action).toBe("Verifique suas credenciais.");
+          });
       });
 
       test("Should throw an error if token don't exist", async () => {
@@ -167,6 +191,15 @@ describe("src/services/ResetPasswordService.ts", () => {
         await expect(
           resetPasswordService.executeResetPassword("john@email.com", "fake-token", "P4ssword!234", "P4ssword!234"),
         ).rejects.toThrow(ResetPasswordServiceError);
+
+        expect(mockUserRepository.findUserByEmail).toHaveBeenCalledWith("john@email.com");
+
+        await resetPasswordService
+          .executeResetPassword("john@email.com", "fake-token", "P4ssword!234", "P4ssword!234")
+          .catch((error) => {
+            expect(error.message).toBe("Não foi possível redefinir sua senha.");
+            expect(error.action).toBe("Faça uma nova solicitação.");
+          });
       });
 
       test("Should throw an error when the token has expired", async () => {
@@ -193,6 +226,34 @@ describe("src/services/ResetPasswordService.ts", () => {
         await expect(
           resetPasswordService.executeResetPassword("john@email.com", "fake-token", "P4ssword!234", "P4ssword!234"),
         ).rejects.toThrow(ResetPasswordServiceError);
+
+        expect(mockUserRepository.findUserByEmail).toHaveBeenCalledWith("john@email.com");
+        expect(mockResetPasswordRepository.findResetPasswordToken).toHaveBeenCalledWith("123");
+        expect(mockHasher.decrypt).toHaveBeenCalledWith("fake-token", "hashed-fake-token");
+
+        await resetPasswordService
+          .executeResetPassword("john@email.com", "fake-token", "P4ssword!234", "P4ssword!234")
+          .catch((error) => {
+            expect(error.message).toBe("Não foi possível redefinir sua senha.");
+            expect(error.action).toBe("Faça uma nova solicitação.");
+          });
+      });
+
+      test("Should throw InternalServerError if unexpected error occurs during reset password execution", async () => {
+        mockUserRepository.findUserByEmail.mockRejectedValue(new Error("Unexpected error"));
+
+        await expect(
+          resetPasswordService.executeResetPassword("john@email.com", "fake-token", "P4ssword!234", "P4ssword!234"),
+        ).rejects.toThrow(InternalServerError);
+
+        expect(mockUserRepository.findUserByEmail).toHaveBeenCalledWith("john@email.com");
+
+        await resetPasswordService
+          .executeResetPassword("john@email.com", "fake-token", "P4ssword!234", "P4ssword!234")
+          .catch((error) => {
+            expect(error.message).toBe("Ocorreu um Erro inesperado ao tentar resetar a senha");
+            expect(error.action).toBe("Tente novamente mais tarde");
+          });
       });
     });
   });
