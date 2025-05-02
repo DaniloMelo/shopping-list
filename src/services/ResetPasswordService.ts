@@ -24,14 +24,18 @@ export default class ResetPasswordService {
       }
 
       const isResetPasswordTokenExists = await this.resetPasswordRepository.findResetPasswordToken(isUserExists.id);
-      if (isResetPasswordTokenExists) {
+      if (isResetPasswordTokenExists && isResetPasswordTokenExists.expiresAt > new Date()) {
         throw new ResetPasswordServiceError("Email já Enviado.", "Verifique sua caixa de entrada.", 400, true);
+      }
+      if (isResetPasswordTokenExists && isResetPasswordTokenExists.expiresAt < new Date()) {
+        await this.resetPasswordRepository.deleteAllResetPasswordTokens(isUserExists.id);
       }
 
       const resetPasswordToken = await this.tokenService.generate({
         resetPasswordToken: Math.random().toString(36).substring(2),
       });
       const hashedResetPasswordToken = await this.hasher.encrypt(resetPasswordToken);
+
       const expirationTime = new Date(Date.now() + 10 * 60 * 1000);
 
       await this.resetPasswordRepository.createResetPasswordToken({
