@@ -5,6 +5,7 @@ import useProduct from "@/hooks/useProduct";
 import NumberFormatter from "@/lib/NumberFormatter";
 import { PublicError } from "@/lib/CustomErrors";
 import { useSWRConfig } from "swr";
+import useModal from "@/hooks/useModal";
 
 interface IUpdatedProduct {
   id: string;
@@ -14,12 +15,12 @@ interface IUpdatedProduct {
 }
 
 interface IUpdatedProductModalProps {
-  isModalOpen: boolean;
-  onModalOpen(visibility: boolean): void;
   userId: string;
 }
 
-export default function UpdateProductModal({ isModalOpen, onModalOpen, userId }: IUpdatedProductModalProps) {
+export default function UpdateProductModal({ userId }: IUpdatedProductModalProps) {
+  const { isUpdateProductModalOpen, toggleIsUpdateProductModalOpen } = useModal();
+
   const [product, setProduct] = useState<IUpdatedProduct>({
     id: "",
     productName: "",
@@ -67,7 +68,7 @@ export default function UpdateProductModal({ isModalOpen, onModalOpen, userId }:
       }
 
       mutate(`/api/v1/product/list-products/${userId}`);
-      onModalOpen(false);
+      toggleIsUpdateProductModalOpen(false);
       setIsLoading(false);
     } catch (error) {
       if (error instanceof PublicError) {
@@ -84,10 +85,10 @@ export default function UpdateProductModal({ isModalOpen, onModalOpen, userId }:
 
   return (
     <div
-      className={`flex justify-center items-center fixed h-screen w-screen bg-zinc-700/50 backdrop-blur-sm z-10 ${isModalOpen ? "fixed" : "hidden"}`}
+      className={`flex justify-center items-center fixed h-screen w-screen bg-zinc-700/50 backdrop-blur-sm z-10 ${isUpdateProductModalOpen ? "fixed" : "hidden"}`}
     >
       <section className="flex flex-col flex-1 max-w-4xl p-8 mx-8 rounded-lg bg-primaryLightBG dark:bg-primaryDarkBG">
-        <button className="self-end hover:text-zinc-500" onClick={() => onModalOpen(false)}>
+        <button className="self-end hover:text-zinc-500" onClick={() => toggleIsUpdateProductModalOpen(false)}>
           X
         </button>
 

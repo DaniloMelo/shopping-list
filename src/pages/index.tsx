@@ -24,7 +24,6 @@ interface IHomeProps {
 
 export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
   const [search, setSearch] = useState("");
-  const [updateProductModalOpen, setUpdatedProductModalOpen] = useState(false);
   const [updatedProducts, setUpdatedProducts] = useState<ProductProps[]>(shoppingList);
   const [menuOpen, setMenuOpen] = useState(false);
   const [total, setTotal] = useState("");
@@ -67,7 +66,6 @@ export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
         initialProducts={shoppingList}
         userId={userId}
         search={search}
-        onUpdateProductModalOPen={setUpdatedProductModalOpen}
         onUpdateProduct={setUpdatedProducts}
       />
 
@@ -75,11 +73,7 @@ export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
 
       <CreateProductModal userId={userId} />
 
-      <UpdateProductModal
-        isModalOpen={updateProductModalOpen}
-        onModalOpen={setUpdatedProductModalOpen}
-        userId={userId}
-      />
+      <UpdateProductModal userId={userId} />
     </main>
   );
 }
