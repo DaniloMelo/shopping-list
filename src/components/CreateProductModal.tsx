@@ -1,22 +1,22 @@
 import { useCreateProductFetch } from "@/hooks/useCreateProductFetch";
 import ModalInput from "./ModalInput";
 import { CgSpinner } from "react-icons/cg";
+import useModal from "@/hooks/useModal";
 
 interface ModalProps {
-  isModalOpen: boolean;
-  onModalOpen(visible: boolean): void;
   userId: string;
 }
 
-export default function CreateProductModal({ isModalOpen, userId, onModalOpen }: ModalProps) {
+export default function CreateProductModal({ userId }: ModalProps) {
   const { product, setProduct, isLoading, errorMessage, errorAction, handleSubmit } = useCreateProductFetch();
+  const { isCreateProductModalOpen, toggleIsCreateProductModalOpen } = useModal();
 
   return (
     <section
-      className={`flex justify-center items-center fixed h-screen w-screen bg-zinc-700/50 backdrop-blur-sm z-10 ${isModalOpen ? "fixed" : "hidden"}`}
+      className={`flex justify-center items-center fixed h-screen w-screen bg-zinc-700/50 backdrop-blur-sm z-10 ${isCreateProductModalOpen ? "fixed" : "hidden"}`}
     >
       <div className="flex flex-col flex-1 max-w-4xl p-8 mx-8 rounded-lg bg-primaryLightBG dark:bg-primaryDarkBG">
-        <button className="self-end hover:text-zinc-500" onClick={() => onModalOpen(false)}>
+        <button className="self-end hover:text-zinc-500" onClick={() => toggleIsCreateProductModalOpen(false)}>
           X
         </button>
 

@@ -12,6 +12,7 @@ import TokenService from "@/lib/TokenService";
 import { GetServerSideProps } from "next";
 import { useEffect, useState } from "react";
 import Header from "@/components/Header";
+import useModal from "@/hooks/useModal";
 
 const tokenService = new TokenService();
 
@@ -23,11 +24,12 @@ interface IHomeProps {
 
 export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
   const [search, setSearch] = useState("");
-  const [modalOpen, setModalOpen] = useState(false);
   const [updateProductModalOpen, setUpdatedProductModalOpen] = useState(false);
   const [updatedProducts, setUpdatedProducts] = useState<ProductProps[]>(shoppingList);
   const [menuOpen, setMenuOpen] = useState(false);
   const [total, setTotal] = useState("");
+
+  const { toggleIsCreateProductModalOpen } = useModal();
 
   useEffect(() => {
     setTotal(calcTotal(updatedProducts));
@@ -48,7 +50,7 @@ export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
 
       <FilterProducts value={search} onSearchChange={setSearch} />
 
-      <OpenCreateProductModalButton click={() => setModalOpen(true)} desktopType />
+      <OpenCreateProductModalButton click={() => toggleIsCreateProductModalOpen(true)} desktopType />
 
       {updatedProducts.length === 0 ? (
         <div className="my-10">
@@ -69,9 +71,9 @@ export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
         onUpdateProduct={setUpdatedProducts}
       />
 
-      <OpenCreateProductModalButton click={() => setModalOpen(true)} />
+      <OpenCreateProductModalButton click={() => toggleIsCreateProductModalOpen(true)} />
 
-      <CreateProductModal isModalOpen={modalOpen} onModalOpen={setModalOpen} userId={userId} />
+      <CreateProductModal userId={userId} />
 
       <UpdateProductModal
         isModalOpen={updateProductModalOpen}

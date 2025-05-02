@@ -2,6 +2,7 @@ import { PublicError } from "@/lib/CustomErrors";
 import NumberFormatter from "@/lib/NumberFormatter";
 import { useState } from "react";
 import { useSWRConfig } from "swr";
+import useModal from "./useModal";
 
 interface INewProduct {
   productName: string;
@@ -19,6 +20,7 @@ export function useCreateProductFetch() {
     productQuantity: "",
   });
 
+  const { toggleIsCreateProductModalOpen } = useModal();
   const { mutate } = useSWRConfig();
 
   async function handleSubmit(e: React.FormEvent, userId: string) {
@@ -46,7 +48,7 @@ export function useCreateProductFetch() {
       }
 
       mutate(`/api/v1/product/list-products/${userId}`);
-      // onModalOpen(false);
+      toggleIsCreateProductModalOpen(false);
       setIsLoading(false);
       setProduct({ productName: "", productPrice: "", productQuantity: "" });
     } catch (error) {
