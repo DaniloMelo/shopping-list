@@ -1,10 +1,10 @@
 import { PublicError } from "@/lib/CustomErrors";
-import NumberFormatter from "@/lib/NumberFormatter";
 import { useState } from "react";
 import { useSWRConfig } from "swr";
 import useModal from "./useModal";
+import { useFetch } from "./useFetch";
 
-interface INewProduct {
+export interface INewProduct {
   productName: string;
   productPrice: string;
   productQuantity: string;
@@ -21,6 +21,7 @@ export function useCreateProductFetch() {
   });
 
   const { toggleIsCreateProductModalOpen } = useModal();
+  const { fetchCreateProduct } = useFetch();
   const { mutate } = useSWRConfig();
 
   async function handleSubmit(e: React.FormEvent, userId: string) {
@@ -30,15 +31,7 @@ export function useCreateProductFetch() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`/api/v1/product/create-product/${userId}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          productName: product.productName,
-          productPrice: NumberFormatter.toNumber(product.productPrice),
-          productQuantity: NumberFormatter.toNumber(product.productQuantity),
-        }),
-      });
+      const response = await fetchCreateProduct({ userId, product });
 
       if (!response.ok) {
         const errorData = await response.json();

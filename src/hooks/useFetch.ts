@@ -1,3 +1,6 @@
+import NumberFormatter from "@/lib/NumberFormatter";
+import { INewProduct } from "./useCreateProductFetch";
+
 interface InewUserData {
   name: string;
   email: string;
@@ -15,6 +18,11 @@ interface IExecuteResetPassword {
   token: string;
   password: string;
   passwordConfirmation: string;
+}
+
+interface IFetchCreateProduct {
+  userId: string;
+  product: INewProduct;
 }
 
 export function useFetch() {
@@ -66,6 +74,20 @@ export function useFetch() {
     return response;
   }
 
+  async function fetchCreateProduct({ userId, product }: IFetchCreateProduct) {
+    const response = await fetch(`/api/v1/product/create-product/${userId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        productName: product.productName,
+        productPrice: NumberFormatter.toNumber(product.productPrice),
+        productQuantity: NumberFormatter.toNumber(product.productQuantity),
+      }),
+    });
+
+    return response;
+  }
+
   async function fetchDeleteProduct(productId: string, userId: string) {
     await fetch(`/api/v1/product/delete-product/${productId}`, {
       method: "DELETE",
@@ -80,6 +102,7 @@ export function useFetch() {
     fetchLogout,
     fetchRequestResetPassword,
     fetchExecuteResetPassword,
+    fetchCreateProduct,
     fetchDeleteProduct,
   };
 }
