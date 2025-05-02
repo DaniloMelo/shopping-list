@@ -1,8 +1,8 @@
 import { IoMdMenu } from "react-icons/io";
 import FilterProducts from "@/components/FilterProducts";
 import Menu from "@/components/Menu";
-import Modal from "@/components/Modal";
-import OpenModalButton from "@/components/OpenModalButton";
+import CreateProductModal from "@/components/CreateProductModal";
+import OpenCreateProductModalButton from "@/components/OpenCreateProductModalButton";
 import { ProductProps } from "@/components/Product";
 import ProductsList from "@/components/ProductsList";
 import UpdateProductModal from "@/components/UpdateProductModal";
@@ -48,7 +48,7 @@ export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
 
       <FilterProducts value={search} onSearchChange={setSearch} />
 
-      <OpenModalButton click={() => setModalOpen(true)} desktopType />
+      <OpenCreateProductModalButton click={() => setModalOpen(true)} desktopType />
 
       {updatedProducts.length === 0 ? (
         <div className="my-10">
@@ -69,9 +69,9 @@ export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
         onUpdateProduct={setUpdatedProducts}
       />
 
-      <OpenModalButton click={() => setModalOpen(true)} />
+      <OpenCreateProductModalButton click={() => setModalOpen(true)} />
 
-      <Modal isOpen={modalOpen} setModalOpen={setModalOpen} userId={userId} />
+      <CreateProductModal isModalOpen={modalOpen} onModalOpen={setModalOpen} userId={userId} />
 
       <UpdateProductModal
         isModalOpen={updateProductModalOpen}

@@ -6,8 +6,8 @@ import { CgSpinner } from "react-icons/cg";
 import { useSWRConfig } from "swr";
 
 interface ModalProps {
-  isOpen: boolean;
-  setModalOpen(visible: boolean): void;
+  isModalOpen: boolean;
+  onModalOpen(visible: boolean): void;
   userId: string;
 }
 
@@ -17,7 +17,7 @@ interface INewProduct {
   productQuantity: string;
 }
 
-export default function Modal({ isOpen, userId, setModalOpen }: ModalProps) {
+export default function CreateProductModal({ isModalOpen, userId, onModalOpen }: ModalProps) {
   const [errorMessage, setErrorMessage] = useState("");
   const [errorAction, setErrorAction] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -54,7 +54,7 @@ export default function Modal({ isOpen, userId, setModalOpen }: ModalProps) {
       }
 
       mutate(`/api/v1/product/list-products/${userId}`);
-      setModalOpen(false);
+      onModalOpen(false);
       setIsLoading(false);
       setProduct({ productName: "", productPrice: "", productQuantity: "" });
     } catch (error) {
@@ -72,10 +72,10 @@ export default function Modal({ isOpen, userId, setModalOpen }: ModalProps) {
 
   return (
     <section
-      className={`flex justify-center items-center fixed h-screen w-screen bg-zinc-700/50 backdrop-blur-sm z-10 ${isOpen ? "fixed" : "hidden"}`}
+      className={`flex justify-center items-center fixed h-screen w-screen bg-zinc-700/50 backdrop-blur-sm z-10 ${isModalOpen ? "fixed" : "hidden"}`}
     >
       <div className="flex flex-col flex-1 max-w-4xl p-8 mx-8 rounded-lg bg-primaryLightBG dark:bg-primaryDarkBG">
-        <button className="self-end hover:text-zinc-500" onClick={() => setModalOpen(false)}>
+        <button className="self-end hover:text-zinc-500" onClick={() => onModalOpen(false)}>
           X
         </button>
 
