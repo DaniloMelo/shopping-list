@@ -1,8 +1,8 @@
 import { IoMdMenu } from "react-icons/io";
 import FilterProducts from "@/components/FilterProducts";
 import Menu from "@/components/Menu";
-import Modal from "@/components/Modal";
-import OpenModalButton from "@/components/OpenModalButton";
+import CreateProductModal from "@/components/CreateProductModal";
+import OpenCreateProductModalButton from "@/components/OpenCreateProductModalButton";
 import { ProductProps } from "@/components/Product";
 import ProductsList from "@/components/ProductsList";
 import UpdateProductModal from "@/components/UpdateProductModal";
@@ -12,6 +12,7 @@ import TokenService from "@/lib/TokenService";
 import { GetServerSideProps } from "next";
 import { useEffect, useState } from "react";
 import Header from "@/components/Header";
+import useModal from "@/hooks/useModal";
 
 const tokenService = new TokenService();
 
@@ -23,11 +24,11 @@ interface IHomeProps {
 
 export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
   const [search, setSearch] = useState("");
-  const [modalOpen, setModalOpen] = useState(false);
-  const [updateProductModalOpen, setUpdatedProductModalOpen] = useState(false);
   const [updatedProducts, setUpdatedProducts] = useState<ProductProps[]>(shoppingList);
   const [menuOpen, setMenuOpen] = useState(false);
   const [total, setTotal] = useState("");
+
+  const { toggleIsCreateProductModalOpen } = useModal();
 
   useEffect(() => {
     setTotal(calcTotal(updatedProducts));
@@ -48,7 +49,7 @@ export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
 
       <FilterProducts value={search} onSearchChange={setSearch} />
 
-      <OpenModalButton click={() => setModalOpen(true)} desktopType />
+      <OpenCreateProductModalButton click={() => toggleIsCreateProductModalOpen(true)} desktopType />
 
       {updatedProducts.length === 0 ? (
         <div className="my-10">
@@ -65,19 +66,14 @@ export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
         initialProducts={shoppingList}
         userId={userId}
         search={search}
-        onUpdateProductModalOPen={setUpdatedProductModalOpen}
         onUpdateProduct={setUpdatedProducts}
       />
 
-      <OpenModalButton click={() => setModalOpen(true)} />
+      <OpenCreateProductModalButton click={() => toggleIsCreateProductModalOpen(true)} />
 
-      <Modal isOpen={modalOpen} setModalOpen={setModalOpen} userId={userId} />
+      <CreateProductModal userId={userId} />
 
-      <UpdateProductModal
-        isModalOpen={updateProductModalOpen}
-        onModalOpen={setUpdatedProductModalOpen}
-        userId={userId}
-      />
+      <UpdateProductModal userId={userId} />
     </main>
   );
 }

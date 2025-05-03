@@ -9,7 +9,6 @@ export interface ProductsListProps {
   initialProducts: ProductProps[];
   userId: string;
   search: string;
-  onUpdateProductModalOPen(visibility: boolean): void;
   onUpdateProduct(productList: ProductProps[]): void;
 }
 
@@ -19,13 +18,7 @@ async function fetcher(url: string) {
   return products;
 }
 
-export default function ProductsList({
-  initialProducts,
-  userId,
-  search,
-  onUpdateProductModalOPen,
-  onUpdateProduct,
-}: ProductsListProps) {
+export default function ProductsList({ initialProducts, userId, search, onUpdateProduct }: ProductsListProps) {
   const { addInitialProducts } = useProduct();
   const { data, error } = useSWR(`/api/v1/product/list-products/${userId}`, fetcher, {
     fallback: initialProducts,
@@ -58,7 +51,7 @@ export default function ProductsList({
 
   return (
     <div className="flex flex-col w-full gap-y-4 py-10">
-      {filteredData.map((p: ProductProps) => {
+      {filteredData.reverse().map((p: ProductProps) => {
         return (
           <Product
             key={p.id}
@@ -67,7 +60,6 @@ export default function ProductsList({
             productName={p.productName}
             productPrice={p.productPrice}
             productQuantity={p.productQuantity}
-            onUpdateModalOpen={onUpdateProductModalOPen}
           />
         );
       })}

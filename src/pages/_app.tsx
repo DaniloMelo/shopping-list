@@ -1,4 +1,5 @@
 import Container from "@/components/Container";
+import { ModalProvioder } from "@/contexts/ModalContext";
 import { ProductProvider } from "@/contexts/ProductContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 
@@ -7,12 +8,14 @@ import type { AppProps } from "next/app";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <ThemeProvider>
-      <ProductProvider>
-        <Container>
-          <Component {...pageProps} />
-        </Container>
-      </ProductProvider>
-    </ThemeProvider>
+    <ModalProvioder>
+      <ThemeProvider>
+        <ProductProvider>
+          <Container>
+            <Component {...pageProps} />
+          </Container>
+        </ProductProvider>
+      </ThemeProvider>
+    </ModalProvioder>
   );
 }

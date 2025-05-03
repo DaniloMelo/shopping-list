@@ -5,6 +5,7 @@ import { IoIosArrowUp } from "react-icons/io";
 import { useSWRConfig } from "swr";
 import ConfirmationDialog from "./ConfirmationDialog";
 import { useFetch } from "@/hooks/useFetch";
+import useModal from "@/hooks/useModal";
 
 export interface ProductProps {
   id: string;
@@ -12,21 +13,15 @@ export interface ProductProps {
   productName: string;
   productPrice: number;
   productQuantity: number;
-  onUpdateModalOpen(visibility: boolean): void;
 }
 
-export default function Product({
-  id,
-  userId,
-  productName,
-  productPrice,
-  productQuantity,
-  onUpdateModalOpen,
-}: ProductProps) {
+export default function Product({ id, userId, productName, productPrice, productQuantity }: ProductProps) {
   const [isDetailsHidden, setIsDetailsHidden] = useState(false);
   const [isDialogOpen, SetIsDialogOpen] = useState(false);
   const { productToUpdate } = useProduct();
   const { fetchDeleteProduct } = useFetch();
+
+  const { toggleIsUpdateProductModalOpen } = useModal();
   const { mutate } = useSWRConfig();
 
   function handleUpdateProduct() {
@@ -74,7 +69,7 @@ export default function Product({
           <button
             className="bg-blue-700 hover:bg-blue-800 text-zinc-200 py-1 px-4 rounded-md"
             onClick={() => {
-              onUpdateModalOpen(true);
+              toggleIsUpdateProductModalOpen(true);
               handleUpdateProduct();
             }}
           >

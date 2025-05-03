@@ -1,30 +1,30 @@
-import { CgSpinner } from "react-icons/cg";
+import { useCreateProductFetch } from "@/hooks/useCreateProductFetch";
 import ModalInput from "./ModalInput";
+import { CgSpinner } from "react-icons/cg";
 import useModal from "@/hooks/useModal";
-import { useUpdateProductFetch } from "@/hooks/useUpdateProductFetch";
 
-interface IUpdatedProductModalProps {
+interface ModalProps {
   userId: string;
 }
 
-export default function UpdateProductModal({ userId }: IUpdatedProductModalProps) {
-  const { isUpdateProductModalOpen, toggleIsUpdateProductModalOpen } = useModal();
-  const { product, setProduct, errorMessage, errorAction, isLoading, handleSubmit } = useUpdateProductFetch();
+export default function CreateProductModal({ userId }: ModalProps) {
+  const { product, setProduct, isLoading, errorMessage, errorAction, handleSubmit } = useCreateProductFetch();
+  const { isCreateProductModalOpen, toggleIsCreateProductModalOpen } = useModal();
 
   return (
-    <div
-      className={`flex justify-center items-center fixed h-screen w-screen bg-zinc-700/50 backdrop-blur-sm z-10 ${isUpdateProductModalOpen ? "fixed" : "hidden"}`}
-      onClick={() => toggleIsUpdateProductModalOpen(false)}
+    <section
+      className={`flex justify-center items-center fixed h-screen w-screen bg-zinc-700/50 backdrop-blur-sm z-10 ${isCreateProductModalOpen ? "fixed" : "hidden"}`}
+      onClick={() => toggleIsCreateProductModalOpen(false)}
     >
-      <section
+      <div
         className="flex flex-col flex-1 max-w-4xl p-8 mx-8 rounded-lg bg-primaryLightBG dark:bg-primaryDarkBG"
         onClick={(e) => e.stopPropagation()}
       >
-        <button className="self-end hover:text-zinc-500" onClick={() => toggleIsUpdateProductModalOpen(false)}>
+        <button className="self-end hover:text-zinc-500" onClick={() => toggleIsCreateProductModalOpen(false)}>
           X
         </button>
 
-        <h2 className="text-lg mb-6 text-lightTxt dark:text-darkTxt">Edite um produto</h2>
+        <h2 className="text-lg mb-6 text-lightTxt dark:text-darkTxt">Adicione um novo produto</h2>
 
         <form className="flex flex-col gap-5" onSubmit={(e) => handleSubmit(e, userId)}>
           <ModalInput
@@ -61,16 +61,18 @@ export default function UpdateProductModal({ userId }: IUpdatedProductModalProps
           )}
 
           <button
-            className="rounded-md py-2 bg-cyan-700 hover:bg-cyan-900 text-zinc-300 outline-blue-300"
+            className="bg-cyan-700 hover:bg-cyan-900 text-zinc-200 outline-blue-300 py-2 rounded-md"
             disabled={isLoading && true}
           >
             <div className="flex justify-center">
               <CgSpinner className={`${isLoading ? "animate-spin" : "hidden"} text-2xl mx-2`} />
-              {isLoading ? "Editando..." : "Editar"}
+              {isLoading ? "Adicionando..." : "Adicionar"}
             </div>
           </button>
         </form>
-      </section>
-    </div>
+      </div>
+    </section>
   );
 }
+
+// ----------------------------
