@@ -51,7 +51,7 @@ export default function ProductsList({ initialProducts, userId, search, onUpdate
 
   return (
     <div className="flex flex-col w-full gap-y-4 py-10">
-      {filteredData.map((p: ProductProps) => {
+      {filteredData.reverse().map((p: ProductProps) => {
         return (
           <Product
             key={p.id}

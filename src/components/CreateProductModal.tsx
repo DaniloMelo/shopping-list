@@ -14,8 +14,12 @@ export default function CreateProductModal({ userId }: ModalProps) {
   return (
     <section
       className={`flex justify-center items-center fixed h-screen w-screen bg-zinc-700/50 backdrop-blur-sm z-10 ${isCreateProductModalOpen ? "fixed" : "hidden"}`}
+      onClick={() => toggleIsCreateProductModalOpen(false)}
     >
-      <div className="flex flex-col flex-1 max-w-4xl p-8 mx-8 rounded-lg bg-primaryLightBG dark:bg-primaryDarkBG">
+      <div
+        className="flex flex-col flex-1 max-w-4xl p-8 mx-8 rounded-lg bg-primaryLightBG dark:bg-primaryDarkBG"
+        onClick={(e) => e.stopPropagation()}
+      >
         <button className="self-end hover:text-zinc-500" onClick={() => toggleIsCreateProductModalOpen(false)}>
           X
         </button>
@@ -70,3 +74,5 @@ export default function CreateProductModal({ userId }: ModalProps) {
     </section>
   );
 }
+
+// ----------------------------
