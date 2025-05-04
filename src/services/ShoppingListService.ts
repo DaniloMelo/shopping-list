@@ -140,7 +140,7 @@ export default class ShoppingListService {
       }
 
       throw new InternalServerError(
-        "Ocorreu um Erro inesperado ao tentar atualizar o produto.",
+        "Ocorreu um Erro inesperado ao tentar excluir o produto.",
         "Tente novamente mais tarde.",
         500,
         true,

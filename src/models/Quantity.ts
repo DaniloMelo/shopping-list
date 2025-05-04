@@ -5,7 +5,7 @@ export default class Quantity {
 
   constructor(quantity: number) {
     if (quantity <= 0) {
-      throw new ModelValidationError("Quantidade inválida.", "A quantidade deve ser maior que 0", 400, true);
+      throw new ModelValidationError("Quantidade inválida.", "A quantidade deve ser maior que 0.", 400, true);
     }
 
     this.quantity = quantity;
