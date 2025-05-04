@@ -123,7 +123,7 @@ export default class AuthService {
 
       throw new InternalServerError(
         "Ocorreu um Erro inesperado ao tentar realizar o logout.",
-        "Tente novamente mais tarde",
+        "Tente novamente mais tarde.",
         500,
         true,
       );

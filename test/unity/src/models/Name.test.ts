@@ -4,8 +4,6 @@ describe("src/models/Name.ts", () => {
   describe("Successfull Cases", () => {
     test("Should return a valid name", () => {
       const n = new Name("John Doe");
-      console.log("NOME ===> ", n);
-
       expect(n.getValue()).toEqual("John Doe");
     });
   });
