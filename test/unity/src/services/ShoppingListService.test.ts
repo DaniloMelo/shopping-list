@@ -66,7 +66,7 @@ describe("src/services/ShoppingListService.ts", () => {
 
         await shoppingListService.createProduct(newProduct).catch((error) => {
           expect(error.message).toBe("Nome inválido.");
-          expect(error.action).toBe("Confira o nome e tente novamente.");
+          expect(error.action).toBe("Nome precisa ter 3 ou mais caracteres.");
         });
       });
 
@@ -279,7 +279,7 @@ describe("src/services/ShoppingListService.ts", () => {
 
         await shoppingListService.updateProduct("123abc", "098zxc", updatedProduct).catch((error) => {
           expect(error.message).toBe("Nome inválido.");
-          expect(error.action).toBe("Confira o nome e tente novamente.");
+          expect(error.action).toBe("Nome precisa ter 3 ou mais caracteres.");
         });
       });
 

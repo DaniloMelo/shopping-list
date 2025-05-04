@@ -4,8 +4,12 @@ export default class Name {
   private readonly name: string;
 
   constructor(name: string) {
-    if (name.length < 3 || name.trim().length === 0) {
-      throw new ModelValidationError("Nome inválido.", "Confira o nome e tente novamente.", 400, true);
+    if (name.length < 3) {
+      throw new ModelValidationError("Nome inválido.", "Nome precisa ter 3 ou mais caracteres.", 400, true);
+    }
+
+    if (name.trim().length === 0) {
+      throw new ModelValidationError("Nome inválido.", "Nome não pode ser espaços em branco.", 400, true);
     }
 
     this.name = name;

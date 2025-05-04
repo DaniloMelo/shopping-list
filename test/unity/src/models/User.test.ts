@@ -41,7 +41,6 @@ describe("src/models/User.ts", () => {
       const mockPasswordObj = new MockPasswordClass();
 
       const user = new User(mockNameObj, mockEmailObj, mockPasswordObj);
-
       const newUSer = user.getUser();
 
       expect(newUSer).toEqual({
@@ -49,12 +48,6 @@ describe("src/models/User.ts", () => {
         email: "john@email.com",
         password: "P4ssword!23",
       });
-
-      // expect(user.getUser()).toEqual({
-      //   name: "John Doe",
-      //   email: "john@email.com",
-      //   password: "P4ssword!23",
-      // });
     });
   });
 });
