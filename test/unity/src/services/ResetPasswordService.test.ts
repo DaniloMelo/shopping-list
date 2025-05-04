@@ -121,6 +121,19 @@ describe("src/services/ResetPasswordService.ts", () => {
           expect(error.action).toBe("Verifique sua caixa de entrada.");
         });
       });
+
+      test("Should throw InternalServerError if unexpected error occurs during reset password request", async () => {
+        mockUserRepository.findUserByEmail.mockRejectedValue(new Error("Unexpected error"));
+
+        await expect(resetPasswordService.requestResetPassword("john@email.com")).rejects.toThrow(InternalServerError);
+
+        expect(mockUserRepository.findUserByEmail).toHaveBeenCalledWith("john@email.com");
+
+        await resetPasswordService.requestResetPassword("john@email.com").catch((error) => {
+          expect(error.message).toBe("Ocorreu um erro inesperado ao tentar solicitar a redefinição da senha.");
+          expect(error.action).toBe("Tente novamente mais tarde.");
+        });
+      });
     });
   });
 
@@ -251,7 +264,7 @@ describe("src/services/ResetPasswordService.ts", () => {
         await resetPasswordService
           .executeResetPassword("john@email.com", "fake-token", "P4ssword!234", "P4ssword!234")
           .catch((error) => {
-            expect(error.message).toBe("Ocorreu um Erro inesperado ao tentar resetar a senha");
+            expect(error.message).toBe("Ocorreu um erro inesperado ao tentar resetar a senha");
             expect(error.action).toBe("Tente novamente mais tarde");
           });
       });

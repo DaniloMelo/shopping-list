@@ -121,7 +121,7 @@ export default class ResetPasswordService {
       }
 
       throw new InternalServerError(
-        "Ocorreu um Erro inesperado ao tentar resetar a senha",
+        "Ocorreu um erro inesperado ao tentar resetar a senha",
         "Tente novamente mais tarde",
         500,
         true,
