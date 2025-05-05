@@ -62,7 +62,12 @@ describe("src/services/ShoppingListService.ts", () => {
           userId: "123456",
         };
 
-        await expect(shoppingListService.createProduct(newProduct)).rejects.toThrow("Nome inválido.");
+        await expect(shoppingListService.createProduct(newProduct)).rejects.toThrow(ModelValidationError);
+
+        await shoppingListService.createProduct(newProduct).catch((error) => {
+          expect(error.message).toBe("Nome inválido.");
+          expect(error.action).toBe("Nome precisa ter 3 ou mais caracteres.");
+        });
       });
 
       test("Should throw ModelValidationError if product price is invalid", async () => {
@@ -73,7 +78,12 @@ describe("src/services/ShoppingListService.ts", () => {
           userId: "123456",
         };
 
-        await expect(shoppingListService.createProduct(newProduct)).rejects.toThrow("Preço inválido.");
+        await expect(shoppingListService.createProduct(newProduct)).rejects.toThrow(ModelValidationError);
+
+        await shoppingListService.createProduct(newProduct).catch((error) => {
+          expect(error.message).toBe("Preço inválido.");
+          expect(error.action).toBe("O preço deve ser maior que R$ 0,00");
+        });
       });
 
       test("Should throw ModelValidationError if product quantity is invalid", async () => {
@@ -84,7 +94,12 @@ describe("src/services/ShoppingListService.ts", () => {
           userId: "123456",
         };
 
-        await expect(shoppingListService.createProduct(newProduct)).rejects.toThrow("Quantidade inválida.");
+        await expect(shoppingListService.createProduct(newProduct)).rejects.toThrow(ModelValidationError);
+
+        await shoppingListService.createProduct(newProduct).catch((error) => {
+          expect(error.message).toBe("Quantidade inválida.");
+          expect(error.action).toBe("A quantidade deve ser maior que 0.");
+        });
       });
 
       test("Should throw InternalServerError if a unexpected error occurs during product creation", async () => {
@@ -98,10 +113,13 @@ describe("src/services/ShoppingListService.ts", () => {
         mockUserRepository.findUserById.mockRejectedValue(new Error("Unexpected error."));
 
         await expect(shoppingListService.createProduct(newProduct)).rejects.toThrow(InternalServerError);
+
+        expect(mockUserRepository.findUserById).toHaveBeenCalledWith("123456");
+
         await shoppingListService.createProduct(newProduct).catch((error) => {
           expect(error.message).toBe("Ocorreu um erro inesperado ao tentar adicionar um novo produto.");
+          expect(error.action).toBe("Tente novamente mais tarde.");
         });
-        expect(mockUserRepository.findUserById).toHaveBeenCalledWith("123456");
       });
     });
   });
@@ -144,10 +162,13 @@ describe("src/services/ShoppingListService.ts", () => {
         mockShoppingListRepository.findAll.mockRejectedValue(new Error("Unexpected error."));
 
         await expect(shoppingListService.listProducts("123abc")).rejects.toThrow(InternalServerError);
+
+        expect(mockShoppingListRepository.findAll).toHaveBeenCalledWith("123abc");
+
         await shoppingListService.listProducts("123abc").catch((error) => {
           expect(error.message).toBe("Ocorreu um erro inesperado ao tentar buscar a lista de produtos.");
+          expect(error.action).toBe("Tente novamente mais tarde.");
         });
-        expect(mockShoppingListRepository.findAll).toHaveBeenCalledWith("123abc");
       });
     });
   });
@@ -194,9 +215,10 @@ describe("src/services/ShoppingListService.ts", () => {
 
         expect(mockShoppingListRepository.findById).toHaveBeenCalledWith("unexistent-product-id");
 
-        await shoppingListService
-          .updateProduct("123abc", "unexistent-product-id", updatedProduct)
-          .catch((error) => expect(error.message).toBe("Product not found."));
+        await shoppingListService.updateProduct("123abc", "unexistent-product-id", updatedProduct).catch((error) => {
+          expect(error.message).toBe("Product not found.");
+          expect(error.action).toBe("Verify the provided ID");
+        });
       });
 
       test("Should throw ProductServiceError when user ID and user ID in product are different", async () => {
@@ -224,9 +246,10 @@ describe("src/services/ShoppingListService.ts", () => {
 
         expect(mockShoppingListRepository.findById).toHaveBeenCalledWith("098zxc");
 
-        await shoppingListService
-          .updateProduct("different-user-id", "098zxc", updatedProduct)
-          .catch((error) => expect(error.message).toBe("Permision Denied."));
+        await shoppingListService.updateProduct("different-user-id", "098zxc", updatedProduct).catch((error) => {
+          expect(error.message).toBe("Permision Denied.");
+          expect(error.action).toBe("Permision Denied.");
+        });
       });
 
       test("Should throw ModelValidationError if product name is invalid", async () => {
@@ -254,9 +277,10 @@ describe("src/services/ShoppingListService.ts", () => {
 
         expect(mockShoppingListRepository.findById).toHaveBeenCalledWith("098zxc");
 
-        await shoppingListService
-          .updateProduct("123abc", "098zxc", updatedProduct)
-          .catch((error) => expect(error.message).toBe("Nome inválido."));
+        await shoppingListService.updateProduct("123abc", "098zxc", updatedProduct).catch((error) => {
+          expect(error.message).toBe("Nome inválido.");
+          expect(error.action).toBe("Nome precisa ter 3 ou mais caracteres.");
+        });
       });
 
       test("Should throw ModelValidationError if product price is invalid", async () => {
@@ -284,9 +308,10 @@ describe("src/services/ShoppingListService.ts", () => {
 
         expect(mockShoppingListRepository.findById).toHaveBeenCalledWith("098zxc");
 
-        await shoppingListService
-          .updateProduct("123abc", "098zxc", updatedProduct)
-          .catch((error) => expect(error.message).toBe("Preço inválido."));
+        await shoppingListService.updateProduct("123abc", "098zxc", updatedProduct).catch((error) => {
+          expect(error.message).toBe("Preço inválido.");
+          expect(error.action).toBe("O preço deve ser maior que R$ 0,00");
+        });
       });
 
       test("Should throw ModelValidationError if product quantity is invalid", async () => {
@@ -314,12 +339,13 @@ describe("src/services/ShoppingListService.ts", () => {
 
         expect(mockShoppingListRepository.findById).toHaveBeenCalledWith("098zxc");
 
-        await shoppingListService
-          .updateProduct("123abc", "098zxc", updatedProduct)
-          .catch((error) => expect(error.message).toBe("Quantidade inválida."));
+        await shoppingListService.updateProduct("123abc", "098zxc", updatedProduct).catch((error) => {
+          expect(error.message).toBe("Quantidade inválida.");
+          expect(error.action).toBe("A quantidade deve ser maior que 0.");
+        });
       });
 
-      test("Should throw InternalServerError if a unexpected error occurs", async () => {
+      test("Should throw InternalServerError if a unexpected error occurs during product update", async () => {
         const updatedProduct = {
           productName: "Updated-name",
           productPrice: 299.99,
@@ -334,9 +360,10 @@ describe("src/services/ShoppingListService.ts", () => {
 
         expect(mockShoppingListRepository.findById).toHaveBeenCalledWith("098zxc");
 
-        await shoppingListService
-          .updateProduct("123abc", "098zxc", updatedProduct)
-          .catch((error) => expect(error.message).toBe("Ocorreu um Erro inesperado ao tentar atualizar o produto."));
+        await shoppingListService.updateProduct("123abc", "098zxc", updatedProduct).catch((error) => {
+          expect(error.message).toBe("Ocorreu um Erro inesperado ao tentar atualizar o produto.");
+          expect(error.action).toBe("Tente novamente mais tarde.");
+        });
       });
     });
   });
@@ -373,9 +400,10 @@ describe("src/services/ShoppingListService.ts", () => {
 
         expect(mockShoppingListRepository.findById).toHaveBeenCalledWith("unexistent-product-id");
 
-        await shoppingListService
-          .deleteProduct("unexistent-product-id", "abc123")
-          .catch((error) => expect(error.message).toBe("Product not found."));
+        await shoppingListService.deleteProduct("unexistent-product-id", "abc123").catch((error) => {
+          expect(error.message).toBe("Product not found.");
+          expect(error.action).toBe("Verify the provided ID");
+        });
       });
 
       test("Should throw ProductServiceError when user ID and user ID in product are different", async () => {
@@ -397,9 +425,23 @@ describe("src/services/ShoppingListService.ts", () => {
 
         expect(mockShoppingListRepository.findById).toHaveBeenCalledWith("098zxc");
 
-        await shoppingListService
-          .deleteProduct("098zxc", "different-user-id")
-          .catch((error) => expect(error.message).toBe("Permision Denied."));
+        await shoppingListService.deleteProduct("098zxc", "different-user-id").catch((error) => {
+          expect(error.message).toBe("Permision Denied.");
+          expect(error.action).toBe("Permision Denied.");
+        });
+      });
+
+      test("Should throw InternalServerError if unexpected error occurs during delete product", async () => {
+        mockShoppingListRepository.findById.mockRejectedValue(new Error("Unexpected error."));
+
+        await expect(shoppingListService.deleteProduct("123", "321")).rejects.toThrow(InternalServerError);
+
+        expect(mockShoppingListRepository.findById).toHaveBeenCalledWith("123");
+
+        await shoppingListService.deleteProduct("123", "321").catch((error) => {
+          expect(error.message).toBe("Ocorreu um Erro inesperado ao tentar excluir o produto.");
+          expect(error.action).toBe("Tente novamente mais tarde.");
+        });
       });
     });
   });

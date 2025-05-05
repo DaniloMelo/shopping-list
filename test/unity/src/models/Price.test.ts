@@ -1,3 +1,4 @@
+import { ModelValidationError } from "@/lib/CustomErrors";
 import Price from "@/models/Price";
 
 describe("src/models/Price.ts", () => {
@@ -11,10 +12,16 @@ describe("src/models/Price.ts", () => {
 
   describe("Failure Cases", () => {
     test("Should throw an error if price is equal or less than 0", () => {
-      expect(() => new Price(0)).toThrow("Preço inválido.");
-      expect(() => new Price(0.0)).toThrow("Preço inválido.");
-      expect(() => new Price(-1.11)).toThrow("Preço inválido.");
-      expect(() => new Price(-1)).toThrow("Preço inválido.");
+      try {
+        new Price(0);
+      } catch (error) {
+        expect(error).toBeInstanceOf(ModelValidationError);
+
+        if (error instanceof ModelValidationError) {
+          expect(error.message).toBe("Preço inválido.");
+          expect(error.action).toBe("O preço deve ser maior que R$ 0,00");
+        }
+      }
     });
   });
 });

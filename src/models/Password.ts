@@ -8,7 +8,7 @@ export default class Password {
 
     if (!passwordRegex.test(password)) {
       throw new ModelValidationError(
-        "Formato de senha inválida.",
+        "Formato de senha inválido.",
         "A senha deve conter: 8 Caracteres, 1 Letra maiúscula, 1 Número e 1 Caractere especial.",
         400,
         true,

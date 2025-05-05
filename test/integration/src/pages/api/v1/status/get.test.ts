@@ -2,7 +2,6 @@ import getBaseUrl from "@/lib/getBaseUrl";
 
 describe("/api/v1/status end-point", () => {
   test("GET to /api/v1/status should return system status", async () => {
-    console.log("Domínio nos testes ==> ", `${getBaseUrl()}/api/v1/status`);
     const response = await fetch(`${getBaseUrl()}/api/v1/status`);
     expect(response.status).toBe(200);
 
