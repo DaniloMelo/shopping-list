@@ -21,7 +21,7 @@ model User {
   createdAt          DateTime             @default(now())
   SessionToken       SessionToken[]
   ResetPasswordToken ResetPasswordToken[]
-  ShoppingList       ShoppingList[]
+  ProductList        Product[]
 }
 
 model SessionToken {
@@ -42,7 +42,7 @@ model ResetPasswordToken {
   createdAt DateTime @default(now())
 }
 
-model ShoppingList {
+model Product {
   id              String   @id @default(uuid())
   productName     String
   productPrice    Float

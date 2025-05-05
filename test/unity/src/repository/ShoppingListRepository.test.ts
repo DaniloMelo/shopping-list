@@ -3,7 +3,7 @@ import ShoppingListRepository from "@/repository/ShoppingListRepository";
 
 jest.mock("../../../../src/lib/prisma", () => ({
   prisma: {
-    shoppingList: {
+    product: {
       create: jest.fn(),
       findMany: jest.fn(),
       findUnique: jest.fn(),
@@ -29,11 +29,11 @@ describe("src/repository/ShoppingListRepository.ts", () => {
         userId: "123456",
       };
 
-      (prisma.shoppingList.create as jest.Mock).mockResolvedValue(undefined);
+      (prisma.product.create as jest.Mock).mockResolvedValue(undefined);
 
       await shoppingListRepository.create(newProduct);
 
-      expect(prisma.shoppingList.create).toHaveBeenCalledWith({
+      expect(prisma.product.create).toHaveBeenCalledWith({
         data: newProduct,
       });
     });
@@ -51,11 +51,11 @@ describe("src/repository/ShoppingListRepository.ts", () => {
         },
       ];
 
-      (prisma.shoppingList.findMany as jest.Mock).mockResolvedValue(dbProducts);
+      (prisma.product.findMany as jest.Mock).mockResolvedValue(dbProducts);
 
       const result = await shoppingListRepository.findAll("123abc");
 
-      expect(prisma.shoppingList.findMany).toHaveBeenCalledWith({
+      expect(prisma.product.findMany).toHaveBeenCalledWith({
         where: { userId: "123abc" },
       });
       expect(result).toEqual(dbProducts);
@@ -72,11 +72,11 @@ describe("src/repository/ShoppingListRepository.ts", () => {
         updatedAt: new Date(),
       };
 
-      (prisma.shoppingList.findUnique as jest.Mock).mockResolvedValue(dbProduct);
+      (prisma.product.findUnique as jest.Mock).mockResolvedValue(dbProduct);
 
       const result = await shoppingListRepository.findById("098zxc");
 
-      expect(prisma.shoppingList.findUnique).toHaveBeenCalledWith({
+      expect(prisma.product.findUnique).toHaveBeenCalledWith({
         where: { id: "098zxc" },
       });
 
@@ -90,22 +90,22 @@ describe("src/repository/ShoppingListRepository.ts", () => {
         productQuantity: 1,
       };
 
-      (prisma.shoppingList.update as jest.Mock).mockResolvedValue(undefined);
+      (prisma.product.update as jest.Mock).mockResolvedValue(undefined);
 
       await shoppingListRepository.update("098zxc", updatedProduct);
 
-      expect(prisma.shoppingList.update).toHaveBeenCalledWith({
+      expect(prisma.product.update).toHaveBeenCalledWith({
         where: { id: "098zxc" },
         data: updatedProduct,
       });
     });
 
     test("Should delete product", async () => {
-      (prisma.shoppingList.delete as jest.Mock).mockResolvedValue(undefined);
+      (prisma.product.delete as jest.Mock).mockResolvedValue(undefined);
 
       await shoppingListRepository.deleteById("098zxc");
 
-      expect(prisma.shoppingList.delete).toHaveBeenCalledWith({
+      expect(prisma.product.delete).toHaveBeenCalledWith({
         where: { id: "098zxc" },
       });
     });
@@ -113,22 +113,22 @@ describe("src/repository/ShoppingListRepository.ts", () => {
 
   describe("Failure Cases", () => {
     test("Should return a empty array if user don't have products", async () => {
-      (prisma.shoppingList.findMany as jest.Mock).mockResolvedValue([]);
+      (prisma.product.findMany as jest.Mock).mockResolvedValue([]);
 
       const result = await shoppingListRepository.findAll("123abc");
 
-      expect(prisma.shoppingList.findMany).toHaveBeenCalledWith({
+      expect(prisma.product.findMany).toHaveBeenCalledWith({
         where: { userId: "123abc" },
       });
       expect(result).toEqual([]);
     });
 
     test("Should return null if product don't exist when find by ID", async () => {
-      (prisma.shoppingList.findUnique as jest.Mock).mockResolvedValue(null);
+      (prisma.product.findUnique as jest.Mock).mockResolvedValue(null);
 
       const result = await shoppingListRepository.findById("unexistent-id");
 
-      expect(prisma.shoppingList.findUnique).toHaveBeenCalledWith({
+      expect(prisma.product.findUnique).toHaveBeenCalledWith({
         where: { id: "unexistent-id" },
       });
 
