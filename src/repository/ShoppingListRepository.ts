@@ -27,32 +27,32 @@ export interface IShoppingListRepository {
 
 export default class ShoppingListRepository implements IShoppingListRepository {
   async create(newProductObj: INewProduct): Promise<void> {
-    await prisma.shoppingList.create({
+    await prisma.product.create({
       data: newProductObj,
     });
   }
 
   async findAll(userId: string): Promise<IDbProduct[] | []> {
-    return await prisma.shoppingList.findMany({
+    return await prisma.product.findMany({
       where: { userId },
     });
   }
 
   async findById(productId: string): Promise<IDbProduct | null> {
-    return await prisma.shoppingList.findUnique({
+    return await prisma.product.findUnique({
       where: { id: productId },
     });
   }
 
   async update(productId: string, product: IUpdateProduct): Promise<void> {
-    await prisma.shoppingList.update({
+    await prisma.product.update({
       where: { id: productId },
       data: product,
     });
   }
 
   async deleteById(productId: string) {
-    await prisma.shoppingList.delete({
+    await prisma.product.delete({
       where: { id: productId },
     });
   }
