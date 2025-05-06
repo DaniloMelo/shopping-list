@@ -9,6 +9,7 @@ jest.mock("../../../../src/lib/prisma", () => ({
       findUnique: jest.fn(),
       update: jest.fn(),
       delete: jest.fn(),
+      deleteMany: jest.fn(),
     },
   },
 }));
@@ -100,13 +101,23 @@ describe("src/repository/ShoppingListRepository.ts", () => {
       });
     });
 
-    test("Should delete product", async () => {
+    test("Should delete one product", async () => {
       (prisma.product.delete as jest.Mock).mockResolvedValue(undefined);
 
       await shoppingListRepository.deleteById("098zxc");
 
       expect(prisma.product.delete).toHaveBeenCalledWith({
         where: { id: "098zxc" },
+      });
+    });
+
+    test("Should delete all products", async () => {
+      (prisma.product.deleteMany as jest.Mock).mockResolvedValue(undefined);
+
+      await shoppingListRepository.deleteAll("abc123");
+
+      expect(prisma.product.deleteMany).toHaveBeenCalledWith({
+        where: { userId: "abc123" },
       });
     });
   });

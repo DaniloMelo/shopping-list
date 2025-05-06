@@ -21,7 +21,7 @@ async function seed() {
     ],
   });
 
-  await prisma.shoppingList.createMany({
+  await prisma.product.createMany({
     data: [
       {
         id: "393d179d-d9a2-4fa7-a4b3-c10509158c7b",
