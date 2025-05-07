@@ -111,13 +111,18 @@ describe("src/repository/ShoppingListRepository.ts", () => {
       });
     });
 
-    test("Should delete all products", async () => {
+    test("Should delete selected products", async () => {
       (prisma.product.deleteMany as jest.Mock).mockResolvedValue(undefined);
 
-      await shoppingListRepository.deleteAll("abc123");
+      await shoppingListRepository.deleteSelected(["123", "456", "789"], "123abc");
 
       expect(prisma.product.deleteMany).toHaveBeenCalledWith({
-        where: { userId: "abc123" },
+        where: {
+          id: {
+            in: ["123", "456", "789"],
+          },
+          userId: "123abc",
+        },
       });
     });
   });

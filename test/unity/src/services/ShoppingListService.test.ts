@@ -16,7 +16,7 @@ const mockShoppingListRepository: jest.Mocked<IShoppingListRepository> = {
   findById: jest.fn(),
   update: jest.fn(),
   deleteById: jest.fn(),
-  deleteAll: jest.fn(),
+  deleteSelected: jest.fn(),
 };
 
 describe("src/services/ShoppingListService.ts", () => {
@@ -450,20 +450,25 @@ describe("src/services/ShoppingListService.ts", () => {
   describe("deleteAllProducts method:", () => {
     describe("Sucessfull Cases", () => {
       test("Should delete all products", async () => {
-        mockShoppingListRepository.deleteAll.mockResolvedValue(undefined);
+        mockShoppingListRepository.deleteSelected.mockResolvedValue(undefined);
 
-        await expect(shoppingListService.deleteAllProducts("123abc")).resolves.toBeUndefined();
-        expect(mockShoppingListRepository.deleteAll).toHaveBeenCalledWith("123abc");
+        await expect(
+          shoppingListService.deleteSelectedProducts(["123", "456", "789"], "123abc"),
+        ).resolves.toBeUndefined();
+
+        expect(mockShoppingListRepository.deleteSelected).toHaveBeenCalledWith(["123", "456", "789"], "123abc");
       });
     });
 
     describe("Failure Cases", () => {
       test("Should throw InternalServerError if unexpected error occurs during delete all products", async () => {
-        mockShoppingListRepository.deleteAll.mockRejectedValue(new Error("Unexpected error."));
+        mockShoppingListRepository.deleteSelected.mockRejectedValue(new Error("Unexpected error."));
 
-        await expect(shoppingListService.deleteAllProducts("123abc")).rejects.toThrow(InternalServerError);
+        await expect(shoppingListService.deleteSelectedProducts(["123", "456", "789"], "123abc")).rejects.toThrow(
+          InternalServerError,
+        );
 
-        await shoppingListService.deleteAllProducts("123abc").catch((error) => {
+        await shoppingListService.deleteSelectedProducts(["123", "456", "789"], "123abc").catch((error) => {
           expect(error.message).toBe("Ocorreu um erro inesperado ao tentar excluir todos os produtos.");
           expect(error.action).toBe("Tente novamente mais tarde.");
         });

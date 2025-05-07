@@ -148,11 +148,23 @@ export default class ShoppingListService {
     }
   }
 
-  async deleteAllProducts(userId: string) {
+  async deleteSelectedProducts(productIds: string[], userId: string) {
+    if (!productIds || productIds.length === 0) {
+      throw new Error("Lista de IDs de produtos vazia.");
+    }
+
+    if (!userId) {
+      throw new Error("ID do usuário não informado.");
+    }
+
     try {
-      await this.shoppingListRepository.deleteAll(userId);
+      await this.shoppingListRepository.deleteSelected(productIds, userId);
     } catch (error) {
       console.error("Error during delete all products: ", error);
+
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
 
       throw new InternalServerError(
         "Ocorreu um erro inesperado ao tentar excluir todos os produtos.",
