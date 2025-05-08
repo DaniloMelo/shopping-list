@@ -111,7 +111,7 @@ export default class ShoppingListService {
       }
 
       throw new InternalServerError(
-        "Ocorreu um Erro inesperado ao tentar atualizar o produto.",
+        "Ocorreu um erro inesperado ao tentar atualizar o produto.",
         "Tente novamente mais tarde.",
         500,
         true,
@@ -133,14 +133,41 @@ export default class ShoppingListService {
 
       await this.shoppingListRepository.deleteById(productId);
     } catch (error) {
-      console.error("Error during delete product: ", error);
+      console.error("Error during delete one product: ", error);
 
       if (error instanceof ProductServiceError) {
         throw error;
       }
 
       throw new InternalServerError(
-        "Ocorreu um Erro inesperado ao tentar excluir o produto.",
+        "Ocorreu um erro inesperado ao tentar excluir o produto.",
+        "Tente novamente mais tarde.",
+        500,
+        true,
+      );
+    }
+  }
+
+  async deleteSelectedProducts(productIds: string[], userId: string) {
+    if (!productIds || productIds.length === 0) {
+      throw new Error("Lista de IDs de produtos vazia.");
+    }
+
+    if (!userId) {
+      throw new Error("ID do usuário não informado.");
+    }
+
+    try {
+      await this.shoppingListRepository.deleteSelected(productIds, userId);
+    } catch (error) {
+      console.error("Error during delete all products: ", error);
+
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
+
+      throw new InternalServerError(
+        "Ocorreu um erro inesperado ao tentar excluir todos os produtos.",
         "Tente novamente mais tarde.",
         500,
         true,

@@ -13,6 +13,10 @@ interface IProductContext {
   addProduct(product: IProduct): void;
   productToUpdate(product: IProduct): void;
   getProductToUpdate: IProduct;
+  addProductToDelete(productId: string): void;
+  removeProductToDele(productId: string): void;
+  cleanProductsToDelete(): void;
+  productsToDelete: string[];
 }
 
 interface IProductProdiverProps {
@@ -24,6 +28,7 @@ const ProductContext = createContext<IProductContext | undefined>(undefined);
 export function ProductProvider({ children }: IProductProdiverProps) {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [productToUpdate, setProductToUpdate] = useState<IProduct>();
+  const [productsToDelete, setProductsToDelete] = useState<string[]>([]);
 
   function addInitialProducts(initialProducts: IProduct[]) {
     setProducts(initialProducts);
@@ -37,6 +42,19 @@ export function ProductProvider({ children }: IProductProdiverProps) {
     setProductToUpdate(product);
   }
 
+  function addProductToDelete(productId: string) {
+    setProductsToDelete((prevProductId) => [...prevProductId, productId]);
+  }
+
+  function removeProductToDele(productId: string) {
+    const updatedArr = productsToDelete.filter((item) => item !== productId);
+    setProductsToDelete([...updatedArr]);
+  }
+
+  function cleanProductsToDelete() {
+    setProductsToDelete([]);
+  }
+
   return (
     <ProductContext.Provider
       value={{
@@ -45,6 +63,10 @@ export function ProductProvider({ children }: IProductProdiverProps) {
         addProduct,
         productToUpdate: addProductToUpdate,
         getProductToUpdate: productToUpdate!,
+        addProductToDelete,
+        removeProductToDele,
+        cleanProductsToDelete,
+        productsToDelete,
       }}
     >
       {children}

@@ -6,6 +6,7 @@ import { useSWRConfig } from "swr";
 import ConfirmationDialog from "./ConfirmationDialog";
 import { useFetch } from "@/hooks/useFetch";
 import useModal from "@/hooks/useModal";
+import CheckBox from "./CheckBox";
 
 export interface ProductProps {
   id: string;
@@ -50,7 +51,10 @@ export default function Product({ id, userId, productName, productPrice, product
   return (
     <div className="p-3 rounded-md bg-secondaryLightBG dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 shadow-md dark:shadow-none">
       <div className="flex justify-between cursor-pointer" onClick={() => setIsDetailsHidden(!isDetailsHidden)}>
-        <p className="font-semibold">{productName}</p>
+        <div className="flex items-center gap-x-4">
+          <CheckBox productId={id} />
+          <p className="font-semibold">{productName}</p>
+        </div>
         <div className="ml-4 text-xl items-start">
           <IoIosArrowUp
             className={`transition transform duration-300 ${isDetailsHidden ? "rotate-180" : "rotate-0"}`}

@@ -16,6 +16,7 @@ const mockShoppingListRepository: jest.Mocked<IShoppingListRepository> = {
   findById: jest.fn(),
   update: jest.fn(),
   deleteById: jest.fn(),
+  deleteSelected: jest.fn(),
 };
 
 describe("src/services/ShoppingListService.ts", () => {
@@ -124,7 +125,7 @@ describe("src/services/ShoppingListService.ts", () => {
     });
   });
 
-  describe("listProducts method: ", () => {
+  describe("listProducts method:", () => {
     describe("Successfull Cases", () => {
       test("Should find and return all products", async () => {
         const dbProducts = [
@@ -173,7 +174,7 @@ describe("src/services/ShoppingListService.ts", () => {
     });
   });
 
-  describe("updateProduct method: ", () => {
+  describe("updateProduct method:", () => {
     describe("Successfull Cases", () => {
       test("Should update product successfully", async () => {
         const dbProduct = {
@@ -361,14 +362,14 @@ describe("src/services/ShoppingListService.ts", () => {
         expect(mockShoppingListRepository.findById).toHaveBeenCalledWith("098zxc");
 
         await shoppingListService.updateProduct("123abc", "098zxc", updatedProduct).catch((error) => {
-          expect(error.message).toBe("Ocorreu um Erro inesperado ao tentar atualizar o produto.");
+          expect(error.message).toBe("Ocorreu um erro inesperado ao tentar atualizar o produto.");
           expect(error.action).toBe("Tente novamente mais tarde.");
         });
       });
     });
   });
 
-  describe("deleteProduct method: ", () => {
+  describe("deleteProduct method:", () => {
     describe("Successfull Cases", () => {
       test("Should delete product", async () => {
         const dbProduct = {
@@ -431,7 +432,7 @@ describe("src/services/ShoppingListService.ts", () => {
         });
       });
 
-      test("Should throw InternalServerError if unexpected error occurs during delete product", async () => {
+      test("Should throw InternalServerError if unexpected error occurs during delete one product", async () => {
         mockShoppingListRepository.findById.mockRejectedValue(new Error("Unexpected error."));
 
         await expect(shoppingListService.deleteProduct("123", "321")).rejects.toThrow(InternalServerError);
@@ -439,7 +440,36 @@ describe("src/services/ShoppingListService.ts", () => {
         expect(mockShoppingListRepository.findById).toHaveBeenCalledWith("123");
 
         await shoppingListService.deleteProduct("123", "321").catch((error) => {
-          expect(error.message).toBe("Ocorreu um Erro inesperado ao tentar excluir o produto.");
+          expect(error.message).toBe("Ocorreu um erro inesperado ao tentar excluir o produto.");
+          expect(error.action).toBe("Tente novamente mais tarde.");
+        });
+      });
+    });
+  });
+
+  describe("deleteAllProducts method:", () => {
+    describe("Sucessfull Cases", () => {
+      test("Should delete all products", async () => {
+        mockShoppingListRepository.deleteSelected.mockResolvedValue(undefined);
+
+        await expect(
+          shoppingListService.deleteSelectedProducts(["123", "456", "789"], "123abc"),
+        ).resolves.toBeUndefined();
+
+        expect(mockShoppingListRepository.deleteSelected).toHaveBeenCalledWith(["123", "456", "789"], "123abc");
+      });
+    });
+
+    describe("Failure Cases", () => {
+      test("Should throw InternalServerError if unexpected error occurs during delete all products", async () => {
+        mockShoppingListRepository.deleteSelected.mockRejectedValue(new Error("Unexpected error."));
+
+        await expect(shoppingListService.deleteSelectedProducts(["123", "456", "789"], "123abc")).rejects.toThrow(
+          InternalServerError,
+        );
+
+        await shoppingListService.deleteSelectedProducts(["123", "456", "789"], "123abc").catch((error) => {
+          expect(error.message).toBe("Ocorreu um erro inesperado ao tentar excluir todos os produtos.");
           expect(error.action).toBe("Tente novamente mais tarde.");
         });
       });

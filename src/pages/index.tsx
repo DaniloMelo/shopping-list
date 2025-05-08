@@ -13,6 +13,8 @@ import { GetServerSideProps } from "next";
 import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import useModal from "@/hooks/useModal";
+import useProduct from "@/hooks/useProduct";
+import DeleteSelectedProductsButton from "@/components/DeleteSelectedProductsButton";
 
 const tokenService = new TokenService();
 
@@ -29,6 +31,7 @@ export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
   const [total, setTotal] = useState("");
 
   const { toggleIsCreateProductModalOpen } = useModal();
+  const { productsToDelete } = useProduct();
 
   useEffect(() => {
     setTotal(calcTotal(updatedProducts));
@@ -49,14 +52,18 @@ export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
 
       <FilterProducts value={search} onSearchChange={setSearch} />
 
-      <OpenCreateProductModalButton click={() => toggleIsCreateProductModalOpen(true)} desktopType />
+      {productsToDelete.length > 0 ? (
+        <DeleteSelectedProductsButton userId={userId} desktopType />
+      ) : (
+        <OpenCreateProductModalButton click={() => toggleIsCreateProductModalOpen(true)} desktopType />
+      )}
 
       {updatedProducts.length === 0 ? (
         <div className="my-10">
           <p className="text-lightTxt dark:text-darkTxt">Sua lista de compras está vazia.</p>
         </div>
       ) : (
-        <div className="flex items-end w-full px-2 gap-x-2 mt-4">
+        <div className="flex w-full px-2 gap-x-2 mt-4">
           <p className="text-xl font-[500] text-lightTxt dark:text-darkTxt">Total: </p>
           <span className="font-[500] text-lightTxt dark:text-darkTxt">{total}</span>
         </div>
@@ -69,7 +76,11 @@ export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
         onUpdateProduct={setUpdatedProducts}
       />
 
-      <OpenCreateProductModalButton click={() => toggleIsCreateProductModalOpen(true)} />
+      {productsToDelete.length > 0 ? (
+        <DeleteSelectedProductsButton userId={userId} />
+      ) : (
+        <OpenCreateProductModalButton click={() => toggleIsCreateProductModalOpen(true)} />
+      )}
 
       <CreateProductModal userId={userId} />
 
