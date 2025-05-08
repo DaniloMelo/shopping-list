@@ -387,7 +387,7 @@ describe("src/services/ShoppingListService.ts", () => {
 
         await expect(shoppingListService.deleteProduct("098zxc", "123abc")).resolves.toBeUndefined();
         expect(mockShoppingListRepository.findById).toHaveBeenCalledWith("098zxc");
-        expect(mockShoppingListRepository.deleteById).toHaveBeenCalledWith("098zxc");
+        expect(mockShoppingListRepository.deleteById).toHaveBeenCalledWith("098zxc", "123abc");
       });
     });
 

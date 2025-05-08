@@ -31,7 +31,7 @@ export default function Product({ id, userId, productName, productPrice, product
 
   async function handleDeleteProduct() {
     try {
-      await fetchDeleteProduct(id, userId);
+      await fetchDeleteProduct(id);
       mutate(`/api/v1/product/list-products/${userId}`);
 
       SetIsDialogOpen(false);

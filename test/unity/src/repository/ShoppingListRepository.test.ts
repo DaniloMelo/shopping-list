@@ -104,10 +104,13 @@ describe("src/repository/ShoppingListRepository.ts", () => {
     test("Should delete one product", async () => {
       (prisma.product.delete as jest.Mock).mockResolvedValue(undefined);
 
-      await shoppingListRepository.deleteById("098zxc");
+      await shoppingListRepository.deleteById("098zxc", "123abc");
 
       expect(prisma.product.delete).toHaveBeenCalledWith({
-        where: { id: "098zxc" },
+        where: {
+          id: "098zxc",
+          userId: "123abc",
+        },
       });
     });
 

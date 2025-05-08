@@ -110,11 +110,9 @@ export function useFetch() {
     return response;
   }
 
-  async function fetchDeleteProduct(productId: string, userId: string) {
-    await fetch(`/api/v1/product/delete-product/${productId}`, {
+  async function fetchDeleteProduct(productId: string) {
+    await fetch(`/api/v1/product/delete/one/${productId}`, {
       method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId }),
     });
   }
 

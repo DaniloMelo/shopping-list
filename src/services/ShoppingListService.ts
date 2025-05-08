@@ -131,7 +131,7 @@ export default class ShoppingListService {
         throw new ProductServiceError("Permision Denied.", "Permision Denied.", 403, false);
       }
 
-      await this.shoppingListRepository.deleteById(productId);
+      await this.shoppingListRepository.deleteById(productId, userId);
     } catch (error) {
       console.error("Error during delete one product: ", error);
 
