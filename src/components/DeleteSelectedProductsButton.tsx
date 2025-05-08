@@ -11,13 +11,16 @@ export default function DeleteSelectedProductsButton({ desktopType, userId }: ID
   const { isDialogOpen, setIsDialogOpen, productsToDelete, dialogConfirmation } =
     useDeleteSelectedProductsFetch(userId);
 
+  const desktopCSS = "hidden sm:block py-2 px-4 my-4 rounded-md self-start transition hover:bg-red-900 hover:scale-105";
+  const mobileCSS = "block sm:hidden fixed right-4 bottom-4 rounded-full p-3 active:bg-red-900 active:scale-110";
+
   return (
     <>
       <button
-        className={`flex items-center justify-center bg-red-500 ${desktopType ? "hidden sm:block py-2 px-4 my-4 rounded-md self-start transition hover:bg-red-900 hover:scale-105" : "block sm:hidden fixed right-4 bottom-4 rounded-full p-3 active:bg-red-900 active:scale-110"}`}
+        className={`flex items-center justify-center bg-red-500 text-white ${desktopType ? desktopCSS : mobileCSS}`}
         onClick={() => setIsDialogOpen(true)}
       >
-        {desktopType ? "Excluir itens selecionados" : <GoTrash className="text-4xl text-white" />}
+        {desktopType ? "Excluir itens selecionados" : <GoTrash className="text-4xl" />}
       </button>
 
       <ConfirmationDialog
