@@ -22,7 +22,7 @@ export interface IShoppingListRepository {
   findAll(userId: string): Promise<IDbProduct[] | []>;
   findById(productId: string): Promise<IDbProduct | null>;
   update(productId: string, product: IUpdateProduct): Promise<void>;
-  deleteById(productId: string): Promise<void>;
+  deleteById(productId: string, userId: string): Promise<void>;
   deleteSelected(productIds: string[], userId: string): Promise<void>;
 }
 
@@ -52,9 +52,12 @@ export default class ShoppingListRepository implements IShoppingListRepository {
     });
   }
 
-  async deleteById(productId: string) {
+  async deleteById(productId: string, userId: string) {
     await prisma.product.delete({
-      where: { id: productId },
+      where: {
+        id: productId,
+        userId: userId,
+      },
     });
   }
 

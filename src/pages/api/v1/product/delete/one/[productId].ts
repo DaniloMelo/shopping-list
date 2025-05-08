@@ -1,3 +1,4 @@
+import getUserIdFromRequest from "@/lib/auth";
 import { InternalServerError, ProductServiceError } from "@/lib/CustomErrors";
 import ShoppingListRepository from "@/repository/ShoppingListRepository";
 import UserRepository from "@/repository/UserRepository";
@@ -13,11 +14,15 @@ export default async function deleteProduct(req: NextApiRequest, res: NextApiRes
     return res.status(405).json({ message: "Method not allowed." });
   }
 
+  const userId = await getUserIdFromRequest(req);
+  if (!userId) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
   try {
     const { productId } = req.query;
-    const { userId } = req.body;
 
-    await shoppingListService.deleteProduct(productId as string, userId);
+    await shoppingListService.deleteProduct(productId as string, userId as string);
 
     return res.status(200).json({ message: "Product deleted." });
   } catch (error) {
