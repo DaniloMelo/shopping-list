@@ -1,4 +1,5 @@
 import { InternalServerError } from "@/lib/CustomErrors";
+import getUserIdFromRequest from "@/lib/getUserIdFromRequest";
 import ShoppingListRepository from "@/repository/ShoppingListRepository";
 import UserRepository from "@/repository/UserRepository";
 import ShoppingListService from "@/services/ShoppingListService";
@@ -13,10 +14,13 @@ export default async function listProducts(req: NextApiRequest, res: NextApiResp
     return res.status(405).json({ message: "Method Not Allowed." });
   }
 
-  try {
-    const { userId } = req.query;
+  const userId = await getUserIdFromRequest(req);
+  if (!userId) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
 
-    const result = await shoppingListService.listProducts(userId as string);
+  try {
+    const result = await shoppingListService.listProducts(userId);
 
     return res.status(200).json(result);
   } catch (error) {

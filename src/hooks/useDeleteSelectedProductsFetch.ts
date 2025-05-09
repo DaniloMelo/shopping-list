@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useSWRConfig } from "swr";
 import useProduct from "./useProduct";
 
-export function useDeleteSelectedProductsFetch(userId: string) {
+export function useDeleteSelectedProductsFetch() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const { productsToDelete, cleanProductsToDelete } = useProduct();
@@ -18,7 +18,7 @@ export function useDeleteSelectedProductsFetch(userId: string) {
         }),
       });
 
-      mutate(`/api/v1/product/list-products/${userId}`);
+      mutate(`/api/v1/product/list-products`);
 
       cleanProductsToDelete();
       setIsDialogOpen(false);

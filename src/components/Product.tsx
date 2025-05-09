@@ -10,13 +10,12 @@ import CheckBox from "./CheckBox";
 
 export interface ProductProps {
   id: string;
-  userId: string;
   productName: string;
   productPrice: number;
   productQuantity: number;
 }
 
-export default function Product({ id, userId, productName, productPrice, productQuantity }: ProductProps) {
+export default function Product({ id, productName, productPrice, productQuantity }: ProductProps) {
   const [isDetailsHidden, setIsDetailsHidden] = useState(false);
   const [isDialogOpen, SetIsDialogOpen] = useState(false);
   const { productToUpdate } = useProduct();
@@ -32,7 +31,7 @@ export default function Product({ id, userId, productName, productPrice, product
   async function handleDeleteProduct() {
     try {
       await fetchDeleteProduct(id);
-      mutate(`/api/v1/product/list-products/${userId}`);
+      mutate(`/api/v1/product/list-products`);
 
       SetIsDialogOpen(false);
     } catch (error) {

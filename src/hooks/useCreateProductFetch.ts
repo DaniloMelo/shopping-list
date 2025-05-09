@@ -24,7 +24,7 @@ export function useCreateProductFetch() {
   const { fetchCreateProduct } = useFetch();
   const { mutate } = useSWRConfig();
 
-  async function handleSubmit(e: React.FormEvent, userId: string) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setErrorMessage("");
     setErrorAction("");
@@ -40,7 +40,7 @@ export function useCreateProductFetch() {
         }
       }
 
-      mutate(`/api/v1/product/list-products/${userId}`);
+      mutate(`/api/v1/product/list-products`);
       toggleIsCreateProductModalOpen(false);
       setIsLoading(false);
       setProduct({ productName: "", productPrice: "", productQuantity: "" });

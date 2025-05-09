@@ -53,7 +53,7 @@ export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
       <FilterProducts value={search} onSearchChange={setSearch} />
 
       {productsToDelete.length > 0 ? (
-        <DeleteSelectedProductsButton userId={userId} desktopType />
+        <DeleteSelectedProductsButton desktopType />
       ) : (
         <OpenCreateProductModalButton click={() => toggleIsCreateProductModalOpen(true)} desktopType />
       )}
@@ -69,20 +69,15 @@ export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
         </div>
       )}
 
-      <ProductsList
-        initialProducts={shoppingList}
-        userId={userId}
-        search={search}
-        onUpdateProduct={setUpdatedProducts}
-      />
+      <ProductsList initialProducts={shoppingList} search={search} onUpdateProduct={setUpdatedProducts} />
 
       {productsToDelete.length > 0 ? (
-        <DeleteSelectedProductsButton userId={userId} />
+        <DeleteSelectedProductsButton />
       ) : (
         <OpenCreateProductModalButton click={() => toggleIsCreateProductModalOpen(true)} />
       )}
 
-      <CreateProductModal userId={userId} />
+      <CreateProductModal />
 
       <UpdateProductModal userId={userId} />
     </main>
@@ -151,10 +146,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const fetchUserData = await fetchUserResponse.json();
 
-    const fetchShoppingListResponse = await fetch(`${baseUrl}/api/v1/product/list-products/${payload.userId}`, {
+    const fetchShoppingListResponse = await fetch(`${baseUrl}/api/v1/product/list-products`, {
       headers: {
         Cookie: allCookies,
-        "Content-Type": "application/json",
       },
     });
 

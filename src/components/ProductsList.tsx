@@ -7,7 +7,6 @@ import { useEffect } from "react";
 
 export interface ProductsListProps {
   initialProducts: ProductProps[];
-  userId: string;
   search: string;
   onUpdateProduct(productList: ProductProps[]): void;
 }
@@ -18,9 +17,9 @@ async function fetcher(url: string) {
   return products;
 }
 
-export default function ProductsList({ initialProducts, userId, search, onUpdateProduct }: ProductsListProps) {
+export default function ProductsList({ initialProducts, search, onUpdateProduct }: ProductsListProps) {
   const { addInitialProducts } = useProduct();
-  const { data, error } = useSWR(`/api/v1/product/list-products/${userId}`, fetcher, {
+  const { data, error } = useSWR(`/api/v1/product/list-products`, fetcher, {
     fallback: initialProducts,
   });
 
@@ -56,7 +55,6 @@ export default function ProductsList({ initialProducts, userId, search, onUpdate
           <Product
             key={p.id}
             id={p.id}
-            userId={userId}
             productName={p.productName}
             productPrice={p.productPrice}
             productQuantity={p.productQuantity}

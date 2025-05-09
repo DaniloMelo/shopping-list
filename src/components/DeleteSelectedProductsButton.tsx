@@ -4,12 +4,10 @@ import { useDeleteSelectedProductsFetch } from "@/hooks/useDeleteSelectedProduct
 
 interface IDeleteSelectedProductsBtn {
   desktopType?: boolean;
-  userId: string;
 }
 
-export default function DeleteSelectedProductsButton({ desktopType, userId }: IDeleteSelectedProductsBtn) {
-  const { isDialogOpen, setIsDialogOpen, productsToDelete, dialogConfirmation } =
-    useDeleteSelectedProductsFetch(userId);
+export default function DeleteSelectedProductsButton({ desktopType }: IDeleteSelectedProductsBtn) {
+  const { isDialogOpen, setIsDialogOpen, productsToDelete, dialogConfirmation } = useDeleteSelectedProductsFetch();
 
   const desktopCSS = "hidden sm:block py-2 px-4 my-4 rounded-md self-start transition hover:bg-red-900 hover:scale-105";
   const mobileCSS = "block sm:hidden fixed right-4 bottom-4 rounded-full p-3 active:bg-red-900 active:scale-110";
