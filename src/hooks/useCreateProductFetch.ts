@@ -31,7 +31,7 @@ export function useCreateProductFetch() {
     setIsLoading(true);
 
     try {
-      const response = await fetchCreateProduct({ userId, product });
+      const response = await fetchCreateProduct({ product });
 
       if (!response.ok) {
         const errorData = await response.json();

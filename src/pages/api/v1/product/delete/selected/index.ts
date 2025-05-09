@@ -1,5 +1,5 @@
-import getUserIdFromRequest from "@/lib/auth";
 import { InternalServerError } from "@/lib/CustomErrors";
+import getUserIdFromRequest from "@/lib/getUserIdFromRequest";
 import ShoppingListRepository from "@/repository/ShoppingListRepository";
 import UserRepository from "@/repository/UserRepository";
 import ShoppingListService from "@/services/ShoppingListService";
@@ -22,7 +22,7 @@ export default async function deleteProduct(req: NextApiRequest, res: NextApiRes
   try {
     const { productIds } = req.body;
 
-    await shoppingListService.deleteSelectedProducts(productIds, userId as string);
+    await shoppingListService.deleteSelectedProducts(productIds, userId);
 
     return res.status(200).json({ message: "All selected product are deleted." });
   } catch (error) {

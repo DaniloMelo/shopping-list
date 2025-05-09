@@ -22,7 +22,6 @@ interface IExecuteResetPassword {
 }
 
 interface IFetchCreateProduct {
-  userId: string;
   product: INewProduct;
 }
 
@@ -80,8 +79,8 @@ export function useFetch() {
     return response;
   }
 
-  async function fetchCreateProduct({ userId, product }: IFetchCreateProduct) {
-    const response = await fetch(`/api/v1/product/create-product/${userId}`, {
+  async function fetchCreateProduct({ product }: IFetchCreateProduct) {
+    const response = await fetch(`/api/v1/product/create-product`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
