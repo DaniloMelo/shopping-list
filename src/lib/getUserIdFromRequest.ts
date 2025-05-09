@@ -11,7 +11,7 @@ export default async function getUserIdFromRequest(req: NextApiRequest) {
   try {
     const decodedJwt = await tokenService.verify(token);
 
-    return decodedJwt.userId;
+    return decodedJwt.userId as string;
   } catch (error) {
     console.error("Invalid token:", error);
     return null;

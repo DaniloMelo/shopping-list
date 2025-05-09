@@ -22,7 +22,7 @@ export default async function deleteProduct(req: NextApiRequest, res: NextApiRes
   try {
     const { productId } = req.query;
 
-    await shoppingListService.deleteProduct(productId as string, userId as string);
+    await shoppingListService.deleteProduct(productId as string, userId);
 
     return res.status(200).json({ message: "Product deleted." });
   } catch (error) {

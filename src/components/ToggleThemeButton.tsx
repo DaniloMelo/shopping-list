@@ -7,7 +7,7 @@ export default function ToggleThemeButton() {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <div className="rounded-full gap-x-2 overflow-hidden" onClick={toggleTheme}>
+    <div className="rounded-full gap-x-2 overflow-hidden cursor-pointer" onClick={toggleTheme}>
       {theme === "light" ? (
         <div className="flex justify-center items-center h-10 w-10 p-1 bg-blue-600 rounded-full">
           <MdLightMode className="text-yellow-300 text-2xl" />
