@@ -1,5 +1,5 @@
-import getUserIdFromRequest from "@/lib/auth";
 import { InternalServerError, ProductServiceError } from "@/lib/CustomErrors";
+import getUserIdFromRequest from "@/lib/getUserIdFromRequest";
 import ShoppingListRepository from "@/repository/ShoppingListRepository";
 import UserRepository from "@/repository/UserRepository";
 import ShoppingListService from "@/services/ShoppingListService";
