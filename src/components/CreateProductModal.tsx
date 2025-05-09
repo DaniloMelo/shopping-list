@@ -3,11 +3,7 @@ import ModalInput from "./ModalInput";
 import { CgSpinner } from "react-icons/cg";
 import useModal from "@/hooks/useModal";
 
-interface ModalProps {
-  userId: string;
-}
-
-export default function CreateProductModal({ userId }: ModalProps) {
+export default function CreateProductModal() {
   const { product, setProduct, isLoading, errorMessage, errorAction, handleSubmit } = useCreateProductFetch();
   const { isCreateProductModalOpen, toggleIsCreateProductModalOpen } = useModal();
 
@@ -26,7 +22,7 @@ export default function CreateProductModal({ userId }: ModalProps) {
 
         <h2 className="text-lg mb-6 text-lightTxt dark:text-darkTxt">Adicione um novo produto</h2>
 
-        <form className="flex flex-col gap-5" onSubmit={(e) => handleSubmit(e, userId)}>
+        <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
           <ModalInput
             type="text"
             placeholder="Nome"

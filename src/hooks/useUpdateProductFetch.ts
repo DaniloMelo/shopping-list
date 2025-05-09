@@ -52,7 +52,7 @@ export function useUpdateProductFetch() {
         if (errorData.isPublicError) throw new PublicError(errorData.message, errorData.action);
       }
 
-      mutate(`/api/v1/product/list-products/${userId}`);
+      mutate(`/api/v1/product/list-products`);
       toggleIsUpdateProductModalOpen(false);
       setIsLoading(false);
     } catch (error) {
