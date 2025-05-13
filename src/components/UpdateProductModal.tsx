@@ -37,6 +37,7 @@ export default function UpdateProductModal({ userId }: IUpdatedProductModalProps
 
           <ModalInput
             type="text"
+            inputMode="numeric"
             placeholder="Preço. Ex: 19,90"
             value={product.productPrice}
             onChange={(e) => setProduct({ ...product, productPrice: e.target.value })}
