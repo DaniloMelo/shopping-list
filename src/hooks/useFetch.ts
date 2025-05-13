@@ -85,8 +85,8 @@ export function useFetch() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         productName: product.productName,
-        productPrice: Number(product.productPrice),
-        productQuantity: Number(product.productQuantity),
+        productPrice: NumberFormatter.toNumber(product.productPrice),
+        productQuantity: NumberFormatter.toNumber(product.productQuantity),
       }),
     });
 
