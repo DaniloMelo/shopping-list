@@ -33,6 +33,7 @@ export default function CreateProductModal() {
 
           <ModalInput
             type="text"
+            inputMode="numeric"
             placeholder="Preço. Ex: 19,90"
             value={product.productPrice}
             onChange={(e) => setProduct({ ...product, productPrice: e.target.value })}
@@ -70,5 +71,3 @@ export default function CreateProductModal() {
     </section>
   );
 }
-
-// ----------------------------
