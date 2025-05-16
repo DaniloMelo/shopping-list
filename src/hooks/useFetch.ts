@@ -1,7 +1,3 @@
-import NumberFormatter from "@/lib/NumberFormatter";
-import { INewProduct } from "./useCreateProductFetch";
-import { IUpdatedProduct } from "./useUpdateProductFetch";
-
 interface InewUserData {
   name: string;
   email: string;
@@ -22,12 +18,21 @@ interface IExecuteResetPassword {
 }
 
 interface IFetchCreateProduct {
-  product: INewProduct;
+  productName: string;
+  productPrice: number;
+  productQuantity: number;
+}
+
+interface product {
+  id: string;
+  productName: string;
+  productPrice: number;
+  productQuantity: number;
 }
 
 interface IFetchUpdateProduct {
   userId: string;
-  product: IUpdatedProduct;
+  product: product;
 }
 
 export function useFetch() {
@@ -79,14 +84,14 @@ export function useFetch() {
     return response;
   }
 
-  async function fetchCreateProduct({ product }: IFetchCreateProduct) {
+  async function fetchCreateProduct(product: IFetchCreateProduct) {
     const response = await fetch(`/api/v1/product/create-product`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         productName: product.productName,
-        productPrice: NumberFormatter.toNumber(product.productPrice),
-        productQuantity: NumberFormatter.toNumber(product.productQuantity),
+        productPrice: product.productPrice,
+        productQuantity: product.productQuantity,
       }),
     });
 
@@ -101,8 +106,8 @@ export function useFetch() {
         userId: userId,
         productId: product.id,
         productName: product.productName,
-        productPrice: NumberFormatter.toNumber(product.productPrice),
-        productQuantity: NumberFormatter.toNumber(product.productQuantity),
+        productPrice: product.productPrice,
+        productQuantity: product.productQuantity,
       }),
     });
 

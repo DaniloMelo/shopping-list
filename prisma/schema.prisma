@@ -45,7 +45,7 @@ model ResetPasswordToken {
 model Product {
   id              String   @id @default(uuid())
   productName     String
-  productPrice    Float
+  productPrice    Int
   productQuantity Int
   userId          String
   user            User     @relation(fields: [userId], references: [id])

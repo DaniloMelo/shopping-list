@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import useProduct from "./useProduct";
 import { useSWRConfig } from "swr";
 import NumberFormatter from "@/lib/NumberFormatter";
-import { PublicError } from "@/lib/CustomErrors";
+import { NumberFormatterError, PublicError } from "@/lib/CustomErrors";
 import useModal from "./useModal";
 import { useFetch } from "./useFetch";
 
@@ -34,7 +34,7 @@ export function useUpdateProductFetch() {
       setProduct({
         id: getProductToUpdate.id,
         productName: getProductToUpdate.productName,
-        productPrice: NumberFormatter.toBRL(getProductToUpdate.productPrice).substring(3),
+        productPrice: NumberFormatter.centsToBRL(getProductToUpdate.productPrice).substring(3),
         productQuantity: getProductToUpdate.productQuantity.toString(),
       });
     }
@@ -45,7 +45,13 @@ export function useUpdateProductFetch() {
     setIsLoading(true);
 
     try {
-      const response = await fetchUpdateProduct({ userId, product });
+      const parsedProduct = {
+        ...product,
+        productPrice: NumberFormatter.BRLToCents(product.productPrice),
+        productQuantity: Number(product.productQuantity),
+      };
+
+      const response = await fetchUpdateProduct({ userId, product: parsedProduct });
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -56,7 +62,7 @@ export function useUpdateProductFetch() {
       toggleIsUpdateProductModalOpen(false);
       setIsLoading(false);
     } catch (error) {
-      if (error instanceof PublicError) {
+      if (error instanceof PublicError || error instanceof NumberFormatterError) {
         setErrorMessage(error.message);
         setErrorAction(error.action);
         setIsLoading(false);

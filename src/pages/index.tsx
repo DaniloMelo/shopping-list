@@ -63,7 +63,7 @@ export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
           <p className="text-lightTxt dark:text-darkTxt">Sua lista de compras está vazia.</p>
         </div>
       ) : (
-        <div className="flex w-full px-2 gap-x-2 mt-4">
+        <div className="flex items-end w-full px-2 gap-x-2 mt-4">
           <p className="text-xl font-[500] text-lightTxt dark:text-darkTxt">Total: </p>
           <span className="font-[500] text-lightTxt dark:text-darkTxt">{total}</span>
         </div>
