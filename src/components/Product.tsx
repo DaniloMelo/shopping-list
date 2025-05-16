@@ -64,7 +64,7 @@ export default function Product({ id, productName, productPrice, productQuantity
       <hr className={`border-t border-zinc-500 mt-2 mb-4 ${isDetailsHidden && "hidden"}`} />
 
       <div className={`mb-2 ${isDetailsHidden && "hidden"}`}>
-        <p>{NumberFormatter.toBRL(productPrice)}</p>
+        <p>{NumberFormatter.centsToBRL(productPrice)}</p>
 
         <p className="my-2">Quantidade: {productQuantity}</p>
 

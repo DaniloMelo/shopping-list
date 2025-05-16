@@ -53,6 +53,13 @@ export class ProductServiceError extends CustomError {
   }
 }
 
+export class NumberFormatterError extends CustomError {
+  constructor(message: string, action: string, statusCode: number, isPublicError: boolean, cause?: unknown) {
+    super(message, action, statusCode, isPublicError, cause);
+    this.name = "NumberFormatterError";
+  }
+}
+
 export class ResetPasswordServiceError extends CustomError {
   constructor(message: string, action: string, statusCode: number, isPublicError: boolean, cause?: unknown) {
     super(message, action, statusCode, isPublicError, cause);

@@ -1,8 +1,9 @@
-import { PublicError } from "@/lib/CustomErrors";
+import { NumberFormatterError, PublicError } from "@/lib/CustomErrors";
 import { useState } from "react";
 import { useSWRConfig } from "swr";
 import useModal from "./useModal";
 import { useFetch } from "./useFetch";
+import NumberFormatter from "@/lib/NumberFormatter";
 
 export interface INewProduct {
   productName: string;
@@ -31,7 +32,13 @@ export function useCreateProductFetch() {
     setIsLoading(true);
 
     try {
-      const response = await fetchCreateProduct({ product });
+      const parsedProduct = {
+        ...product,
+        productPrice: NumberFormatter.BRLToCents(product.productPrice),
+        productQuantity: Number(product.productQuantity),
+      };
+
+      const response = await fetchCreateProduct(parsedProduct);
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -45,14 +52,14 @@ export function useCreateProductFetch() {
       setIsLoading(false);
       setProduct({ productName: "", productPrice: "", productQuantity: "" });
     } catch (error) {
-      if (error instanceof PublicError) {
+      if (error instanceof PublicError || error instanceof NumberFormatterError) {
         setErrorMessage(error.message);
         setErrorAction(error.action);
         setIsLoading(false);
         setTimeout(() => {
           setErrorMessage("");
           setErrorAction("");
-        }, 2000);
+        }, 4000);
       }
     }
   }
