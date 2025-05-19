@@ -9,13 +9,16 @@ interface IDeleteSelectedProductsBtn {
 export default function DeleteSelectedProductsButton({ desktopType }: IDeleteSelectedProductsBtn) {
   const { isDialogOpen, setIsDialogOpen, productsToDelete, dialogConfirmation } = useDeleteSelectedProductsFetch();
 
-  const desktopCSS = "hidden sm:block py-2 px-4 my-4 rounded-md self-start transition hover:bg-red-900 hover:scale-105";
-  const mobileCSS = "block sm:hidden fixed right-4 bottom-4 rounded-full p-3 active:bg-red-900 active:scale-110";
+  const desktopCSS =
+    "hidden sm:block py-2 px-4 my-4 rounded-md self-start transition hover:bg-secondaryBtnColorHover hover:scale-105";
+
+  const mobileCSS =
+    "block sm:hidden fixed right-4 bottom-4 rounded-full p-3 active:bg-secondaryBtnColorHover active:scale-110";
 
   return (
     <>
       <button
-        className={`flex items-center justify-center bg-red-500 text-white ${desktopType ? desktopCSS : mobileCSS}`}
+        className={`flex items-center justify-center bg-secondaryBtnColor text-white ${desktopType ? desktopCSS : mobileCSS}`}
         onClick={() => setIsDialogOpen(true)}
       >
         {desktopType ? "Excluir itens selecionados" : <GoTrash className="text-4xl" />}

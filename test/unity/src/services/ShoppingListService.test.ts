@@ -447,9 +447,9 @@ describe("src/services/ShoppingListService.ts", () => {
     });
   });
 
-  describe("deleteAllProducts method:", () => {
+  describe("deleteSelectedProducts method:", () => {
     describe("Sucessfull Cases", () => {
-      test("Should delete all products", async () => {
+      test("Should delete selected products", async () => {
         mockShoppingListRepository.deleteSelected.mockResolvedValue(undefined);
 
         await expect(
@@ -461,7 +461,7 @@ describe("src/services/ShoppingListService.ts", () => {
     });
 
     describe("Failure Cases", () => {
-      test("Should throw InternalServerError if unexpected error occurs during delete all products", async () => {
+      test("Should throw InternalServerError if unexpected error occurs during delete selected products", async () => {
         mockShoppingListRepository.deleteSelected.mockRejectedValue(new Error("Unexpected error."));
 
         await expect(shoppingListService.deleteSelectedProducts(["123", "456", "789"], "123abc")).rejects.toThrow(
@@ -469,7 +469,7 @@ describe("src/services/ShoppingListService.ts", () => {
         );
 
         await shoppingListService.deleteSelectedProducts(["123", "456", "789"], "123abc").catch((error) => {
-          expect(error.message).toBe("Ocorreu um erro inesperado ao tentar excluir todos os produtos.");
+          expect(error.message).toBe("Ocorreu um erro inesperado ao tentar excluir os produtos selecionados.");
           expect(error.action).toBe("Tente novamente mais tarde.");
         });
       });
