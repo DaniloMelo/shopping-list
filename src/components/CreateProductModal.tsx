@@ -58,7 +58,7 @@ export default function CreateProductModal() {
           )}
 
           <button
-            className="bg-cyan-700 hover:bg-cyan-900 text-zinc-200 outline-blue-300 py-2 rounded-md"
+            className="bg-primaryBtnColor hover:bg-primaryBtnColorHover active:-primaryBtnColorHover text-white outline-blue-300 py-2 rounded-md"
             disabled={isLoading && true}
           >
             <div className="flex justify-center">
