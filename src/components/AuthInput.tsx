@@ -8,21 +8,21 @@ const montserrat = Montserrat({
 });
 
 interface AuthInputProps extends InputHTMLAttributes<HTMLInputElement> {
-  Icon: ElementType;
+  Icon?: ElementType;
 }
 
 export default function AuthInput({ Icon, ...rest }: AuthInputProps) {
   return (
-    <div
+    <label
       className={`${montserrat.variable} flex justify-center items-center p-1 border-b
       bg-primaryLightBG border-zinc-700 focus-within:border-zinc-400 hover:border-zinc-400 text-lightTxt 
       dark:bg-primaryDarkBG dark:border-zinc-500 dark:text-darkTxt`}
     >
-      <Icon className="text-xl mr-2" />
+      {Icon && <Icon className="text-xl mr-2" />}
       <input
         className="w-full outline-none font-[500] placeholder-zinc-400 placeholder:font-[500] bg-primaryLightBG dark:bg-primaryDarkBG dark:placeholder-zinc-600"
         {...rest}
-      ></input>
-    </div>
+      />
+    </label>
   );
 }
