@@ -62,7 +62,7 @@ export default function UpdateProductModal({ userId }: IUpdatedProductModalProps
           )}
 
           <button
-            className="rounded-md py-2 bg-cyan-700 hover:bg-cyan-900 text-zinc-300 outline-blue-300"
+            className="rounded-md py-2 bg-primaryBtnColor hover:bg-primaryBtnColorHover active:bg-primaryBtnColorHover text-white font-semibold outline-blue-300"
             disabled={isLoading && true}
           >
             <div className="flex justify-center">

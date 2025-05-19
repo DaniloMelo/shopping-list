@@ -14,14 +14,14 @@ export default function ConfirmationDialog({ message, isOpen, onConfirmation }: 
 
         <div className="flex justify-center items-center gap-x-4">
           <button
-            className="py-2 px-4 rounded-lg bg-blue-800 hover:bg-blue-900 text-zinc-300"
+            className="py-2 px-4 rounded-lg bg-primaryBtnColor hover:bg-primaryBtnColorHover active:bg-primaryBtnColorHover text-zinc-300"
             onClick={() => onConfirmation(true)}
           >
             Sim
           </button>
 
           <button
-            className="py-2 px-4 rounded-lg bg-red-800 hover:bg-red-900 text-zinc-300"
+            className="py-2 px-4 rounded-lg bg-secondaryBtnColor hover:bg-secondaryBtnColorHover active:secondaryBtnColorHover text-zinc-300"
             onClick={() => onConfirmation(false)}
           >
             Não

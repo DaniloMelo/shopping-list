@@ -70,7 +70,7 @@ export default function Product({ id, productName, productPrice, productQuantity
 
         <div className="flex justify-start items-center gap-x-4 mt-6">
           <button
-            className="bg-blue-700 hover:bg-blue-800 text-zinc-200 py-1 px-4 rounded-md"
+            className="bg-primaryBtnColor hover:bg-primaryBtnColorHover active:bg-primaryBtnColorHover text-zinc-200 py-1 px-4 rounded-md"
             onClick={() => {
               toggleIsUpdateProductModalOpen(true);
               handleUpdateProduct();
@@ -80,7 +80,7 @@ export default function Product({ id, productName, productPrice, productQuantity
           </button>
 
           <button
-            className="bg-red-700 hover:bg-red-800 text-zinc-200 py-1 px-4 rounded-md"
+            className="bg-secondaryBtnColor hover:bg-secondaryBtnColorHover active:bg-secondaryBtnColorHover text-zinc-200 py-1 px-4 rounded-md"
             onClick={() => SetIsDialogOpen(true)}
           >
             Excluir

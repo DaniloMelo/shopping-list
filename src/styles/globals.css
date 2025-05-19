@@ -9,6 +9,10 @@
   --primary-dark-bg: #000000;
   --secondary-dark-bg: #27272a;
   --dark-txt: #d4d4d8;
+  --primary-btn-color: #1e40af;
+  --primary-btn-color-hover: #1d4ed8;
+  --secondary-btn-color: #991b1b;
+  --secondary-btn-color-hover: #b91c1c;
 }
 
 @media (prefers-color-scheme: dark) {
