@@ -150,24 +150,24 @@ export default class ShoppingListService {
 
   async deleteSelectedProducts(productIds: string[], userId: string) {
     if (!productIds || productIds.length === 0) {
-      throw new Error("Lista de IDs de produtos vazia.");
+      throw new ProductServiceError("A list of products is required", "Product list is missing", 400, false);
     }
 
     if (!userId) {
-      throw new Error("ID do usuário não informado.");
+      throw new ProductServiceError("User ID is required", "User ID is missing", 400, false);
     }
 
     try {
       await this.shoppingListRepository.deleteSelected(productIds, userId);
     } catch (error) {
-      console.error("Error during delete all products: ", error);
+      console.error("Error during delete selected products: ", error);
 
-      if (error instanceof Error) {
-        console.log(error.message);
+      if (error instanceof ProductServiceError) {
+        throw error;
       }
 
       throw new InternalServerError(
-        "Ocorreu um erro inesperado ao tentar excluir todos os produtos.",
+        "Ocorreu um erro inesperado ao tentar excluir os produtos selecionados.",
         "Tente novamente mais tarde.",
         500,
         true,
