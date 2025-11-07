@@ -1,6 +1,7 @@
 import AuthButton from "@/components/AuthButton";
 import AuthInput from "@/components/AuthInput";
 import Logo from "@/components/Logo";
+import PageTitle from "@/components/PageTitle";
 import { useLoginFetch } from "@/hooks/useLoginFetch";
 import Link from "next/link";
 import { IoIosMail } from "react-icons/io";
@@ -10,53 +11,57 @@ export default function LoginPage() {
   const { user, setUser, formErrorMessage, formErrorAction, isDisabled, isLoading, handleSubmit } = useLoginFetch();
 
   return (
-    <main className="h-screen flex justify-center items-center">
-      <section className="flex flex-col justify-center items-center w-80 py-10">
-        <Logo size="md" />
+    <>
+      <PageTitle title="Login" />
 
-        <h1 className="text-xl self-start mt-10 mb-5">Entrar</h1>
+      <main className="h-screen flex justify-center items-center">
+        <section className="flex flex-col justify-center items-center w-80 py-10">
+          <Logo size="md" />
 
-        <form className="w-full flex flex-col gap-5" onSubmit={handleSubmit}>
-          <AuthInput
-            Icon={IoIosMail}
-            placeholder="Email"
-            type="email"
-            value={user.email}
-            onChange={(e) => setUser({ ...user, email: e.target.value })}
-            required
-          />
+          <h1 className="text-xl self-start mt-10 mb-5">Entrar</h1>
 
-          <AuthInput
-            Icon={MdLock}
-            placeholder="Senha"
-            type="password"
-            value={user.password}
-            onChange={(e) => setUser({ ...user, password: e.target.value })}
-            required
-          />
+          <form className="w-full flex flex-col gap-5" onSubmit={handleSubmit}>
+            <AuthInput
+              Icon={IoIosMail}
+              placeholder="Email"
+              type="email"
+              value={user.email}
+              onChange={(e) => setUser({ ...user, email: e.target.value })}
+              required
+            />
 
-          {formErrorMessage && (
-            <div className="bg-red-900/50 w-full p-5 mt-5 text-sm text-center rounded-md">
-              <p className="mb-2">{formErrorMessage}</p>
-              <p>{formErrorAction}</p>
-            </div>
-          )}
+            <AuthInput
+              Icon={MdLock}
+              placeholder="Senha"
+              type="password"
+              value={user.password}
+              onChange={(e) => setUser({ ...user, password: e.target.value })}
+              required
+            />
 
-          <AuthButton disabled={isDisabled} loading={isLoading}>
-            {isLoading ? "Entrando" : "Entrar"}
-          </AuthButton>
+            {formErrorMessage && (
+              <div className="bg-red-900/50 w-full p-5 mt-5 text-sm text-center rounded-md">
+                <p className="mb-2">{formErrorMessage}</p>
+                <p>{formErrorAction}</p>
+              </div>
+            )}
 
-          <p className="text-blue-800 text-end text-sm">
-            <Link href="/request-reset-password" className="hover:text-blue-500 ">
-              Esqueceu sua senha?
-            </Link>
-          </p>
-        </form>
+            <AuthButton disabled={isDisabled} loading={isLoading}>
+              {isLoading ? "Entrando" : "Entrar"}
+            </AuthButton>
 
-        <Link href="/register" className="mt-10">
-          Não tem uma conta? <span className="text-blue-800 hover:text-blue-500">Cadastrar</span>
-        </Link>
-      </section>
-    </main>
+            <p className="text-blue-800 text-end text-sm">
+              <Link href="/request-reset-password" className="hover:text-blue-500 ">
+                Esqueceu sua senha?
+              </Link>
+            </p>
+          </form>
+
+          <Link href="/register" className="mt-10">
+            Não tem uma conta? <span className="text-blue-800 hover:text-blue-500">Cadastrar</span>
+          </Link>
+        </section>
+      </main>
+    </>
   );
 }
