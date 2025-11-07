@@ -6,82 +6,87 @@ import AuthInput from "@/components/AuthInput";
 import AuthButton from "@/components/AuthButton";
 import Link from "next/link";
 import { useRegisterFetch } from "@/hooks/useRegisterFetch";
+import PageTitle from "@/components/PageTitle";
 
 export default function RegisterPage() {
   const { newUser, setNewUser, isDisabled, isLoading, formErrorMessage, formErrorAction, formSuccess, handleSubmit } =
     useRegisterFetch();
 
   return (
-    <main className="h-screen flex justify-center">
-      <section className="flex flex-col justify-center items-center w-80 py-10">
-        <Logo size="md" />
+    <>
+      <PageTitle title="Cadastro" />
 
-        <h1 className="text-xl self-start mt-10 mb-5">Cadastre-se</h1>
+      <main className="h-screen flex justify-center">
+        <section className="flex flex-col justify-center items-center w-80 py-10">
+          <Logo size="md" />
 
-        <form className="w-full flex flex-col gap-5" onSubmit={handleSubmit}>
-          <AuthInput
-            Icon={MdPerson}
-            placeholder="Nome"
-            type="text"
-            value={newUser.name}
-            onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
-            required
-          />
-          <AuthInput
-            Icon={IoIosMail}
-            placeholder="Email"
-            type="email"
-            value={newUser.email}
-            onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
-            required
-          />
+          <h1 className="text-xl self-start mt-10 mb-5">Cadastre-se</h1>
 
-          <AuthInput
-            Icon={MdLock}
-            placeholder="Senha"
-            type="password"
-            value={newUser.password}
-            onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
-            required
-          />
+          <form className="w-full flex flex-col gap-5" onSubmit={handleSubmit}>
+            <AuthInput
+              Icon={MdPerson}
+              placeholder="Nome"
+              type="text"
+              value={newUser.name}
+              onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
+              required
+            />
+            <AuthInput
+              Icon={IoIosMail}
+              placeholder="Email"
+              type="email"
+              value={newUser.email}
+              onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+              required
+            />
 
-          <AuthInput
-            Icon={MdLock}
-            placeholder="Confirme a senha"
-            type="password"
-            value={newUser.passwordConfirmation}
-            onChange={(e) => setNewUser({ ...newUser, passwordConfirmation: e.target.value })}
-            required
-          />
+            <AuthInput
+              Icon={MdLock}
+              placeholder="Senha"
+              type="password"
+              value={newUser.password}
+              onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+              required
+            />
 
-          {formErrorMessage && (
-            <div className="bg-red-900/50 w-full p-5 mt-5 text-sm text-center rounded-md">
-              <p className="mb-2">{formErrorMessage}</p>
-              <p>{formErrorAction}</p>
-            </div>
-          )}
+            <AuthInput
+              Icon={MdLock}
+              placeholder="Confirme a senha"
+              type="password"
+              value={newUser.passwordConfirmation}
+              onChange={(e) => setNewUser({ ...newUser, passwordConfirmation: e.target.value })}
+              required
+            />
 
-          {formSuccess && (
-            <div className="bg-green-900/50 w-full p-5 mt-5 text-sm text-center rounded-md">
-              <p>{formSuccess}</p>
-            </div>
-          )}
+            {formErrorMessage && (
+              <div className="bg-red-900/50 w-full p-5 mt-5 text-sm text-center rounded-md">
+                <p className="mb-2">{formErrorMessage}</p>
+                <p>{formErrorAction}</p>
+              </div>
+            )}
 
-          <AuthButton disabled={isDisabled} loading={isLoading}>
-            {isLoading ? "Cadastrando" : "Cadastrar"}
-          </AuthButton>
+            {formSuccess && (
+              <div className="bg-green-900/50 w-full p-5 mt-5 text-sm text-center rounded-md">
+                <p>{formSuccess}</p>
+              </div>
+            )}
 
-          <p className="text-blue-800 text-end text-sm">
-            <Link href="/request-reset-password" className="hover:text-blue-500 ">
-              Esqueceu sua senha?
-            </Link>
-          </p>
-        </form>
+            <AuthButton disabled={isDisabled} loading={isLoading}>
+              {isLoading ? "Cadastrando" : "Cadastrar"}
+            </AuthButton>
 
-        <Link href="/login" className="mt-10">
-          Já tem uma conta? <span className="text-blue-800 hover:text-blue-500">Entrar</span>
-        </Link>
-      </section>
-    </main>
+            <p className="text-blue-800 text-end text-sm">
+              <Link href="/request-reset-password" className="hover:text-blue-500 ">
+                Esqueceu sua senha?
+              </Link>
+            </p>
+          </form>
+
+          <Link href="/login" className="mt-10">
+            Já tem uma conta? <span className="text-blue-800 hover:text-blue-500">Entrar</span>
+          </Link>
+        </section>
+      </main>
+    </>
   );
 }
