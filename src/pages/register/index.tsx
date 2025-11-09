@@ -7,6 +7,7 @@ import AuthButton from "@/components/AuthButton";
 import Link from "next/link";
 import { useRegisterFetch } from "@/hooks/useRegisterFetch";
 import PageTitle from "@/components/PageTitle";
+import Attribution from "@/components/Attribution";
 
 export default function RegisterPage() {
   const { newUser, setNewUser, isDisabled, isLoading, formErrorMessage, formErrorAction, formSuccess, handleSubmit } =
@@ -86,6 +87,8 @@ export default function RegisterPage() {
             Já tem uma conta? <span className="text-blue-800 hover:text-blue-500">Entrar</span>
           </Link>
         </section>
+
+        <Attribution />
       </main>
     </>
   );
