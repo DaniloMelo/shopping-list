@@ -1,3 +1,4 @@
+import Attribution from "@/components/Attribution";
 import AuthButton from "@/components/AuthButton";
 import AuthInput from "@/components/AuthInput";
 import Logo from "@/components/Logo";
@@ -14,7 +15,7 @@ export default function LoginPage() {
     <>
       <PageTitle title="Login" />
 
-      <main className="h-screen flex justify-center items-center">
+      <main className="h-screen flex flex-col justify-center items-center">
         <section className="flex flex-col justify-center items-center w-80 py-10">
           <Logo size="md" />
 
@@ -61,6 +62,8 @@ export default function LoginPage() {
             Não tem uma conta? <span className="text-blue-800 hover:text-blue-500">Cadastrar</span>
           </Link>
         </section>
+
+        <Attribution />
       </main>
     </>
   );

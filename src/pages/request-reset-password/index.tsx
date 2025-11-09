@@ -1,3 +1,4 @@
+import Attribution from "@/components/Attribution";
 import AuthButton from "@/components/AuthButton";
 import AuthInput from "@/components/AuthInput";
 import Logo from "@/components/Logo";
@@ -58,6 +59,8 @@ export default function RequestResetPasswordPage() {
             </p>
           </form>
         </section>
+
+        <Attribution />
       </main>
     </>
   );
