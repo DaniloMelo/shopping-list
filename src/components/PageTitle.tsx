@@ -7,7 +7,7 @@ interface PageTitleProps {
 export default function PageTitle({ title }: PageTitleProps) {
   return (
     <Head>
-      <title>Shopping List | {title}</title>
+      <title>{`Shopping List | ${title}`}</title>
     </Head>
   );
 }

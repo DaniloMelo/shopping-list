@@ -17,7 +17,7 @@ export default function LogoutButton({ userEmail }: LogoutButtonProps) {
 
   return (
     <button
-      className="flex justify-center items-center w-full py-1 px-4 border-b 
+      className="flex justify-center items-center w-fit p-2 
         text-lightTxt hover:text-zinc-500 border-zinc-500 hover:border-zinc-400
         dark:text-darkTxt dark:hover:text-zinc-400 dark:border-zinc-300 dark:hover:border-zinc-400"
       onClick={() => handleLogout(userEmail)}

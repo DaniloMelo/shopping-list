@@ -1,4 +1,3 @@
-import Container from "@/components/Container";
 import { ModalProvioder } from "@/contexts/ModalContext";
 import { ProductProvider } from "@/contexts/ProductContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
@@ -11,9 +10,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <ModalProvioder>
       <ThemeProvider>
         <ProductProvider>
-          <Container>
-            <Component {...pageProps} />
-          </Container>
+          <Component {...pageProps} />
         </ProductProvider>
       </ThemeProvider>
     </ModalProvioder>
