@@ -1,6 +1,7 @@
 import Attribution from "@/components/Attribution";
 import AuthButton from "@/components/AuthButton";
 import AuthInput from "@/components/AuthInput";
+import Container from "@/components/Container";
 import Logo from "@/components/Logo";
 import PageTitle from "@/components/PageTitle";
 import { useExecuteResetPasswordFetch } from "@/hooks/useExecuteResetPasswordFetch";
@@ -25,58 +26,66 @@ export default function ExecuteResetPasswordPage() {
     <>
       <PageTitle title="Redefinição de senha" />
 
-      <main className="h-screen flex justify-center">
-        <section className="flex flex-col justify-center items-center w-80 py-10">
-          <Logo size="md" />
+      <Container>
+        <main className="h-screen flex flex-col justify-center items-center">
+          <section className="flex flex-col flex-1 justify-center items-center w-80 py-10">
+            <Logo size="md" />
 
-          <h1 className="text-xl self-start mt-10 mb-5">Redefinição de senha</h1>
+            <h1 className="text-xl self-start mt-10 mb-5">Redefinição de senha</h1>
 
-          <form className="w-full flex flex-col gap-5" onSubmit={handleSubmit}>
-            <AuthInput
-              Icon={MdLock}
-              placeholder="Nova Senha"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <form className="w-full flex flex-col gap-5" onSubmit={handleSubmit}>
+              <AuthInput
+                Icon={MdLock}
+                placeholder="Nova Senha"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
 
-            <AuthInput
-              Icon={MdLock}
-              placeholder="Confirme a senha"
-              type="password"
-              value={passwordConfirmation}
-              onChange={(e) => setPasswordConfirmation(e.target.value)}
-              required
-            />
+              <AuthInput
+                Icon={MdLock}
+                placeholder="Confirme a senha"
+                type="password"
+                value={passwordConfirmation}
+                onChange={(e) => setPasswordConfirmation(e.target.value)}
+                required
+              />
 
-            {formErrorMessage && (
-              <div className="bg-red-900/50 w-full p-5 mt-5 text-sm text-center rounded-md">
-                <p className="mb-2">{formErrorMessage}</p>
-                <p>{formErrorAction}</p>
-              </div>
-            )}
+              {formErrorMessage && (
+                <div className="bg-red-900/50 w-full p-5 mt-5 text-sm text-center rounded-md">
+                  <p className="mb-2">{formErrorMessage}</p>
+                  <p>{formErrorAction}</p>
+                </div>
+              )}
 
-            {formSuccess && (
-              <div className="bg-green-900/50 w-full p-5 mt-5 text-sm text-center rounded-md">
-                <p>{formSuccess}</p>
-              </div>
-            )}
+              {formSuccess && (
+                <div className="bg-green-900/50 w-full p-5 mt-5 text-sm text-center rounded-md">
+                  <p>{formSuccess}</p>
+                </div>
+              )}
 
-            <AuthButton loading={isLoading} disabled={isDisabled}>
-              {isLoading ? "Alterando" : "Alterar"}
-            </AuthButton>
+              <AuthButton loading={isLoading} disabled={isDisabled}>
+                {isLoading ? "Alterando" : "Alterar"}
+              </AuthButton>
 
-            <p className="text-blue-800 text-end text-sm">
-              <Link href="/login" className="hover:text-blue-500 ">
-                Voltar para o login
-              </Link>
-            </p>
-          </form>
-        </section>
+              <p className="text-blue-800 text-end text-sm">
+                <Link href="/login" className="hover:text-blue-500 ">
+                  Voltar para o login
+                </Link>
+              </p>
+            </form>
+          </section>
 
-        <Attribution />
-      </main>
+          <footer className="w-full flex items-center">
+            <Attribution />
+
+            <section className="pr-2 text-sm text-zinc-600 dark:text-zinc-400 underline">
+              <Link href="/status">App Status</Link>
+            </section>
+          </footer>
+        </main>
+      </Container>
     </>
   );
 }

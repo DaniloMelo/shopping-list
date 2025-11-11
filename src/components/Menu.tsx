@@ -30,7 +30,7 @@ export default function Menu({ userEmail, isOpen, onMenuOpen }: MenuProps) {
           </div>
         </div>
 
-        <div className="mb-10">
+        <div>
           <LogoutButton userEmail={userEmail} />
         </div>
       </nav>

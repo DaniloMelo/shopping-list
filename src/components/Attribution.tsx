@@ -2,8 +2,9 @@ import { FaGithub } from "react-icons/fa6";
 
 export default function Attribution() {
   return (
-    <section className="absolute bottom-4">
-      <p>
+    // <section className="absolute bottom-4">
+    <section className="flex-1">
+      <p className="text-center">
         Criado por{" "}
         <a
           href="https://www.linkedin.com/in/danilo-marques-de-melo/"
@@ -14,7 +15,7 @@ export default function Attribution() {
         </a>
       </p>
 
-      <div className="flex justify-center items-center mt-2 gap-x-4">
+      <div className="flex justify-center items-center my-2 gap-x-4">
         <a href="https://www.linkedin.com/in/danilo-marques-de-melo/" target="_blank">
           <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="40" height="40" viewBox="0 0 48 48">
             <path

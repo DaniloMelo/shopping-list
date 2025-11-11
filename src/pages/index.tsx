@@ -41,12 +41,12 @@ export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
 
   return (
     <>
+      <PageTitle title="Minha Lista" />
+
+      <Header userEmail={userEmail} />
+
       <Container>
-        <PageTitle title="Minha Lista" />
-
-        <main className={`flex flex-col items-center`}>
-          <Header userEmail={userEmail} />
-
+        <main className="flex flex-col items-center">
           <span
             className={`self-start cursor-pointer mt-2 text-zinc-300 hover:text-zinc-400 xl:hidden ${menuOpen ? "opacity-0" : "opacity-100"}`}
             onClick={() => setMenuOpen(true)}

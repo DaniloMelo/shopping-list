@@ -16,9 +16,8 @@ export default function Header({ userEmail }: HeaderProps) {
 
           <div className="flex justify-center items-center gap-x-5">
             <ToggleThemeButton />
-            <div className="w-40 ">
-              <LogoutButton userEmail={userEmail} />
-            </div>
+
+            <LogoutButton userEmail={userEmail} />
           </div>
         </div>
       </Container>
