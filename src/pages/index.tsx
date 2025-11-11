@@ -16,6 +16,7 @@ import useModal from "@/hooks/useModal";
 import useProduct from "@/hooks/useProduct";
 import DeleteSelectedProductsButton from "@/components/DeleteSelectedProductsButton";
 import PageTitle from "@/components/PageTitle";
+import Container from "@/components/Container";
 
 const tokenService = new TokenService();
 
@@ -40,51 +41,53 @@ export default function Home({ shoppingList, userEmail, userId }: IHomeProps) {
 
   return (
     <>
-      <PageTitle title="Minha Lista" />
+      <Container>
+        <PageTitle title="Minha Lista" />
 
-      <main className={`flex flex-col items-center`}>
-        <Header userEmail={userEmail} />
+        <main className={`flex flex-col items-center`}>
+          <Header userEmail={userEmail} />
 
-        <span
-          className={`self-start cursor-pointer mt-2 text-zinc-300 hover:text-zinc-400 xl:hidden ${menuOpen ? "opacity-0" : "opacity-100"}`}
-          onClick={() => setMenuOpen(true)}
-        >
-          <IoMdMenu className="text-3xl text-lightTxt dark:text-darkTxt" />
-        </span>
+          <span
+            className={`self-start cursor-pointer mt-2 text-zinc-300 hover:text-zinc-400 xl:hidden ${menuOpen ? "opacity-0" : "opacity-100"}`}
+            onClick={() => setMenuOpen(true)}
+          >
+            <IoMdMenu className="text-3xl text-lightTxt dark:text-darkTxt" />
+          </span>
 
-        <Menu userEmail={userEmail} isOpen={menuOpen} onMenuOpen={setMenuOpen} />
+          <Menu userEmail={userEmail} isOpen={menuOpen} onMenuOpen={setMenuOpen} />
 
-        <FilterProducts value={search} onSearchChange={setSearch} />
+          <FilterProducts value={search} onSearchChange={setSearch} />
 
-        {productsToDelete.length > 0 ? (
-          <DeleteSelectedProductsButton desktopType />
-        ) : (
-          <OpenCreateProductModalButton click={() => toggleIsCreateProductModalOpen(true)} desktopType />
-        )}
+          {productsToDelete.length > 0 ? (
+            <DeleteSelectedProductsButton desktopType />
+          ) : (
+            <OpenCreateProductModalButton click={() => toggleIsCreateProductModalOpen(true)} desktopType />
+          )}
 
-        {updatedProducts.length === 0 ? (
-          <div className="my-10">
-            <p className="text-lightTxt dark:text-darkTxt">Sua lista de compras está vazia.</p>
-          </div>
-        ) : (
-          <div className="flex items-end w-full px-2 gap-x-2 mt-4">
-            <p className="text-xl font-[500] text-lightTxt dark:text-darkTxt">Total: </p>
-            <span className="font-[500] text-lightTxt dark:text-darkTxt">{total}</span>
-          </div>
-        )}
+          {updatedProducts.length === 0 ? (
+            <div className="my-10">
+              <p className="text-lightTxt dark:text-darkTxt">Sua lista de compras está vazia.</p>
+            </div>
+          ) : (
+            <div className="flex items-end w-full px-2 gap-x-2 mt-4">
+              <p className="text-xl font-[500] text-lightTxt dark:text-darkTxt">Total: </p>
+              <span className="font-[500] text-lightTxt dark:text-darkTxt">{total}</span>
+            </div>
+          )}
 
-        <ProductsList initialProducts={shoppingList} search={search} onUpdateProduct={setUpdatedProducts} />
+          <ProductsList initialProducts={shoppingList} search={search} onUpdateProduct={setUpdatedProducts} />
 
-        {productsToDelete.length > 0 ? (
-          <DeleteSelectedProductsButton />
-        ) : (
-          <OpenCreateProductModalButton click={() => toggleIsCreateProductModalOpen(true)} />
-        )}
+          {productsToDelete.length > 0 ? (
+            <DeleteSelectedProductsButton />
+          ) : (
+            <OpenCreateProductModalButton click={() => toggleIsCreateProductModalOpen(true)} />
+          )}
 
-        <CreateProductModal />
+          <CreateProductModal />
 
-        <UpdateProductModal userId={userId} />
-      </main>
+          <UpdateProductModal userId={userId} />
+        </main>
+      </Container>
     </>
   );
 }
