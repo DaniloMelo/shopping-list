@@ -2,8 +2,7 @@ import { FaGithub } from "react-icons/fa6";
 
 export default function Attribution() {
   return (
-    // <section className="absolute bottom-4">
-    <section className="flex-1">
+    <section className="flex-1 pl-16">
       <p className="text-center">
         Criado por{" "}
         <a
