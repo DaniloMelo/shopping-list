@@ -7,6 +7,7 @@ import Logo from "@/components/Logo";
 import ToggleThemeButton from "@/components/ToggleThemeButton";
 import Link from "next/link";
 import Container from "@/components/Container";
+import dateFormatter from "@/lib/dateFormatter";
 
 async function fetchAPI(key: string) {
   const response = await fetch(key);
@@ -46,7 +47,7 @@ export default function StatusPage() {
 
           <section className="flex items-center">
             <p className="font-bold mr-2">Última atualização:</p>
-            {data ? data.updated_at : <LoadingSpinner />}
+            {data ? dateFormatter(data.updated_at) : <LoadingSpinner />}
           </section>
 
           {error && (
