@@ -20,7 +20,7 @@ export default async function status(req: NextApiRequest, res: NextApiResponse) 
     const openConnectionsData = openConnectionsResponse[0].count;
 
     return res.status(200).json({
-      updated_at: new Date().toLocaleString("pt-BR"),
+      updated_at: new Date().toISOString(),
       dependencies: {
         database: {
           server_version: serverVersionData,
