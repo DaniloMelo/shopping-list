@@ -27,7 +27,7 @@ export default function StatusPage() {
     <>
       <PageTitle title="Status" />
 
-      <header className="w-full py-2 hidden xl:block bg-secondaryLightBG text-lightTxt shadow-sm dark:bg-secondaryDarkBG dark:shadow-none">
+      <header className="w-full py-2 bg-secondaryLightBG text-lightTxt shadow-sm dark:bg-secondaryDarkBG dark:shadow-none">
         <Container>
           <div className="flex justify-between items-center">
             <Link href="/">
